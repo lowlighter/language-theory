@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++11 -w -I /usr/local/include
+CFLAGS = -std=c++11 -w
 BINDIR = bin
 
 all: flex bison main.cpp lexer.cpp parser.cpp

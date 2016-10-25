@@ -17,6 +17,7 @@
 %token<dbl> LITERAL_DBL
 
 %type<dbl> expr
+%type<dbl> term
 
 %start root
 
@@ -26,13 +27,18 @@ root: /* empty */
     | root expr '\n'          {cout << $2 << endl;}
     ;
 
-expr: LITERAL_DBL             {$$ = $1;}
-    | expr '+' LITERAL_DBL    {$$ = $1 + $3;}
-    | expr '-' LITERAL_DBL    {$$ = $1 - $3;}
+expr: term             {$$ = $1;}
+    | expr '+' term    {$$ = $1 + $3;}
+    | expr '-' term    {$$ = $1 - $3;}
+    ;
+
+term: LITERAL_DBL             {$$ = $1;}
+    | term '*' LITERAL_DBL    {$$ = $1 * $3;}
+    | term '/' LITERAL_DBL    {$$ = $1 / $3;}
     ;
 
 %%
 
 extern void yyerror(char const* msg) {
-  cerr << "Lexer error: " << msg << endl;
+  cerr << "Error: " << msg << endl;
 }

@@ -6,8 +6,8 @@
   extern int yyparse();
 %}
 
-operator  "+"|"-"
-number    [0-9]+
+operator  [*\+\-\/]
+number    [0-9]+(\.[0-9]+)?
 parenthes [()]
 
 %%
