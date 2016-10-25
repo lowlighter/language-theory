@@ -1,25 +1,25 @@
+%option noyywrap
+
 %{
-  #include <iostream>
-  #include <vector>
-  #include <string>
+  #include "parser.hpp"
 
-  using namespace std;
-
-  vector<string> tokens;
-
+  extern int yyparse();
 %}
 
-%%
-("+"|"-"|"*"|"/")     {tokens.push_back("operator");}
-[0-9]+                {tokens.push_back("number");}
+operator  "+"|"-"
+number    [0-9]+
+parenthes [()]
+
 %%
 
-int yywrap() {return 1;}
+{operator}  { return yytext[0]; }
 
-int main(int argc, char *argv[]) {
-  yylex();
-  for(auto elt : tokens) {
-    cout << elt << endl;
-  }
-  return 0;
-}
+{number}    {
+              yylval.dbl = atof(yytext);
+              return LITERAL_DBL;
+            }
+
+\n          {return '\n';}
+.
+
+%%
