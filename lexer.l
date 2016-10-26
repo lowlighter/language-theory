@@ -6,20 +6,31 @@
   extern int yyparse();
 %}
 
-operator  [*\+\-\/]
-number    [0-9]+(\.[0-9]+)?
-parenthes [()]
+operator    [*\+\-\/]
+number      [0-9]+(\.[0-9]+)?
+variable    [a-zA-Z_][a-zA-Z_0-9]*
+parenthes   [()]
+print       print
+endline     \n
 
 %%
 
-{operator}  { return yytext[0]; }
+{print}       {return PRINT;}
 
-{number}    {
-              yylval.dbl = atof(yytext);
-              return LITERAL_DBL;
-            }
+{operator}    { return yytext[0]; }
 
-\n          {return '\n';}
-.
+{number}      {
+                yylval.dbl = atof(yytext);
+                return NUMBER;
+              }
+
+{variable}    {
+                yylval.intg = yytext[0] - 'a';
+                return VARIABLE;
+              }
+
+{endline}     {return '\n';}
+
+.             {;}
 
 %%

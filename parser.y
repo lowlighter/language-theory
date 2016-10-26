@@ -5,36 +5,38 @@
 
   using namespace std;
 
-  extern int yylex();
-  extern void yyerror(char const* msg);
+  int yylex();
+  void yyerror(char const* msg);
+
+  long int sym[26];
 %}
 
-%union
-{
-  double dbl;
-};
+%union {double dbl; int intg;}
 
-%token<dbl> LITERAL_DBL
+%token <dbl>  NUMBER
+%token <intg> VARIABLE
+%token        PRINT
 
-%type<dbl> expr
-%type<dbl> term
+%type <dbl>   line expr term
 
-%start root
+%start        line
 
 %%
 
-root: /* empty */
-    | root expr '\n'          {cout << $2 << endl;}
+line: /* empty */               {;}
+    | line expr '\n'            {cout << $2 << endl;}
+    | line VARIABLE expr '\n'   { sym[$2] = $3;}
+    | line PRINT VARIABLE'\n'   {cout << sym[$3] << endl;}
     ;
 
-expr: term             {$$ = $1;}
-    | expr '+' term    {$$ = $1 + $3;}
-    | expr '-' term    {$$ = $1 - $3;}
+expr: term                      {$$ = $1;}
+    | expr '+' term             {$$ = $1 + $3;}
+    | expr '-' term             {$$ = $1 - $3;}
     ;
 
-term: LITERAL_DBL             {$$ = $1;}
-    | term '*' LITERAL_DBL    {$$ = $1 * $3;}
-    | term '/' LITERAL_DBL    {$$ = $1 / $3;}
+term: NUMBER                    {$$ = $1;}
+    | term '*' NUMBER           {$$ = $1 * $3;}
+    | term '/' NUMBER           {$$ = $1 / $3;}
     ;
 
 %%
