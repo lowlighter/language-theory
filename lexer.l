@@ -1,25 +1,22 @@
 %option noyywrap
 
 %{
+  #include <string>
   #include "parser.hpp"
+
+  using namespace std;
 
   extern int yyparse();
 %}
 
-operator    [*\+\-\/]
+operator    [*\+\-\/\=\(\)]
 number      [0-9]+(\.[0-9]+)?
 variable    [a-zA-Z_][a-zA-Z_0-9]*
-parenthes   [()]
-print       print
 endline     \n
 
 %%
 
-{print}       {return PRINT;}
-
 {operator}    {return yytext[0];}
-
-{parenthes}    {return yytext[0];}
 
 {number}      {
                 yylval.dbl = atof(yytext);
@@ -27,7 +24,7 @@ endline     \n
               }
 
 {variable}    {
-                yylval.intg = yytext[0] - 'a';
+                yylval.s = new string(yytext);
                 return VARIABLE;
               }
 

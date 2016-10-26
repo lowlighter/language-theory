@@ -1,23 +1,25 @@
 %defines
-
+%code requires {
+  #include <string>
+}
 %{
   #include <iostream>
   #include <stdlib.h>
+  #include <map>
 
   using namespace std;
 
   int yylex();
   void yyerror(char const* msg);
 
-  long int sym[26];
+  std::map<std::string, int> vars;
 %}
 
-%union {double dbl; int intg;}
+%union {double dbl; int intg; std::string *s;}
 
-%token BATATA
+%token        BATATA
 %token <dbl>  NUMBER
-%token <intg> VARIABLE
-%token        PRINT
+%token <s>    VARIABLE
 
 %type <dbl>   line expr
 
@@ -35,8 +37,8 @@ line: /* empty */                 {;}
     ;
 
 expr: NUMBER                    { $$ = $1; }
-    | VARIABLE                  { $$ = sym[$1]; }
-    | VARIABLE '=' expr         { $$ = sym[$1] = $3; }
+    | VARIABLE                  { $$ = vars[*$1]; }
+    | VARIABLE '=' expr         { $$ = vars[*$1] = $3; }
     | expr '+' expr             { $$ = $1 + $3; }
     | expr '-' expr             { $$ = $1 - $3; }
     | expr '*' expr             { $$ = $1 * $3; }
