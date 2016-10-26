@@ -17,7 +17,7 @@
 %token <intg> VARIABLE
 %token        PRINT
 
-%type <dbl>   line expr term
+%type <dbl>   line expr factor term
 
 %start        line
 
@@ -29,14 +29,18 @@ line: /* empty */               {;}
     | line PRINT VARIABLE'\n'   {cout << sym[$3] << endl;}
     ;
 
-expr: term                      {$$ = $1;}
+expr: factor                      {$$ = $1;}
     | expr '+' term             {$$ = $1 + $3;}
     | expr '-' term             {$$ = $1 - $3;}
     ;
 
-term: NUMBER                    {$$ = $1;}
+factor: term                    {$$ = $1;}
     | term '*' NUMBER           {$$ = $1 * $3;}
     | term '/' NUMBER           {$$ = $1 / $3;}
+    ;
+
+term: NUMBER                    {$$ = $1;}
+    | '(' expr ')'              {$$ = $2;}
     ;
 
 %%

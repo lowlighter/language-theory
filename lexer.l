@@ -17,7 +17,9 @@ endline     \n
 
 {print}       {return PRINT;}
 
-{operator}    { return yytext[0]; }
+{operator}    {return yytext[0];}
+
+{parenthes}    {return yytext[0];}
 
 {number}      {
                 yylval.dbl = atof(yytext);
