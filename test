@@ -1,0 +1,29 @@
+#!/bin/bash
+
+function test() {
+  output=$(./bin/interpreter <<< $1)
+  if [ "$output" = $2 ]; then
+    echo -e "Test $1 \033[1;32m passed \xE2\x9C\x93 \033[0m"
+  else
+    echo -e "Test $1 \033[1;31m failed \xE2\x9C\x97 \033[0m"
+  fi
+}
+
+##
+# DEFINE TESTS BELOW
+##
+
+# test <'formula'> <result>
+
+test '1+10' 11
+test '10-9' 1
+test '4/2' 2
+test '2*10' 20
+test '2*10/10' 2
+test '2*10+32' 52
+test '4+2*4' 12
+test '(4+2)*4' 24
+test '4+(2*4)' 12
+test '(1)+(2)' 3
+test '(1+2)' 3
+test '1/2/2' 0.25

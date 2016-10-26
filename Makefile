@@ -6,6 +6,7 @@ all: main.cpp lexer.cpp parser.cpp
 	mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS) $^ -o $(BINDIR)/interpreter
 	rm -f lexer.cpp parser.cpp parser.hpp
+	./test
 
 lexer.cpp: lexer.l
 	flex -o $@ $^

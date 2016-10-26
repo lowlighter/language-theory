@@ -2,6 +2,7 @@
 
 %{
   #include <iostream>
+  #include <stdlib.h>
 
   using namespace std;
 
@@ -21,22 +22,30 @@
 
 %start        line
 
+%left '+' '-' '*' '/'
+
 %%
 
 line: /* empty */               {;}
     | line expr '\n'            {cout << $2 << endl;}
     | line VARIABLE expr '\n'   { sym[$2] = $3;}
-    | line PRINT VARIABLE'\n'   {cout << sym[$3] << endl;}
+    | line PRINT VARIABLE '\n'  {cout << sym[$3] << endl;}
     ;
 
-expr: factor                      {$$ = $1;}
+expr: factor                    {$$ = $1;}
     | expr '+' term             {$$ = $1 + $3;}
     | expr '-' term             {$$ = $1 - $3;}
     ;
 
 factor: term                    {$$ = $1;}
-    | term '*' NUMBER           {$$ = $1 * $3;}
-    | term '/' NUMBER           {$$ = $1 / $3;}
+    | expr '*' NUMBER           {$$ = $1 * $3;}
+    | expr '/' NUMBER           {
+                                  if($3) {
+                                    $$ = $1 / $3;
+                                  } else {
+                                    yyerror("Division by zero");
+                                  }
+                                }
     ;
 
 term: NUMBER                    {$$ = $1;}
@@ -47,4 +56,5 @@ term: NUMBER                    {$$ = $1;}
 
 extern void yyerror(char const* msg) {
   cerr << "Error: " << msg << endl;
+  exit(EXIT_FAILURE);
 }
