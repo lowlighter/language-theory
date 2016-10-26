@@ -33,8 +33,8 @@ line: /* empty */               {;}
     ;
 
 expr: factor                    {$$ = $1;}
-    | expr '+' term             {$$ = $1 + $3;}
-    | expr '-' term             {$$ = $1 - $3;}
+    | expr '+' factor             {$$ = $1 + $3;}
+    | expr '-' factor             {$$ = $1 - $3;}
     ;
 
 factor: term                    {$$ = $1;}
