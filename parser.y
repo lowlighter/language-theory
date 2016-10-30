@@ -6,6 +6,7 @@
   #include <iostream>
   #include <stdlib.h>
   #include <map>
+  #include <cmath>
 
   using namespace std;
 
@@ -25,7 +26,7 @@
 
 %start        line
 
-%right '='
+%right '=' '^'
 %left '+' '-'
 %left '*' '/' '%'
 %right BATATA
@@ -37,14 +38,15 @@ line: /* empty */                 {;}
     ;
 
 expr: NUMBER                    { $$ = $1; }
-    | VARIABLE                  { $$ = vars[*$1]; }
-    | VARIABLE '=' expr         { $$ = vars[*$1] = $3; }
+    | VARIABLE                  { $$ = vars[*$1]; delete $1;}
+    | VARIABLE '=' expr         { $$ = vars[*$1] = $3; delete $1;}
     | expr '+' expr             { $$ = $1 + $3; }
     | expr '-' expr             { $$ = $1 - $3; }
     | expr '*' expr             { $$ = $1 * $3; }
     | expr '/' expr             { $$ = $1 / $3; }
     | '+' expr %prec BATATA     { $$ =  $2; }
     | '-' expr %prec BATATA     { $$ = -$2; }
+    | expr '^' expr             { $$ = pow($1, $3); }
     | '(' expr ')'              { $$ =  $2; }
     ;
 

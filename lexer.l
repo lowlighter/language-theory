@@ -9,7 +9,7 @@
   extern int yyparse();
 %}
 
-operator    [*\+\-\/\=\(\)]
+operator    [*\+\-\/\=\(\)\^]
 number      [0-9]+(\.[0-9]+)?
 variable    [a-zA-Z_][a-zA-Z_0-9]*
 endline     \n
