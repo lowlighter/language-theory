@@ -16,6 +16,7 @@
   std::map<std::string, int> vars;
 %}
 
+/* */
 %union {double dbl; int intg; std::string *s;}
 
 %token        BATATA
@@ -26,10 +27,12 @@
 
 %start        line
 
-%right '=' '^'
+//Associativité
 %left '+' '-'
 %left '*' '/' '%'
-%right BATATA
+%precedence BATATA
+%right '=' '^'
+
 
 %%
 
@@ -38,15 +41,20 @@ line: /* empty */                 {;}
     ;
 
 expr: NUMBER                    { $$ = $1; }
+    //Affectation
     | VARIABLE                  { $$ = vars[*$1]; delete $1;}
     | VARIABLE '=' expr         { $$ = vars[*$1] = $3; delete $1;}
+    //Opérations basiques
     | expr '+' expr             { $$ = $1 + $3; }
     | expr '-' expr             { $$ = $1 - $3; }
     | expr '*' expr             { $$ = $1 * $3; }
     | expr '/' expr             { $$ = $1 / $3; }
+    //Signes
     | '+' expr %prec BATATA     { $$ =  $2; }
     | '-' expr %prec BATATA     { $$ = -$2; }
+    //Puissance
     | expr '^' expr             { $$ = pow($1, $3); }
+    //Priorité
     | '(' expr ')'              { $$ =  $2; }
     ;
 
