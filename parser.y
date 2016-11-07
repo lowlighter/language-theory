@@ -22,6 +22,7 @@
 %token        BATATA
 %token <dbl>  NUMBER
 %token <s>    VARIABLE
+%token        SQRT SIN COS
 
 %type <dbl>   line expr
 
@@ -56,6 +57,10 @@ expr: NUMBER                    { $$ = $1; }
     | expr '^' expr             { $$ = pow($1, $3); }
     //Priorité
     | '(' expr ')'              { $$ =  $2; }
+    //Fonctions mathématiques
+    | SQRT '(' expr ')'          { $$ = sqrt($3) ; }
+    | COS '(' expr ')'           { $$ = round(10000*cos($3))/10000 ; }
+    | SIN '(' expr ')'           { $$ = round(10000*sin($3))/10000 ; }
     ;
 
 %%

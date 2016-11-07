@@ -16,6 +16,10 @@
 operator    [*\+\-\/\=\(\)\^]
 number      [0-9]+(\.[0-9]+)?
 variable    [a-zA-Z_][a-zA-Z_0-9]*
+sqrt        (?i:sqrt)
+sin         (?i:sin(us)?)
+cos         (?i:cos(inus)?)
+pi          (?i:pi)
 endline     \n
 
 
@@ -23,6 +27,17 @@ endline     \n
 %%
 
 {operator}    { return yytext[0]; }
+
+{sqrt}        { return SQRT ; }
+
+{sin}         { return SIN ; }
+
+{cos}         { return COS ; }
+
+{pi}          {
+                yylval.dbl = 3.14159 ;
+                return NUMBER ;
+              }
 
 {number}      {
                 yylval.dbl = atof(yytext);

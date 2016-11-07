@@ -3,9 +3,9 @@
 function test() {
   output=$(./bin/interpreter <<< $1)
   if [ "$output" = $2 ]; then
-    echo -e "Test $1 = $2\033[1;32m passed \xE2\x9C\x93 \033[0m"
+    echo -e "\033[1;32m \xE2\x9C\x93 \033[0m| $1 = $2"
   else
-    echo -e "Test $1 = $2 ($output found) \033[1;31m failed \xE2\x9C\x97 \033[0m"
+    echo -e "\033[1;31m \xE2\x9C\x97 \033[0m| $1 = $2 ($output was found) "
   fi
 }
 
@@ -40,3 +40,7 @@ test '-2^2' -4
 test '3^2-3^2' 0
 test '2^2+3' 7
 test '2^(2+3)' 32
+test 'sqrt(4)' 2
+test 'pi' 3.14159
+test 'cosinus(pi)' -1
+test 'sin(pi)' 0
