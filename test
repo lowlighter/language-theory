@@ -39,8 +39,14 @@ test '6^7' 279936
 test '-2^2' -4
 test '3^2-3^2' 0
 test '2^2+3' 7
+test '(2+3)^2' 25
 test '2^(2+3)' 32
 test 'sqrt(4)' 2
 test 'pi' 3.14159
 test 'cosinus(pi)' -1
 test 'sin(pi)' 0
+test 'plot(3*2)' 6
+test 'plot(3*2, range=[-5,5])' 6
+test 'plot(5^2, xrange=[2,3])' 25
+test 'plot(4+2, yrange=[2,3])' 6
+test 'plot(4+2, range=[-5,5], xrange=[-5,5], yrange=[2,3])' 6

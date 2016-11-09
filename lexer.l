@@ -13,14 +13,22 @@
 %}
 
 /* Déclarations Flex */
-operator    [*\+\-\/\=\(\)\^]
+operator    [*\+\-\/\=\(\)\^\,\[\]]
 number      [0-9]+(\.[0-9]+)?
 variable    [a-zA-Z_][a-zA-Z_0-9]*
 sqrt        (?i:sqrt)
 sin         (?i:sin(us)?)
 cos         (?i:cos(inus)?)
 pi          (?i:pi)
-endline     \n
+plot        (?i:plot)
+array       (\[[0-9]*\])
+
+/* Parameters */
+range        (?i:r(ange)?)
+xrange       (?i:x(range)?)
+yrange       (?i:y(range)?)
+color        (?i:c(olor)?)
+endline      \n
 
 
 /* Règles flex */
@@ -28,11 +36,19 @@ endline     \n
 
 {operator}    { return yytext[0]; }
 
-{sqrt}        { return SQRT ; }
+{sqrt}        { return SQRT; }
 
-{sin}         { return SIN ; }
+{sin}         { return SIN; }
 
-{cos}         { return COS ; }
+{cos}         { return COS; }
+
+{plot}        { return PLOT; }
+
+{range}       { return RANGE; }
+
+{xrange}       { return XRANGE; }
+
+{yrange}       { return YRANGE; }
 
 {pi}          {
                 yylval.dbl = 3.14159 ;
