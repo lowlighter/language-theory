@@ -1,10 +1,11 @@
-/* Options */
+    /* Options */
 %option noyywrap
 
-/* Déclarations C++ */
+    /* Déclarations C++ */
 %{
     //Inclusion
         #include <string>
+        #include <iostream>
         #include "parser.hpp"
     //Namespace
         using namespace std;
@@ -12,7 +13,7 @@
       extern int yyparse();
 %}
 
-/* Déclarations Flex */
+    /* Déclarations Flex */
 operator    [*\+\-\/\=\(\)\^\,\[\]]
 number      [0-9]+(\.[0-9]+)?
 variable    [a-zA-Z_][a-zA-Z_0-9]*
@@ -23,16 +24,15 @@ pi          (?i:pi)
 plot        (?i:plot)
 array       (\[[0-9]*\])
 
-/* Parameters */
+    /* Parameters */
 range        (?i:r(ange)?)
-xrange       (?i:x(range)?)
-yrange       (?i:y(range)?)
-color        (?i:c(olor)?)
+xrange       (?i:rx(range)?)
+yrange       (?i:ry(range)?)
+color        (?i:rc(olor)?)
 endline      \n
 
-
-/* Règles flex */
 %%
+    /* Règles flex */
 
 {operator}    { return yytext[0]; }
 
@@ -55,17 +55,19 @@ endline      \n
                 return NUMBER ;
               }
 
+{variable}    {
+              yylval.str = new string(yytext);
+              return VARIABLE;
+            }
+
 {number}      {
                 yylval.dbl = atof(yytext);
                 return NUMBER;
               }
 
-{variable}    {
-                yylval.s = new string(yytext);
-                return VARIABLE;
-              }
 
-{endline}     {return '\n';}
+
+{endline}     { return '\n';}
 
 .             {;}
 

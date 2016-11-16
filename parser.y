@@ -1,87 +1,207 @@
 %defines
+    /* Bibliothèques requises pour générer le .hpp */
 %code requires {
   #include <string>
 }
 %{
-  #include <iostream>
-  #include <stdlib.h>
-  #include <map>
-  #include <cmath>
+    //Bibliothèques
+        #include <iostream>
+        #include <cmath>
+        #include <map>
+        #include <stack>
+        #include <vector>
 
-  using namespace std;
+    //Constantes
+        const int PREC = 10000 ;
 
-  int yylex();
-  void yyerror(char const* msg);
+    //Namespace
+        using namespace std;
 
-  std::map<std::string, int> vars;
+    //Fonctions lexer/bison
+        int yylex();
+        void yyerror(char const* msg) { cerr << "Error: " << msg << endl; exit(EXIT_FAILURE); }
+
+    //Expressions parsées et préparées
+        vector<int> prepared ;
+    //Valeurs des tokens
+        vector<double> values ;
+    //Liste des variables
+        map<string, double> vars ;
+
+    //Stocke un token et sa valeur dans leur tableaux respectifs
+        void store(int token, double value = 0) { prepared.push_back(token) ; values.push_back(value) ; }
+
+    //Récupére la dernière valeur de la pile passée en paramètre
+        double retrieve(stack<double>& stacked) { auto tmp = stacked.top() ; stacked.pop() ; return tmp ; }
+
+    //Fonction d'évaluation
+        double eval(double x = 0, bool verbose = false);
 %}
 
-/* */
-%union {double dbl; int intg; std::string *s;}
-
-%token        BATATA
+    //Liste des membres de yyval
+%union {
+    double dbl;
+    std::string *str;
+}
+    //Tokens de nombres et variables
 %token <dbl>  NUMBER
-%token <s>    VARIABLE ARRAY
-%token        SQRT SIN COS PLOT RANGE XRANGE YRANGE COLOR
+%token <str>  VARIABLE
+%token <str>  ARRAY
+%token        SIGN
 
-%type <dbl>   line expr fcontent params farray
+    //Tokens d'opérations
+%token PLS '+'
+%token MIN '-'
+%token MUL '*'
+%token DIV '/'
+%token MOD '%'
+%token POW '^'
 
+    //Tokens de fonctions
+%token PLOT RANGE XRANGE YRANGE COLOR
+%token SQRT SIN COS
+
+    //Associativité et priorité
+
+%left  PLS MIN
+%left  MUL DIV MOD
+%right POW
+%precedence SIGN
+
+    //Types
+%type <dbl>   fcontent params farray
+%type <dbl>   line expr
+
+    //Axiome
 %start        line
 
-//Associativité
-%left '+' '-'
-%left '*' '/' '%'
-%precedence BATATA
-%right '=' '^'
-
-
 %%
 
-line: /* empty */                     { ; }
-    | line expr '\n'                  { cout << $2 << endl; }
+line: /* Epsilon */                         { ; }
+    | line expr                         { cout << eval(0) << endl; }
     ;
 
-expr: NUMBER                          { $$ = $1; }
-    //Affectation
-    | VARIABLE                        { $$ = vars[*$1]; delete $1;}
-    | VARIABLE '=' expr               { $$ = vars[*$1] = $3; delete $1;}
+expr:
+    //Nombre et variables
+      NUMBER                                { store(NUMBER, $1) ; }
+    | VARIABLE                              { store(VARIABLE, 0) ; }
     //Opérations basiques
-    | expr '+' expr                   { $$ = $1 + $3; }
-    | expr '-' expr                   { $$ = $1 - $3; }
-    | expr '*' expr                   { $$ = $1 * $3; }
-    | expr '/' expr                   { $$ = $1 / $3; }
-    //Signes
-    | '+' expr %prec BATATA           { $$ =  $2; }
-    | '-' expr %prec BATATA           { $$ = -$2; }
-    //Puissance
-    | expr '^' expr                   { $$ = pow($1, $3); }
-    //Priorité
-    | '(' expr ')'                    { $$ =  $2; }
+    | expr '+' expr                         { store(PLS) ; }
+    | expr '-' expr                         { store(MIN) ; }
+    | expr '*' expr                         { store(MUL) ; }
+    | expr '/' expr                         { store(DIV) ; }
+    //Opérations avancées
+    | expr '^' expr                         { store(POW) ; }
     //Fonctions mathématiques
-    | SQRT '(' expr ')'               { $$ = sqrt($3); }
-    | COS '(' expr ')'                { $$ = round(10000*cos($3))/10000; }
-    | SIN '(' expr ')'                { $$ = round(10000*sin($3))/10000; }
-    | PLOT '(' fcontent ')'           { $$ = $3;}
-    ;
+    | SQRT '(' expr ')'                     { store(SQRT) ; }
+    | COS '(' expr ')'                      { store(COS)  ; }
+    | SIN '(' expr ')'                      { store(SIN)  ; }
+    //Priorité
+    | '(' expr ')'                          { $$ =  $2; }
+    //Signes
+    //| '+' expr %prec SIGN                   { $$ =  $2; }
+    //| '-' expr %prec SIGN                   { $$ = -$2; }
+    /*
+        | PLOT '(' fcontent ')'           { $$ = $3;}
+        ;
 
-fcontent: /* empty */                 { ; }
-    | expr params                     { $$ = $1; }
-    ;
+    fcontent: /* empty *//*                 { ; }
+        | expr params                     { $$ = $1; }
+        ;
 
-params: /* empty */                   { ; }
-    | ',' RANGE '=' '[' farray ']' params    { ; }
-    | ',' XRANGE '=' '[' farray ']' params   { ; }
-    | ',' YRANGE '=' '[' farray ']' params   { ; }
-    ;
+    params: /* empty *//*                   { ; }
+        | ',' RANGE '=' '[' farray ']' params    { ; }
+        | ',' XRANGE '=' '[' farray ']' params   { ; }
+        | ',' YRANGE '=' '[' farray ']' params   { ; }
+        ;
 
-farray: /* empty */                   { ; }
-    | expr ',' farray                 { ; }
-    | expr                            { ; }
+    farray: /* empty *//*                   { ; }
+        | expr ',' farray                 { ; }
+        | expr                            { ; }
+    */
     ;
 
 %%
 
-extern void yyerror(char const* msg) {
-  cerr << "Error: " << msg << endl;
-  exit(EXIT_FAILURE);
+double eval(double x, bool verbose) {
+    //Pile de préparation
+        stack<double> preparation ;
+        double tmp = 0 ;
+
+    //Parcours de la chaîne de préparation
+        for (int i = 0; i < prepared.size(); i++) { switch (prepared[i]) {
+
+            //Nombre : Ajout dans la pile
+                case NUMBER:
+                    if (verbose) { cout << values[i] << " " ; }
+                    preparation.push(values[i]) ;
+                    break;
+
+            //Variable : Ajout de la valeur dans la pile
+                case VARIABLE:
+                    if (verbose) { cout << "x" << " " ; }
+                    preparation.push(x) ;
+                    break;
+
+            //Addition : Addition des deux dernières valeurs empilées
+                case PLS:
+                    if (verbose) { cout << "+" << " " ; }
+                    tmp = retrieve(preparation) ;
+                    preparation.push(tmp + retrieve(preparation)) ;
+                    break;
+
+            //Soustraction : Soustraction des deux dernières valeurs empilées
+                case MIN:
+                    if (verbose) { cout << "-" << " " ; }
+                    tmp = retrieve(preparation) ;
+                    preparation.push(retrieve(preparation) - tmp) ;
+                    break;
+
+            //Multiplication : Multiplication des deux dernières valeurs empilées
+                case MUL:
+                    if (verbose) { cout << "*" << " " ; }
+                    tmp = retrieve(preparation) ;
+                    preparation.push(tmp * retrieve(preparation)) ;
+                    break;
+
+            //Division : Division des deux dernières valeurs empilées
+                case DIV:
+                    if (verbose) { cout << "/" << " " ; }
+                    tmp = retrieve(preparation) ;
+                    preparation.push(retrieve(preparation) / tmp) ;
+                    break;
+
+            //Puissance : Puissance des deux dernières valeurs empilées
+                case POW:
+                    if (verbose) { cout << "POW" << " " ; }
+                    tmp = retrieve(preparation) ;
+                    preparation.push(pow(retrieve(preparation), tmp)) ;
+                    break;
+
+            //Racine : Racine de la dernière valeur
+                case SQRT:
+                    if (verbose) { cout << "SQRT" << " " ; }
+                    preparation.push(sqrt(retrieve(preparation))) ;
+                    break;
+
+            //Cosinus : Cosinus de la dernière valeur
+                case COS:
+                    if (verbose) { cout << "COS" << " " ; }
+                    preparation.push(round(PREC*cos(retrieve(preparation))/PREC)) ;
+                    break;
+
+            //Sinus : Sinus de la dernière valeur
+                case SIN:
+                    if (verbose) { cout << "SIN" << " " ; }
+                    preparation.push(round(PREC*sin(retrieve(preparation))/PREC)) ;
+                    break;
+
+            //Comportement par défaut
+                default:
+                    if (verbose) { cout << "[?]" << " "; }
+                    break;
+        } }
+
+    //Résultat
+        return preparation.top() ;
 }
