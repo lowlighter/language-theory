@@ -2,14 +2,11 @@ CC = g++
 CFLAGS = -std=c++11 -w
 BINDIR = bin
 
-all: main.cpp lexer.cpp parser.cpp
-	mkdir -p $(BINDIR)
-	$(CC) $(CFLAGS) $^ -o $(BINDIR)/interpreter
-	rm -f lexer.cpp parser.cpp parser.hpp
-	./test
+all: lexer.cpp parser.cpp
+	cd server && rm -fr build && mkdir build && cd build && cmake .. && make
 
-lexer.cpp: lexer.l
-	flex -o $@ $^
+lexer.cpp: server/lexer.l
+	cd server && flex -o $@ lexer.l
 
-parser.cpp: parser.y
-	bison -o $@ $^
+parser.cpp: server/parser.y
+	cd server && bison -o $@ parser.y

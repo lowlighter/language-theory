@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./server/build/interpreter || echo "The server can't start, did you run 'make' ? "

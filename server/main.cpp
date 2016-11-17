@@ -1,7 +1,11 @@
 #include "server_ws.hpp"
 #include "client_ws.hpp"
+#include "parser.hpp"
 
 using namespace std;
+
+extern double eval(double x, bool verbose = false);
+extern int yy_scan_string(const char *);
 
 typedef SimpleWeb::SocketServer<SimpleWeb::WS> WsServer;
 typedef SimpleWeb::SocketClient<SimpleWeb::WS> WsClient;
@@ -23,14 +27,20 @@ int main() {
         //stringstream data_ss;
         //data_ss << message->rdbuf();
         //auto message_str = data_ss.str();
+
+
+
         auto message_str=message->string();
+        
+        yy_scan_string(message_str.c_str());
+        yyparse();
         
         cout << "Server: Message received: \"" << message_str << "\" from " << (size_t)connection.get() << endl;
                 
         cout << "Server: Sending message \"" << message_str <<  "\" to " << (size_t)connection.get() << endl;
         
         auto send_stream=make_shared<WsServer::SendStream>();
-        *send_stream << message_str;
+        *send_stream << eval(0);
         //server.send is an asynchronous function
         server.send(connection, send_stream, [](const boost::system::error_code& ec){
             if(ec) {

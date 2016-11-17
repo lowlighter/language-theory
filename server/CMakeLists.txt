@@ -25,18 +25,19 @@ find_package(Threads REQUIRED)
 
 include_directories(.)
 
-add_executable(wss_examples wss_examples.cpp)
-target_link_libraries(wss_examples ${Boost_LIBRARIES})
-target_link_libraries(wss_examples ${OPENSSL_LIBRARIES})
-target_link_libraries(wss_examples ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(ws_examples ws_examples.cpp)
-target_link_libraries(ws_examples ${Boost_LIBRARIES})
-target_link_libraries(ws_examples ${OPENSSL_CRYPTO_LIBRARY})
-target_link_libraries(ws_examples ${CMAKE_THREAD_LIBS_INIT})
+#add_executable(wss_examples wss_examples.cpp)
+#target_link_libraries(wss_examples ${Boost_LIBRARIES})
+#target_link_libraries(wss_examples ${OPENSSL_LIBRARIES})
+#target_link_libraries(wss_examples ${CMAKE_THREAD_LIBS_INIT})
+
+add_executable(interpreter main.cpp lexer.cpp parser.cpp)
+target_link_libraries(interpreter ${Boost_LIBRARIES})
+target_link_libraries(interpreter ${OPENSSL_CRYPTO_LIBRARY})
+target_link_libraries(interpreter ${CMAKE_THREAD_LIBS_INIT})
 
 if(MSYS)
-    target_link_libraries(ws_examples ws2_32 wsock32)
+    target_link_libraries(interpreter ws2_32 wsock32)
     target_link_libraries(wss_examples ws2_32 wsock32)
 endif()
 

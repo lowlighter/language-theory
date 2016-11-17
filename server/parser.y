@@ -78,7 +78,7 @@
 %%
 
 line: /* Epsilon */                         { ; }
-    | line expr                         { cout << eval(0) << endl; }
+    | line expr                             { ; }
     ;
 
 expr:
