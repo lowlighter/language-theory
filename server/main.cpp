@@ -42,7 +42,7 @@ int main() {
 
         auto send_stream=make_shared<WsServer::SendStream>();
         //EVAL HERE
-        *send_stream << Master()->eval() ;
+        *send_stream << Master()->eval()->jresult()->data ;
         //server.send is an asynchronous function
         server.send(connection, send_stream, [](const boost::system::error_code& ec){
             if(ec) {

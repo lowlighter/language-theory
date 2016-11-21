@@ -14,7 +14,7 @@ function WebSocketConnection(url) {
         ws.onmessage = function (evt) {
             console.log("New message: ");
             console.log(evt);
-            terminal.innerText += evt.data + '\r\n';
+            terminal.innerText += JSON.parse(evt.data)["result"] + '\r\n';
         };
         ws.onerror = function (evt) {
             console.log("ERR: " + evt.data);
