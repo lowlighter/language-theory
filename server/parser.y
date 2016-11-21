@@ -6,36 +6,23 @@
 %{
     //Bibliothèques
         #include <iostream>
-        #include <cmath>
-        #include <map>
-        #include <stack>
-        #include <vector>
-
-    //Constantes
-        const int PREC = 10000 ;
+        #include "./../server/src/Process.hpp"
 
     //Namespace
         using namespace std;
+        using json = nlohmann::json;
+
+    //Constantes
+        const int NEG = -1 ;
+        const int POS = +1 ;
 
     //Fonctions lexer/bison
         int yylex();
         void yyerror(char const* msg) { cerr << "Error: " << msg << endl; exit(EXIT_FAILURE); }
 
-    //Expressions parsées et préparées
-        vector<int> prepared ;
-    //Valeurs des tokens
-        vector<double> values ;
-    //Liste des variables
-        map<string, double> vars ;
-
-    //Stocke un token et sa valeur dans leur tableaux respectifs
-        void store(int token, double value = 0) { prepared.push_back(token) ; values.push_back(value) ; }
-
-    //Récupére la dernière valeur de la pile passée en paramètre
-        double retrieve(stack<double>& stacked) { auto tmp = stacked.top() ; stacked.pop() ; return tmp ; }
-
-    //Fonction d'évaluation
-        double eval(double x = 0, bool verbose = false);
+    //Processus principal
+        auto master = new Process() ;
+        auto process = master ;
 %}
 
     //Liste des membres de yyval
@@ -45,9 +32,10 @@
 }
     //Tokens de nombres et variables
 %token <dbl>  NUMBER
-%token <str>  VARIABLE
+%token <str>  VARIABLE FUNCTION
 %token <str>  ARRAY
 %token        SIGN
+%token        FROM TO STEP
 
     //Tokens d'opérations
 %token PLS '+'
@@ -56,20 +44,21 @@
 %token DIV '/'
 %token MOD '%'
 %token POW '^'
+%token EQU '='
+%token EOL ';'
 
     //Tokens de fonctions
 %token PLOT RANGE XRANGE YRANGE COLOR
 %token SQRT SIN COS
 
     //Associativité et priorité
-
-%left  PLS MIN
-%left  MUL DIV MOD
-%right POW
+%left  '+' '-'
+%left  '*' '/' '%'
+%right '^' '='
 %precedence SIGN
 
     //Types
-%type <dbl>   fcontent params farray
+    //%type <dbl>   fcontent params farray
 %type <dbl>   line expr
 
     //Axiome
@@ -78,33 +67,45 @@
 %%
 
 line: /* Epsilon */                         { ; }
-    | line expr                             { ; }
+    | line expr '\n'                        { process->store(EOL) ; process->eval() ; }
     ;
 
 expr:
     //Nombre et variables
-      NUMBER                                { store(NUMBER, $1) ; }
-    | VARIABLE                              { store(VARIABLE, 0) ; }
+      NUMBER                                { process->store(NUMBER, $1) ; }
+    | VARIABLE                              { process->store(VARIABLE, *$1) ; }
+    //Affectation de variable et de fonction
+    | VARIABLE '=' expr                     { process->store(EQU, *$1) ; }
+    //| VARIABLE '(' expr ')' '=' expr        { process->store(FUNCTION, *$1) ; }
     //Opérations basiques
-    | expr '+' expr                         { store(PLS) ; }
-    | expr '-' expr                         { store(MIN) ; }
-    | expr '*' expr                         { store(MUL) ; }
-    | expr '/' expr                         { store(DIV) ; }
+    | expr '+' expr                         { process->store(PLS) ; }
+    | expr '-' expr                         { process->store(MIN) ; }
+    | expr '*' expr                         { process->store(MUL) ; }
+    | expr '/' expr                         { process->store(DIV) ; }
     //Opérations avancées
-    | expr '^' expr                         { store(POW) ; }
+    | expr '^' expr                         { process->store(POW) ; }
     //Fonctions mathématiques
-    | SQRT '(' expr ')'                     { store(SQRT) ; }
-    | COS '(' expr ')'                      { store(COS)  ; }
-    | SIN '(' expr ')'                      { store(SIN)  ; }
+    | SQRT '(' expr ')'                     { process->store(SQRT) ; }
+    | COS '(' expr ')'                      { process->store(COS)  ; }
+    | SIN '(' expr ')'                      { process->store(SIN)  ; }
     //Priorité
     | '(' expr ')'                          { $$ =  $2; }
     //Signes
-    //| '+' expr %prec SIGN                   { $$ =  $2; }
-    //| '-' expr %prec SIGN                   { $$ = -$2; }
-    /*
-        | PLOT '(' fcontent ')'           { $$ = $3;}
-        ;
+    | '+' expr %prec SIGN                   { process->store(SIGN, POS) ; }
+    | '-' expr %prec SIGN                   { process->store(SIGN, NEG) ; }
+    //
+    | expr ':' expr                         { process->store(TO) ; process->store(FROM) ; }
+    //Affichage graphique
+    | PLOT '(' expr ')'                     { process->store(PLOT) ; }
+    ;
 
+
+
+    //plot_args: /* Epsilon */                    { ; }
+    //| ',' RANGE '='
+    //;
+
+    /*
     fcontent: /* empty *//*                 { ; }
         | expr params                     { $$ = $1; }
         ;
@@ -119,89 +120,25 @@ expr:
         | expr ',' farray                 { ; }
         | expr                            { ; }
     */
-    ;
+    //;
 
 %%
 
-double eval(double x, bool verbose) {
-    //Pile de préparation
-        stack<double> preparation ;
-        double tmp = 0 ;
+Process* Process::token(int i) { switch (tokens[i]) {
+    case EOL: eol(); break ;
+    case SIGN: sign(i) ; break;
+    case NUMBER: number(i) ; break;
+    case EQU: affect(i) ; break;
+    case VARIABLE: variable(i) ; break;
+    case PLS: add(); break;
+    case MIN: sub(); break;
+    case MUL: mul(); break;
+    case DIV: div(); break;
+    case POW: pow(); break;
+    case SQRT: sqrt(); break;
+    case COS: cos(); break;
+    case SIN: sin(); break;
 
-    //Parcours de la chaîne de préparation
-        for (int i = 0; i < prepared.size(); i++) { switch (prepared[i]) {
-
-            //Nombre : Ajout dans la pile
-                case NUMBER:
-                    if (verbose) { cout << values[i] << " " ; }
-                    preparation.push(values[i]) ;
-                    break;
-
-            //Variable : Ajout de la valeur dans la pile
-                case VARIABLE:
-                    if (verbose) { cout << "x" << " " ; }
-                    preparation.push(x) ;
-                    break;
-
-            //Addition : Addition des deux dernières valeurs empilées
-                case PLS:
-                    if (verbose) { cout << "+" << " " ; }
-                    tmp = retrieve(preparation) ;
-                    preparation.push(tmp + retrieve(preparation)) ;
-                    break;
-
-            //Soustraction : Soustraction des deux dernières valeurs empilées
-                case MIN:
-                    if (verbose) { cout << "-" << " " ; }
-                    tmp = retrieve(preparation) ;
-                    preparation.push(retrieve(preparation) - tmp) ;
-                    break;
-
-            //Multiplication : Multiplication des deux dernières valeurs empilées
-                case MUL:
-                    if (verbose) { cout << "*" << " " ; }
-                    tmp = retrieve(preparation) ;
-                    preparation.push(tmp * retrieve(preparation)) ;
-                    break;
-
-            //Division : Division des deux dernières valeurs empilées
-                case DIV:
-                    if (verbose) { cout << "/" << " " ; }
-                    tmp = retrieve(preparation) ;
-                    preparation.push(retrieve(preparation) / tmp) ;
-                    break;
-
-            //Puissance : Puissance des deux dernières valeurs empilées
-                case POW:
-                    if (verbose) { cout << "POW" << " " ; }
-                    tmp = retrieve(preparation) ;
-                    preparation.push(pow(retrieve(preparation), tmp)) ;
-                    break;
-
-            //Racine : Racine de la dernière valeur
-                case SQRT:
-                    if (verbose) { cout << "SQRT" << " " ; }
-                    preparation.push(sqrt(retrieve(preparation))) ;
-                    break;
-
-            //Cosinus : Cosinus de la dernière valeur
-                case COS:
-                    if (verbose) { cout << "COS" << " " ; }
-                    preparation.push(round(PREC*cos(retrieve(preparation))/PREC)) ;
-                    break;
-
-            //Sinus : Sinus de la dernière valeur
-                case SIN:
-                    if (verbose) { cout << "SIN" << " " ; }
-                    preparation.push(round(PREC*sin(retrieve(preparation))/PREC)) ;
-                    break;
-
-            //Comportement par défaut
-                default:
-                    if (verbose) { cout << "[?]" << " "; }
-                    break;
-        } }
-
-    //Résultat
-        return preparation.top() ;
+    default: unknown() ; break;
+    }
 }
