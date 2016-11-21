@@ -50,15 +50,16 @@
                     vector<string> names ;
 
                 //Enregistre dans les listes appropriées le token, sa valeur et son nom
-                    Process* store(int token, double value = 0, string name = "") { tokens.push_back(token) ; values.push_back(value) ; names.push_back(name) ; }
+                    Process* store(int token, double value = 0, string name = "") { tokens.push_back(token) ; values.push_back(value) ; names.push_back(name) ; return this ; }
                         //Raccourci pour stocker les tokens sans valeurs
-                            Process* store(int token, string name) { store(token, NAN, name) ; }
+                            Process* store(int token, string name) { return store(token, NAN, name) ; }
 
             /* ============================================================================
                 GESTION DE LA NOTATION POSTFIXEE
             ============================================================================ */
-                //Liste des variables déclarées
+                //Liste des variables et des fonctions déclarées
                     map<string, double> vars ;
+                    map<string, Process*> funcs ;
 
                 //Pile de l'analyse sémantique
                     stack<double> stacked ;
@@ -72,7 +73,7 @@
                             Process* clear () { vars.clear() ; while (!stacked.empty()) { stacked.pop() ; } ; return this ; }
 
                 //Méthode d'évaluation
-                    Process* eval () { clear() ; for (int i = 0; i < tokens.size(); i++) { token(i) ; } ; return jresult() ; }
+                    Process* eval () { for (int i = 0; i < (int) tokens.size(); i++) { token(i) ; } ; return jresult() ; }
                         //Méthode à implémenter dans le parser qui permet de gérer les actions à effectuer selon les différents tokens
                             Process* token(int i);
                         //Retourne le réusultat final des entrées
@@ -129,11 +130,4 @@
                         cout << endl << "Error: Undefined variable "+names[i] << endl ; push(NAN) ; return this ;
                     }
         };
-    //Noms des champs
-        const string Process::RESULT = "result";
-        const string Process::VARS = "vars";
-        const string Process::ANSWER = "ans";
-        const string Process::GRAPH = "graph";
-    //Mots réservés
-        vector<string> Process::RESERVED = {"TEST"} ;
 #endif

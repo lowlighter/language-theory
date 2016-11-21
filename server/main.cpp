@@ -1,11 +1,12 @@
 #include "server_ws.hpp"
 #include "client_ws.hpp"
 #include "parser.hpp"
+#include "src/Process.hpp"
 
 using namespace std;
 
-extern double eval(double x, bool verbose = false);
 extern int yy_scan_string(const char *);
+Process* Master();
 
 typedef SimpleWeb::SocketServer<SimpleWeb::WS> WsServer;
 typedef SimpleWeb::SocketClient<SimpleWeb::WS> WsClient;
@@ -40,7 +41,8 @@ int main() {
         cout << "Server: Sending message \"" << message_str <<  "\" to " << (size_t)connection.get() << endl;
 
         auto send_stream=make_shared<WsServer::SendStream>();
-        *send_stream << eval(0);
+        //EVAL HERE
+        *send_stream << Master()->eval() ;
         //server.send is an asynchronous function
         server.send(connection, send_stream, [](const boost::system::error_code& ec){
             if(ec) {
@@ -144,7 +146,7 @@ int main() {
     client.onopen=[&client]() {
         cout << "Client: Opened connection" << endl;
 
-        string message="Hello";
+        string message="1+1";
         cout << "Client: Sending message: \"" << message << "\"" << endl;
 
         auto send_stream=make_shared<WsClient::SendStream>();

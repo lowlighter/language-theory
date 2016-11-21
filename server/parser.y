@@ -8,6 +8,14 @@
         #include <iostream>
         #include "./../server/src/Process.hpp"
 
+        //Noms des champs
+            const string Process::RESULT = "result";
+            const string Process::VARS = "vars";
+            const string Process::ANSWER = "ans";
+            const string Process::GRAPH = "graph";
+        //Mots réservés
+            vector<string> Process::RESERVED = {"TEST"} ;
+
     //Namespace
         using namespace std;
         using json = nlohmann::json;
@@ -23,6 +31,8 @@
     //Processus principal
         auto master = new Process() ;
         auto process = master ;
+    //Permet de récupérer le processus principal
+        Process* Master() { return master ; }
 %}
 
     //Liste des membres de yyval
@@ -67,7 +77,8 @@
 %%
 
 line: /* Epsilon */                         { ; }
-    | line expr '\n'                        { process->store(EOL) ; process->eval() ; }
+    //ADD AN '\n' to make it work in fast mode
+    | line expr                         { process->store(EOL) ; process->eval() ; }
     ;
 
 expr:
@@ -141,4 +152,6 @@ Process* Process::token(int i) { switch (tokens[i]) {
 
     default: unknown() ; break;
     }
+
+    return this ;
 }
