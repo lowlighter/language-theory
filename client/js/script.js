@@ -6,8 +6,13 @@ test = new WebSocketConnection("ws://localhost:8080/echo");
 input.addEventListener('keyup', function(e) {
 	switch (e.key) {
 		case "Enter":
+			if(input.value == "clear") {
+				clearTerminal();
+				input.value = "";
+				break;
+			}
 			test.send(input.value);
-		    appendTextInTerminal(input.value);
+		    appendTextInTerminal('> ' + input.value);
 		    input.value = "";
 			break;
 		case "(":

@@ -3,6 +3,10 @@ function appendTextInTerminal(msg) {
  	terminal.scrollTop = terminal.scrollHeight;
 }
 
+function clearTerminal() {
+  	terminal.innerHTML = "";
+}
+
 
 var appendChartInTerminal = (function () {
     var chartId = 0;

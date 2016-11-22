@@ -8,14 +8,14 @@ html, body {
 }
 
 body {
-  background-color: rgb(30, 52, 68);
+  background-color: rgb(29, 41, 51);
 }
 
 .blocPage {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: rgb(30, 52, 68);
+  background-color: rgb(29, 41, 51);
   padding: 0 50px;
 }
 
@@ -25,7 +25,7 @@ body {
 
   .terminal {
     flex: 1 1;
-    background-color: rgb(30, 52, 68);
+    background-color: rgb(29, 41, 51);
     padding: 20px;
     overflow-y: scroll;
   }
@@ -46,7 +46,7 @@ body {
     }
 
     .input--field {
-      background-color: rgb(30, 52, 68);
+      background-color: rgb(29, 41, 51);
       border: none;
       outline: none;
       font-size: 1.3em;
