@@ -1,3 +1,5 @@
+var graphId = 0
+
 function WebSocketConnection(url) {
     if ("WebSocket" in window) {
 
@@ -14,7 +16,12 @@ function WebSocketConnection(url) {
         ws.onmessage = function (evt) {
             console.log("New message: ");
             console.log(evt);
-            terminal.innerText += JSON.parse(evt.data)["result"] + '\r\n';
+            var data = JSON.parse(evt.data);
+            if(data.graph) {
+                appendChartInTerminal(data.result);
+            } else{
+                appendTextInTerminal(data.result);
+            }
         };
         ws.onerror = function (evt) {
             console.log("ERR: " + evt.data);

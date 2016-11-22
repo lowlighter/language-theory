@@ -7,7 +7,7 @@ input.addEventListener('keyup', function(e) {
 	switch (e.key) {
 		case "Enter":
 			test.send(input.value);
-		    addTerminal(input.value);
+		    appendTextInTerminal(input.value);
 		    input.value = "";
 			break;
 		case "(":
@@ -16,9 +16,6 @@ input.addEventListener('keyup', function(e) {
 		    input.setSelectionRange(position, position);
 			break;
 	}
-})
+});
 
-function addTerminal(msg) {
-  console.log(msg);
-  terminal.innerText += '>  ' + msg + '\r\n';
-}
+
