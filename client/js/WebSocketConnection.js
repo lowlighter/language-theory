@@ -20,7 +20,7 @@ function WebSocketConnection(url) {
             if(data.graph) {
                 appendChartInTerminal(data.result);
             } else{
-                appendTextInTerminal(data.result);
+                appendTextInTerminal('<span class="terminal_resp">' + data.result + '</span>');
             }
         };
         ws.onerror = function (evt) {

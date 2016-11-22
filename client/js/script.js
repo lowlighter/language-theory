@@ -12,7 +12,7 @@ input.addEventListener('keyup', function(e) {
 				break;
 			}
 			test.send(input.value);
-		    appendTextInTerminal('> ' + input.value);
+		    appendTextInTerminal('>>> ' + input.value);
 		    input.value = "";
 			break;
 		case "(":

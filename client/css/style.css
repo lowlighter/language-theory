@@ -1,10 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
+@font-face {
+    font-family: menlo;
+    src: url(fonts/Menlo-Regular.ttf);
+}
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'menlo', 'Roboto', sans-serif;
 }
 
 body {
@@ -29,6 +34,9 @@ body {
     padding: 20px;
     overflow-y: scroll;
   }
+    .terminal_resp {
+      line-height: 1.5em;
+    }
 
     .graphContainer {
       width: 100%;
