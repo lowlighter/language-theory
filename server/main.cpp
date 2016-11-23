@@ -6,7 +6,6 @@
 using namespace std;
 
 extern int yy_scan_string(const char *);
-Process* Master();
 
 typedef SimpleWeb::SocketServer<SimpleWeb::WS> WsServer;
 typedef SimpleWeb::SocketClient<SimpleWeb::WS> WsClient;
@@ -42,7 +41,8 @@ int main() {
 
         auto send_stream=make_shared<WsServer::SendStream>();
         //EVAL HERE
-        *send_stream << Master()->eval()->jresult()->data ;
+        Process::master()->eval() ;
+        *send_stream << Process::master()->jresult()->data ;
         //server.send is an asynchronous function
         server.send(connection, send_stream, [](const boost::system::error_code& ec){
             if(ec) {

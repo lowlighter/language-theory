@@ -87,7 +87,7 @@
 //Entrée
 line: /* Epsilon */                         { ; }
     //ADD AN '\n' to make it work in fast mode
-    | line expr EOL                         {
+    | line expr                          {
                                                 current()->store(EOL) ;
                                                 current()->eval() ;
                                                 current()->jresult();
