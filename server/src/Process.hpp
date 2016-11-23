@@ -31,6 +31,7 @@
 
                 //Mode verbeux
                     bool verbose = true ;
+                    
                 //Identifiant (nom) du processus et nom de la variable d'évaluation
                     string id, var;
                 //Variables temporaires
@@ -111,7 +112,6 @@
                         //Erreurs
                             auto msg = "Error: Undefined call to function "+names[i] ; data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
                     }
-
 
             /* ============================================================================
                 GESTION DES PROCESSUS

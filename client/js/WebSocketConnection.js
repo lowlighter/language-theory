@@ -1,3 +1,5 @@
+var graphId = 0
+
 function WebSocketConnection(url) {
     if ("WebSocket" in window) {
 
@@ -12,16 +14,20 @@ function WebSocketConnection(url) {
             console.log("I'm sorry. Bye!");
         };
         ws.onmessage = function (evt) {
-            console.log("New message: ");
             console.log(evt);
-            terminal.innerText += JSON.parse(evt.data)["result"] + '\r\n';
+            var data = JSON.parse(evt.data);
+            if(data.graph) {
+                appendChartInTerminal(data.result);
+            } else{
+                appendTextInTerminal(highlighterLight('<span class="terminal_resp">' + data.result + '</span>', grammar));
+            }
         };
         ws.onerror = function (evt) {
             console.log("ERR: " + evt.data);
         };
 
         this.write = function () {
-            if (!window.identified) {
+            if (window.identified) {
                 connection.ident();
                 console.debug("Wasn't identified earlier. It is now.");
             }
