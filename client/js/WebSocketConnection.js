@@ -14,13 +14,12 @@ function WebSocketConnection(url) {
             console.log("I'm sorry. Bye!");
         };
         ws.onmessage = function (evt) {
-            console.log("New message: ");
             console.log(evt);
             var data = JSON.parse(evt.data);
             if(data.graph) {
                 appendChartInTerminal(data.result);
             } else{
-                appendTextInTerminal('<span class="terminal_resp">' + data.result + '</span>');
+                appendTextInTerminal(highlighterLight('<span class="terminal_resp">' + data.result + '</span>', grammar));
             }
         };
         ws.onerror = function (evt) {
@@ -28,7 +27,7 @@ function WebSocketConnection(url) {
         };
 
         this.write = function () {
-            if (!window.identified) {
+            if (window.identified) {
                 connection.ident();
                 console.debug("Wasn't identified earlier. It is now.");
             }

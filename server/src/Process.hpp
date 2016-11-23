@@ -30,7 +30,7 @@
                     static const int POS = +1 ;
 
                 //Mode verbeux
-                    bool verbose = false ;
+                    bool verbose = true ;
 
                 //Résultats (au format json)
                     static const string RESULT ;
