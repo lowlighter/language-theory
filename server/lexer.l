@@ -23,6 +23,7 @@ cos         (?i:cos(inus)?)
 pi          (?i:pi)
 plot        (?i:plot)
 
+
     /* Parameters */
 color       (?i:rc(olor)?)
 endline     \n
@@ -31,6 +32,7 @@ endline     \n
     /* Règles flex */
 
 {operator}    { return yytext[0]; }
+
 
 {sqrt}        { return SQRT; }
 
@@ -57,7 +59,9 @@ endline     \n
 
 
 
-{endline}     { return '\n';}
+{endline}     {
+                return EOL ;
+              }
 
 .             {;}
 

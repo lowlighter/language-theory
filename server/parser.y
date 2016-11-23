@@ -10,11 +10,17 @@
 
         //Noms des champs
             const string Process::RESULT = "result";
+            const string Process::RESULTS = "results";
             const string Process::VARS = "vars";
             const string Process::ANSWER = "ans";
             const string Process::GRAPH = "graph";
+            const string Process::MASTER = "master";
+            const string Process::ERROR = "error";
         //Mots réservés
             vector<string> Process::RESERVED = {"TEST"} ;
+        //Initialisation diverse
+            map<string, Process*> Process::processes;
+            stack<Process*> Process::declared;
 
     //Namespace
         using namespace std;
@@ -28,11 +34,12 @@
         int yylex();
         void yyerror(char const* msg) { cerr << "Error: " << msg << endl; exit(EXIT_FAILURE); }
 
+    //Raccourcis
+        Process* current() { return Process::current() ; }
     //Processus principal
-        auto master = new Process() ;
-        auto process = master ;
-    //Permet de récupérer le processus principal
-        Process* Master() { return master ; }
+        auto master = new Process(Process::MASTER) ;
+
+        int token = 0;
 %}
 
     //Liste des membres de yyval
@@ -42,9 +49,10 @@
 }
     //Tokens de nombres et variables
 %token <dbl>  NUMBER
-%token <str>  VARIABLE FUNCTION
+%token <str>  VARIABLE FUNCTION FUNCTION_R
 %token <str>  ARRAY
 %token        SIGN
+%token        EQU
 %token        FROM TO STEP
 
     //Tokens d'opérations
@@ -54,12 +62,11 @@
 %token DIV '/'
 %token MOD '%'
 %token POW '^'
-%token EQU '='
-%token EOL ';'
 
     //Tokens de fonctions
 %token PLOT RANGE XRANGE YRANGE COLOR
 %token SQRT SIN COS
+%token EOL RESET
 
     //Associativité et priorité
 %left  '+' '-'
@@ -70,46 +77,74 @@
     //Types
     //%type <dbl>   fcontent params farray
 %type <dbl>   line expr
+%type <dbl>   numr
 
     //Axiome
 %start        line
 
 %%
 
+//Entrée
 line: /* Epsilon */                         { ; }
     //ADD AN '\n' to make it work in fast mode
-    | line expr                         { process->store(EOL) ; process->eval() ; }
+    | line expr EOL                         {
+                                                current()->store(EOL) ;
+                                                current()->eval() ;
+                                                current()->jresult();
+                                            }
+    | line decl '=' expr EOL                {
+                                                Process::close() ;
+                                                current()->store(EOL) ;
+                                                current()->eval() ;
+                                                current()->jresult() ;
+                                            }
     ;
 
+//Expression
 expr:
-    //Nombre et variables
-      NUMBER                                { process->store(NUMBER, $1) ; }
-    | VARIABLE                              { process->store(VARIABLE, *$1) ; }
-    //Affectation de variable et de fonction
-    | VARIABLE '=' expr                     { process->store(EQU, *$1) ; }
-    //| VARIABLE '(' expr ')' '=' expr        { process->store(FUNCTION, *$1) ; }
-    //Opérations basiques
-    | expr '+' expr                         { process->store(PLS) ; }
-    | expr '-' expr                         { process->store(MIN) ; }
-    | expr '*' expr                         { process->store(MUL) ; }
-    | expr '/' expr                         { process->store(DIV) ; }
-    //Opérations avancées
-    | expr '^' expr                         { process->store(POW) ; }
-    //Fonctions mathématiques
-    | SQRT '(' expr ')'                     { process->store(SQRT) ; }
-    | COS '(' expr ')'                      { process->store(COS)  ; }
-    | SIN '(' expr ')'                      { process->store(SIN)  ; }
     //Priorité
-    | '(' expr ')'                          { $$ =  $2; }
+     '(' expr ')'                          { $$ =  $2; }
     //Signes
-    | '+' expr %prec SIGN                   { process->store(SIGN, POS) ; }
-    | '-' expr %prec SIGN                   { process->store(SIGN, NEG) ; }
-    //
-    | expr ':' expr                         { process->store(TO) ; process->store(FROM) ; }
-    //Affichage graphique
-    | PLOT '(' expr ')'                     { process->store(PLOT) ; }
+    | '+' expr %prec SIGN                   { current()->store(SIGN, POS) ; }
+    | '-' expr %prec SIGN                   { current()->store(SIGN, NEG) ; }
+    | numrs                                 {}
+    //Opérations basiques
+    | expr '+' expr                         { current()->store(PLS) ; }
+    | expr '-' expr                         { current()->store(MIN) ; }
+    | expr '*' expr                         { current()->store(MUL) ; }
+    | expr '/' expr                         { current()->store(DIV) ; }
+    //Opérations avancées
+    | expr '^' expr                         { current()->store(POW) ; }
+    //Fonctions mathématiques
+    | SQRT '(' expr ')'                     { current()->store(SQRT) ; }
+    | COS '(' expr ')'                      { current()->store(COS)  ; }
+    | SIN '(' expr ')'                      { current()->store(SIN)  ; }
     ;
 
+//Déclaration de fonctions et de variables
+decl:
+      VARIABLE '(' VARIABLE ')'             { Process::open(*$1, *$3) ; }
+    ;
+
+//Nombres, variables et fonctions
+numr:
+      NUMBER                                { current()->store(NUMBER, $1) ; }
+    | VARIABLE                              { current()->store(VARIABLE, *$1) ; }
+    | VARIABLE '(' expr ')'                 { current()->store(FUNCTION, *$1) ; }
+    ;
+
+numrs:
+      numr                                  { ; }
+    | VARIABLE '=' expr                     { current()->store(EQU, *$1) ; }
+    | VARIABLE '(' range ')'                { current()->store(FUNCTION_R, *$1) ; }
+
+range:
+    | '[' numr ',' numr ']'                 {
+                                                current()->store(FROM, $2) ;
+                                                current()->store(TO, $4) ;
+                                                current()->store(STEP, 0) ;
+                                            }
+    //| '[' numr ',' numr ',' numr ']'        {}
 
 
     //plot_args: /* Epsilon */                    { ; }
@@ -117,6 +152,15 @@ expr:
     //;
 
     /*
+    //
+    //| expr ':' expr                         { current()->store(RANGE) ; }
+    //Affichage graphique
+    //| PLOT '(' expr ')'                     { current()->store(PLOT) ; }
+
+
+    misc: /* Epsilon                         { ; }
+        |
+        ;
     fcontent: /* empty *//*                 { ; }
         | expr params                     { $$ = $1; }
         ;
@@ -135,23 +179,31 @@ expr:
 
 %%
 
-Process* Process::token(int i) { switch (tokens[i]) {
-    case EOL: eol(); break ;
-    case SIGN: sign(i) ; break;
-    case NUMBER: number(i) ; break;
-    case EQU: affect(i) ; break;
-    case VARIABLE: variable(i) ; break;
-    case PLS: add(); break;
-    case MIN: sub(); break;
-    case MUL: mul(); break;
-    case DIV: div(); break;
-    case POW: pow(); break;
-    case SQRT: sqrt(); break;
-    case COS: cos(); break;
-    case SIN: sin(); break;
-
-    default: unknown() ; break;
-    }
-
-    return this ;
-}
+//Définition du comportement des tokens
+Process* Process::token(int& i) { switch (tokens[i]) {
+    //Nombres et signes
+        case NUMBER: number(i) ; break;
+        case SIGN: sign(i) ; break;
+    //Opérations
+        case PLS: add(i); break;
+        case MIN: sub(i); break;
+        case MUL: mul(i); break;
+        case DIV: div(i); break;
+    //Fonctions
+        case POW: pow(i); break;
+        case SQRT: sqrt(i); break;
+    //Trigonométrie
+        case COS: cos(i); break;
+        case SIN: sin(i); break;
+    //Gestion des variables
+        case EQU: affect(i) ; break;
+        case VARIABLE: variable(i) ; break;
+    //Appel de fonction
+        case FUNCTION: function(i); break;
+        case FUNCTION_R: function_r(i); break;
+        case FROM: case TO: case STEP: break;
+    //Fin de ligne
+        case EOL: eol(i); break ;
+    //Inconnu
+        default: unknown(i) ; break;
+} return this ; }
