@@ -22,7 +22,10 @@ sin         (?i:sin(us)?)
 cos         (?i:cos(inus)?)
 pi          (?i:pi)
 plot        (?i:plot)
-
+if          if
+then        then
+else        else
+endif       endif
 
     /* Parameters */
 color       (?i:rc(olor)?)
@@ -33,6 +36,10 @@ endline     \n
 
 {operator}    { return yytext[0]; }
 
+{if}          { return IF ; }
+{then}          { return THEN ; }
+{else}          { return ELSE ; }
+{endif}     {return ENDIF ;}
 
 {sqrt}        { return SQRT; }
 

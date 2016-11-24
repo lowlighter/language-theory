@@ -61,22 +61,28 @@ extern int yydebug;
     FROM = 265,
     TO = 266,
     STEP = 267,
-    PLS = 268,
-    MIN = 269,
-    MUL = 270,
-    DIV = 271,
-    MOD = 272,
-    POW = 273,
-    PLOT = 274,
-    RANGE = 275,
-    XRANGE = 276,
-    YRANGE = 277,
-    COLOR = 278,
-    SQRT = 279,
-    SIN = 280,
-    COS = 281,
-    EOL = 282,
-    RESET = 283
+    IF = 268,
+    THEN = 269,
+    ELSE = 270,
+    ENDIF = 271,
+    PLS = 272,
+    MIN = 273,
+    MUL = 274,
+    DIV = 275,
+    MOD = 276,
+    POW = 277,
+    GT = 278,
+    LT = 279,
+    PLOT = 280,
+    RANGE = 281,
+    XRANGE = 282,
+    YRANGE = 283,
+    COLOR = 284,
+    SQRT = 285,
+    SIN = 286,
+    COS = 287,
+    EOL = 288,
+    RESET = 289
   };
 #endif
 
@@ -85,12 +91,12 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 46 "parser.y" /* yacc.c:1909  */
+#line 47 "parser.y" /* yacc.c:1909  */
 
     double dbl;
     std::string *str;
 
-#line 94 "parser.hpp" /* yacc.c:1909  */
+#line 100 "parser.hpp" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

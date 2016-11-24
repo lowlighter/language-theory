@@ -31,7 +31,7 @@
 
                 //Mode verbeux
                     bool verbose = true ;
-                    
+
                 //Identifiant (nom) du processus et nom de la variable d'évaluation
                     string id, var;
                 //Variables temporaires
@@ -66,6 +66,13 @@
                 //Trigonométrie
                     Process* cos(int i = 0) { pop(1) ; return display("COS")->push(round(PRECISION*std::cos(a))/PRECISION) ; }
                     Process* sin(int i = 0) { pop(1) ; return display("SIN")->push(round(PRECISION*std::sin(b))/PRECISION) ; }
+
+                    Process* lt(int i = 0) { pop(2) ; return display("<")->push((b < a) ? 1 : 0) ; }
+                    Process* gt(int i = 0) { pop(2) ; return display(">")->push((b > a) ? 1 : 0) ; }
+
+                    Process* logic_if(int i = 0) { return display("IF") ; }
+                    Process* logic_then(int i = 0) { return display("THEN") ; }
+                    Process* logic_endif(int i = 0) { return display("ENDIF") ; }
 
                 //Affectation (variable)
                     Process* affect(int i) {

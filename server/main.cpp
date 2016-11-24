@@ -1,5 +1,6 @@
 #include "server_ws.hpp"
 #include "client_ws.hpp"
+
 #include "parser.hpp"
 #include "src/Process.hpp"
 
@@ -30,7 +31,8 @@ int main() {
 
 
 
-        auto message_str=message->string();
+        auto message_str=message->string()+"\n";
+
 
         yy_scan_string(message_str.c_str());
         yyparse();
@@ -38,6 +40,7 @@ int main() {
         cout << "Server: Message received: \"" << message_str << "\" from " << (size_t)connection.get() << endl;
 
         cout << "Server: Sending message \"" << message_str <<  "\" to " << (size_t)connection.get() << endl;
+
 
         auto send_stream=make_shared<WsServer::SendStream>();
         //EVAL HERE
@@ -146,7 +149,7 @@ int main() {
     client.onopen=[&client]() {
         cout << "Client: Opened connection" << endl;
 
-        string message="1+1";
+        string message="sayhello(x)=x+1";
         cout << "Client: Sending message: \"" << message << "\"" << endl;
 
         auto send_stream=make_shared<WsClient::SendStream>();

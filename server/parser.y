@@ -32,10 +32,11 @@
 
     //Fonctions lexer/bison
         int yylex();
-        void yyerror(char const* msg) { cerr << "Error: " << msg << endl; exit(EXIT_FAILURE); }
+        void yyerror(char const* msg) { cout << "\033[1;31mError: " << msg << "\033[0m" << endl; ; }
 
     //Raccourcis
         Process* current() { return Process::current() ; }
+        void eval() { current()->eval() ; current()->jresult(); }
     //Processus principal
         auto master = new Process(Process::MASTER) ;
 
@@ -54,6 +55,7 @@
 %token        SIGN
 %token        EQU
 %token        FROM TO STEP
+%token        IF THEN ELSE ENDIF
 
     //Tokens d'opérations
 %token PLS '+'
@@ -62,6 +64,8 @@
 %token DIV '/'
 %token MOD '%'
 %token POW '^'
+%token GT  '>'
+%token LT  '<'
 
     //Tokens de fonctions
 %token PLOT RANGE XRANGE YRANGE COLOR
@@ -69,6 +73,7 @@
 %token EOL RESET
 
     //Associativité et priorité
+%left  '<' '>'
 %left  '+' '-'
 %left  '*' '/' '%'
 %right '^' '='
@@ -86,28 +91,21 @@
 
 //Entrée
 line: /* Epsilon */                         { ; }
-    //ADD AN '\n' to make it work in fast mode
-    | line expr                          {
-                                                current()->store(EOL) ;
-                                                current()->eval() ;
-                                                current()->jresult();
-                                            }
-    | line decl '=' expr EOL                {
-                                                Process::close() ;
-                                                current()->store(EOL) ;
-                                                current()->eval() ;
-                                                current()->jresult() ;
-                                            }
+    | line expr EOL                         { current()->store(EOL) ; eval() ;}
+    | line decl '=' expr EOL                { Process::close() ;current()->store(EOL) ; eval() ; }
     ;
 
 //Expression
 expr:
     //Priorité
-     '(' expr ')'                          { $$ =  $2; }
+     '(' expr ')'                           { $$ =  $2; }
     //Signes
     | '+' expr %prec SIGN                   { current()->store(SIGN, POS) ; }
     | '-' expr %prec SIGN                   { current()->store(SIGN, NEG) ; }
+    //Variables numériques
     | numrs                                 {}
+    //Blocs
+    | blocs                                 {}
     //Opérations basiques
     | expr '+' expr                         { current()->store(PLS) ; }
     | expr '-' expr                         { current()->store(MIN) ; }
@@ -115,10 +113,14 @@ expr:
     | expr '/' expr                         { current()->store(DIV) ; }
     //Opérations avancées
     | expr '^' expr                         { current()->store(POW) ; }
+    | expr '<' expr                         { current()->store(LT) ;  }
+    | expr '>' expr                         { current()->store(GT) ;  }
     //Fonctions mathématiques
     | SQRT '(' expr ')'                     { current()->store(SQRT) ; }
     | COS '(' expr ')'                      { current()->store(COS)  ; }
     | SIN '(' expr ')'                      { current()->store(SIN)  ; }
+    //Gestion des erreurs
+    | error                                 { ; }
     ;
 
 //Déclaration de fonctions et de variables
@@ -138,12 +140,21 @@ numrs:
     | VARIABLE '=' expr                     { current()->store(EQU, *$1) ; }
     | VARIABLE '(' range ')'                { current()->store(FUNCTION_R, *$1) ; }
 
+blocs:
+      IF '(' expr ')' stmt                   { current()->store(IF) ; }
+     ;
+
+stmt:
+      THEN '[' expr ']'                     { current()->store(THEN) ; }
+     ;
+
 range:
     | '[' numr ',' numr ']'                 {
                                                 current()->store(FROM, $2) ;
                                                 current()->store(TO, $4) ;
                                                 current()->store(STEP, 0) ;
                                             }
+    ;
     //| '[' numr ',' numr ',' numr ']'        {}
 
 
@@ -202,6 +213,13 @@ Process* Process::token(int& i) { switch (tokens[i]) {
         case FUNCTION: function(i); break;
         case FUNCTION_R: function_r(i); break;
         case FROM: case TO: case STEP: break;
+    //
+        case LT: lt(i) ; break;
+        case GT: gt(i) ; break;
+    //
+        case IF: logic_if(i); break;
+        case THEN: logic_then(i); break;
+        case ENDIF: logic_endif(i); break;
     //Fin de ligne
         case EOL: eol(i); break ;
     //Inconnu
