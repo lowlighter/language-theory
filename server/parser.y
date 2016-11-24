@@ -106,6 +106,7 @@ expr:
     | numrs                                 {}
     //Blocs
     | blocs                                 {}
+    | plot                                  {}
     //Opérations basiques
     | expr '+' expr                         { current()->store(PLS) ; }
     | expr '-' expr                         { current()->store(MIN) ; }
@@ -147,6 +148,9 @@ blocs:
 stmt:
       THEN '[' expr ']'                     { current()->store(THEN) ; }
      ;
+
+plot:
+      PLOT '(' VARIABLE ',' range ')'       { current()->store(FUNCTION_R, *$3) ; current()->store(PLOT) ; }
 
 range:
     | '[' numr ',' numr ']'                 {
@@ -213,6 +217,8 @@ Process* Process::token(int& i) { switch (tokens[i]) {
         case FUNCTION: function(i); break;
         case FUNCTION_R: function_r(i); break;
         case FROM: case TO: case STEP: break;
+    //
+        case PLOT: plot(i); break;
     //
         case LT: lt(i) ; break;
         case GT: gt(i) ; break;

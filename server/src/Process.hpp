@@ -67,6 +67,8 @@
                     Process* cos(int i = 0) { pop(1) ; return display("COS")->push(round(PRECISION*std::cos(a))/PRECISION) ; }
                     Process* sin(int i = 0) { pop(1) ; return display("SIN")->push(round(PRECISION*std::sin(b))/PRECISION) ; }
 
+                    Process* plot(int i = 0) { data[GRAPH] = true ; return display("[plot]") ; }
+
                     Process* lt(int i = 0) { pop(2) ; return display("<")->push((b < a) ? 1 : 0) ; }
                     Process* gt(int i = 0) { pop(2) ; return display(">")->push((b > a) ? 1 : 0) ; }
 
@@ -190,7 +192,6 @@
                     Process* jresult () {
                         //Enregistrement des variables
                             data[VARS] = vars ;
-                            data[GRAPH] = false ;
                         //
                             return this->dump() ;
                     }
