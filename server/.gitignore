@@ -18,3 +18,6 @@ io_test
 parse_test
 
 build/*
+lexer.cpp
+parser.cpp
+parser.hpp
