@@ -8,7 +8,7 @@ var grammar = [{
 				rule: /[\+\-\*\/=\^]/gi,
 				color: "#FFCCFF"
 			},{
-				rule: /(cos|sin)/gi,
+				rule: /(cos|sin|plot)/gi,
 				color: "#FFFFCC"
 			},{
 				rule: /[\(\)]/gi,
@@ -30,7 +30,6 @@ input.addEventListener('keyup', function(e) {
 			break;
 		case "(":
 			var savedSel = saveSelection(input);
-			console.log(savedSel)
 			var position = savedSel.start;
 			input.innerHTML = strip(input.innerHTML);
 			input.innerHTML = [input.innerHTML.slice(0, position), ")", input.innerHTML.slice(position)].join('');

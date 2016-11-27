@@ -2,7 +2,7 @@
 
 @font-face {
 		font-family: menlo;
-		src: url(fonts/Menlo-Regular.ttf);
+		src: url(../fonts/Menlo-Regular.ttf);
 }
 
 html, body {
