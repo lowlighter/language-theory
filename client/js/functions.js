@@ -87,20 +87,19 @@ function clearTerminal() {
   	terminal.innerHTML = "";
 }
 
+var chartId = 0;
 
-var appendChartInTerminal = (function () {
-    var chartId = 0;
-    return function () {
+function appendChartInTerminal(data) {
     	terminal.insertAdjacentHTML('beforeend', '<div class="graphContainer"><canvas id="chart' + chartId +'"></canvas></div><br>');
         terminal.scrollTop = terminal.scrollHeight;
         var ctx = document.querySelector('#chart' + chartId);
         var myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: [1, 2, 3, 4, 5, 6],
+                labels: data.x,
                 datasets: [{
                     label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
+                    data: data.y,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -142,8 +141,7 @@ var appendChartInTerminal = (function () {
             }
         });
 		return chartId += 1;
-	}
-})();
+}
 
 
 function highlighter(selector, grammar) {

@@ -17,7 +17,7 @@ function WebSocketConnection(url) {
             console.log(evt);
             var data = JSON.parse(evt.data);
             if(data.graph) {
-                appendChartInTerminal(data.result);
+                appendChartInTerminal(data);
             } else{
                 appendTextInTerminal(highlighterLight('<span class="terminal_resp">' + data.result + '</span>', grammar));
             }

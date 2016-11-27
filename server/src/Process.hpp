@@ -113,9 +113,12 @@
                                     step = (step) ? step : ((double) (to-from)/DEFAULT_SAMPLE);
                                     display("["+names[i]+"("+print(from)+", "+print(to)+", "+(step ? print(step) : "auto")+")]");
                                 //Evaluation
-                                    vector<double> r; auto process = processes[names[i]] ;
-                                    for (auto j = from; j <= to; j+=step) { r.push_back(process->eval(j)); if (process->verbose) { cout << endl; } }
-                                    data[RESULTS] = r;
+                                    vector<double> y_values;
+                                    vector<double> x_values;
+                                    auto process = processes[names[i]] ;
+                                    for (auto j = from; j <= to; j+=step) { y_values.push_back(process->eval(j)); x_values.push_back(j); if (process->verbose) { cout << endl; } }
+                                    data["y"] = y_values;
+                                    data["x"] = x_values;
                                     return this;
                             }
                         //Erreurs
