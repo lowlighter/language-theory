@@ -116,7 +116,8 @@
                                     vector<double> y_values;
                                     vector<double> x_values;
                                     auto process = processes[names[i]] ;
-                                    for (auto j = from; j <= to; j+=step) { y_values.push_back(process->eval(j)); x_values.push_back(j); if (process->verbose) { cout << endl; } }
+                                    cout << "TO: " << to << endl;
+                                    for (auto j = from; j <= to+step; j+=step) { cout << "j: " << j << "to:" << to << endl;y_values.push_back(process->eval(j)); x_values.push_back(j); if (process->verbose) { cout << endl; } }
                                     data["y"] = y_values;
                                     data["x"] = x_values;
                                     return this;

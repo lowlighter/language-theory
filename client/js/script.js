@@ -28,14 +28,6 @@ input.addEventListener('keyup', function(e) {
 		    appendTextInTerminal(highlighterLight('>>> ' + input.innerHTML, grammar));
 		    input.innerHTML = "";
 			break;
-		case "(":
-			var savedSel = saveSelection(input);
-			var position = savedSel.start;
-			input.innerHTML = strip(input.innerHTML);
-			input.innerHTML = [input.innerHTML.slice(0, position), ")", input.innerHTML.slice(position)].join('');
-		    restoreSelection(input, savedSel);
-		    highlighter('#input', grammar);
-			break;
 	}
 });
 
