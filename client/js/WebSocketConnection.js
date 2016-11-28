@@ -14,8 +14,8 @@ function WebSocketConnection(url) {
             console.log("I'm sorry. Bye!");
         };
         ws.onmessage = function (evt) {
-            console.log(evt);
             var data = JSON.parse(evt.data);
+            console.log(data.error)
             if(data.graph) {
                 appendChartInTerminal(data);
             } else{

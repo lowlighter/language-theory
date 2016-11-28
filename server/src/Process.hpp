@@ -26,7 +26,7 @@
                     static const int PRECISION = 10000, DEFAULT_SAMPLE = 100, NEG = -1, POS = +1 ;
 
                 //Noms des champs et données JSON
-                    static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER ;
+                    static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER, TABLE ;
                     json data;
 
                 //Mode verbeux
@@ -45,8 +45,8 @@
                     Process* token(int& i);
 
                 //Fin de ligne : Met à jour la variable réponse
-                    Process* eol(int i = 0) { rgraph = values[i]; rreturn = true ; return display("(;)") ; }
-                    Process* eolr(int i = 0) { rreturn = false ; return display("(§)") ; }
+                    Process* eol(int i = 0) { data[GRAPH] = (values[i] == 1)||(values[i] == 3); data[TABLE] = (values[i] == 2)||(values[i] == 3); if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ; rreturn = true ; return display("(;)\n") ; }
+                    Process* eolr(int i = 0) { rreturn = false ; return display("(§)\n") ; }
                 //Opération non repertoriée
                     Process* unknown(int i = 0) { return display("?") ; }
 
@@ -89,7 +89,14 @@
                         //Vérification que l'identificateur n'est pas un mot reservé
                             if (!reserved(names[i])) { vars[names[i]] = pop() ; return display("[="+names[i]+"]") ; }
                         //Erreurs
+                            rerror = true ;
                             auto msg = "Error: Use of reserved keyword "+names[i]+" as variable."; data[ERROR] = msg; red("\r"+msg); return this ;
+                    }
+
+                    Process* syntax_error(int i) {
+                        //Erreurs
+                            rerror = true ;
+                            auto msg = "Error: Syntax error."; data[ERROR] = msg; red(string("\r")+msg); return this ;
                     }
 
                 //Récupération (variable)
@@ -97,7 +104,8 @@
                         //Véirification que la variable existe
                             if (vars.count(names[i])) { return display("["+names[i]+"="+print(vars[names[i]])+"]")->push(vars[names[i]]) ; }
                         //Erreurs
-                            auto msg = "Error: Undefined variable "+names[i] ; data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
+                            rerror = true ;
+                            auto msg = "Error: Undefined variable "+names[i]+"." ; data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
                     }
 
                 //Evaluation (fonction)
@@ -110,7 +118,8 @@
                                 return display("["+names[i]+"("+process->var+"="+print(a)+")="+print(b)+"]")->push(b) ;
                             }
                         //Erreurs
-                            auto msg = "Error: Undefined call to function "+names[i] ; data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
+                            rerror = true ;
+                            auto msg = "Error: Undefined call to function "+names[i]+"." ; data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
                     }
 
                     Process* function_r(int i) {
@@ -130,7 +139,8 @@
                                     return this;
                             }
                         //Erreurs
-                            auto msg = "Error: Undefined call to function "+names[i] ; data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
+                            rerror = true ;
+                            auto msg = "Error: Undefined call to function "+names[i]+"." ; data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
                     }
 
             /* ============================================================================
@@ -154,7 +164,7 @@
                                     if (!reserved(name)) {
                                         declared.push(processes[name] = new Process(name, var_name));
                                         return current()->display("["+name+"("+var_name+")]") ;
-                                    } else { auto msg = "Error: Use of reserved keyword "+name+" as function."; master()->data[ERROR] = msg; red("\r"+msg); }
+                                    } else { auto msg = "Error: Use of reserved keyword "+name+" as function."; master()->rerror = true ; master()->data[ERROR] = msg; red("\r"+msg); }
                             }
 
             /* ============================================================================
@@ -193,7 +203,7 @@
                 GESTION DE LA PILE D'ANALYSE (EXPRESSIONS POSTFIXEES)
             ============================================================================ */
                 //
-                    double rresult = NAN; bool rreturn = false, rgraph = false ;
+                    double rresult = NAN; bool rreturn = false, rerror = false ;
                 //Exécute le processus
                     double eval () { clear(); for (int i = 0; i < (int) tokens.size(); i++) { token(i) ; } return result() ; }
                 //Evalue le processus en x
@@ -207,8 +217,8 @@
                         //Enregistrement des variables
                             data[VARS] = vars ;
                             data[RESULT] = result();
-                            data[GRAPH] = rgraph ;
                         //
+                            //cout << result() << endl;
                             this->dump();
                             return this ;
                     }
@@ -218,7 +228,6 @@
             ============================================================================ */
                 //Affiche le contenu des données json
                     Process* dump() { green(data.dump()) ; cout << endl ; return this ; }
-
                 //Affiche la notation polonaise si le mode verbeux est actif
                     Process* display(string action) { if (verbose) { blue(" "+action) ; } ; return this ; }
                 //Affiche d'une couleur différente le texte passé en paramètre

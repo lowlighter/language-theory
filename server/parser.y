@@ -15,6 +15,7 @@
             const string Process::ANSWER = "ans";
             const string Process::GRAPH = "graph";
             const string Process::MASTER = "master";
+            const string Process::TABLE = "table";
             const string Process::ERROR = "error";
         //Mots réservés
             vector<string> Process::RESERVED = {"TEST"} ;
@@ -32,14 +33,14 @@
 
     //Fonctions lexer/bison
         int yylex();
-        void yyerror(char const* msg) { cout << "\033[1;31mError: " << msg << "\033[0m" << endl; ; }
+        void yyerror(char const* msg) {  }
 
     //Raccourcis
         Process* current() { return Process::current() ; }
         void eval() { current()->eval() ; current()->jresult(); }
     //Processus principal
         auto master = new Process(Process::MASTER) ;
-        int token = 0, plot = 0;
+        int token = 0, plot = 0, table = 0;
 %}
 
     //Liste des membres de yyval
@@ -71,7 +72,7 @@
 %token PLOT RANGE XRANGE YRANGE COLOR
 
 %token SQRT SIN COS LOG LN EXP ABS POWER
-%token EOL EOLR RESET
+%token EOL EOLR RESET SYNTAX_ERROR
 
     //Associativité et priorité
 %left  '<' '>'
@@ -92,8 +93,9 @@
 
 //Entrée
 line: /* Epsilon */                         { }
-    | line expr EOL                         { current()->store(EOL, plot) ; plot = 0; eval() ;}
+    | line expr EOL                         { current()->store(EOL, plot+table) ; table = plot = 0; eval() ;}
     | line decl '=' expr EOL                { current()->store(EOL) ; Process::close() ; current()->store(EOLR) ; eval() ; }
+    | line VARIABLE '=' expr EOL            { current()->store(EQU, *$2) ; current()->store(EOLR) ; eval() ; }
     ;
 
 //Expression
@@ -121,6 +123,7 @@ expr:
     | expr LTE expr                         { current()->store(LTE) ;  }
     | expr GTE expr                         { current()->store(GTE) ;  }
     | expr EEQU expr                         { current()->store(EEQU) ;  }
+    | expr DIFF expr                         { current()->store(DIFF) ;  }
     //Fonctions mathématiques
     | SQRT   '(' expr ')'                   { current()->store(SQRT) ; }
     | COS    '(' expr ')'                   { current()->store(COS)  ; }
@@ -137,7 +140,7 @@ expr:
                                               current()->store(IF)    ;
                                             }
     //Gestion des erreurs
-    | error                                 { ; }
+    | error                                 { current()->store(SYNTAX_ERROR) ; }
     ;
 
 //Déclaration de fonctions et de variables
@@ -155,8 +158,7 @@ numr:
 
 numrs:
       numr                                  { ; }
-    | VARIABLE '=' expr                     { current()->store(EQU, *$1) ; }
-    | VARIABLE '(' range ')'                { current()->store(FUNCTION_R, *$1) ; }
+    | VARIABLE '(' range ')'                { table = 2 ; current()->store(FUNCTION_R, *$1) ; }
 
 blocs:
       IF '(' expr ')' stmt                   { current()->store(IF) ; }
@@ -256,6 +258,7 @@ Process* Process::token(int& i) { switch (tokens[i]) {
     //Fin de ligne
         case EOL: eol(i); break ;
         case EOLR: eolr(i); break;
+        case SYNTAX_ERROR: syntax_error(i); break;
     //Inconnu
         default: unknown(i) ; break;
 } return this ; }
