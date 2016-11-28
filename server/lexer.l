@@ -20,7 +20,12 @@ variable    [a-zA-Z_][a-zA-Z_0-9]*
 sqrt        (?i:sqrt)
 sin         (?i:sin(us)?)
 cos         (?i:cos(inus)?)
+log         (?i:log?)
+ln          (?i:ln?)
+exp         (?i:exp?)
+abs         (?i:abs?)
 pi          (?i:pi)
+e           (?i:e)
 plot        (?i:plot)
 if          if
 then        then
@@ -47,10 +52,23 @@ endline     \n
 
 {cos}         { return COS; }
 
+{log}         { return LOG; }
+
+{ln}         { return LN; }
+
+{exp}         { return EXP; }
+
+{abs}         { return ABS; }
+
 {plot}        { return PLOT; }
 
 {pi}          {
                 yylval.dbl = 3.14159 ;
+                return NUMBER ;
+              }
+
+{e}          {
+                yylval.dbl = 2.71828;
                 return NUMBER ;
               }
 
