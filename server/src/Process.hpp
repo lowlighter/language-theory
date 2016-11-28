@@ -45,7 +45,8 @@
                     Process* token(int& i);
 
                 //Fin de ligne : Met à jour la variable réponse
-                    Process* eol(int i = 0) { return display("\n") ; }
+                    Process* eol(int i = 0) { rgraph = values[i]; rreturn = true ; return display("(;)") ; }
+                    Process* eolr(int i = 0) { rreturn = false ; return display("(§)") ; }
                 //Opération non repertoriée
                     Process* unknown(int i = 0) { return display("?") ; }
 
@@ -54,10 +55,10 @@
                     Process* sign(int i) { return display((values[i] > 0 ? "(+)" : "(-)"))->pop(1)->push(values[i]*a) ; }
 
                 //Opération basiques
-                    Process* add(int i = 0) { pop(2) ; return display("+")->push(a + b) ; }
-                    Process* sub(int i = 0) { pop(2) ; return display("-")->push(a - b) ; }
-                    Process* mul(int i = 0) { pop(2) ; return display("*")->push(a * b) ; }
-                    Process* div(int i = 0) { pop(2) ; return display("/")->push(a / b) ; }
+                    Process* add(int i = 0) { pop(2) ; return display("+")->push(b + a) ; }
+                    Process* sub(int i = 0) { pop(2) ; return display("-")->push(b - a) ; }
+                    Process* mul(int i = 0) { pop(2) ; return display("*")->push(b * a) ; }
+                    Process* div(int i = 0) { pop(2) ; return display("/")->push(b / a) ; }
 
                 //Fonctions
                     Process* pow(int i = 0) { pop(2) ; return display("^")->push(std::pow(b, a)) ; }
@@ -67,10 +68,13 @@
                     Process* cos(int i = 0) { pop(1) ; return display("COS")->push(round(PRECISION*std::cos(a))/PRECISION) ; }
                     Process* sin(int i = 0) { pop(1) ; return display("SIN")->push(round(PRECISION*std::sin(b))/PRECISION) ; }
 
-                    Process* plot(int i = 0) { data[GRAPH] = true ; return display("[plot]") ; }
+                    Process* plot(int i = 0) { return display("[plot]") ; }
 
                     Process* lt(int i = 0) { pop(2) ; return display("<")->push((b < a) ? 1 : 0) ; }
                     Process* gt(int i = 0) { pop(2) ; return display(">")->push((b > a) ? 1 : 0) ; }
+                    Process* lte(int i = 0) { pop(2) ; return display("<=")->push((b <= a) ? 1 : 0) ; }
+                    Process* gte(int i = 0) { pop(2) ; return display(">=")->push((b >= a) ? 1 : 0) ; }
+                    Process* eequ(int i = 0) { pop(2) ; return display("==")->push((b == a) ? 1 : 0) ; }
 
                     Process* logic_if(int i = 0) { return display("IF") ; }
                     Process* logic_then(int i = 0) { return display("THEN") ; }
@@ -116,8 +120,7 @@
                                     vector<double> y_values;
                                     vector<double> x_values;
                                     auto process = processes[names[i]] ;
-                                    cout << "TO: " << to << endl;
-                                    for (auto j = from; j <= to+step; j+=step) { cout << "j: " << j << "to:" << to << endl;y_values.push_back(process->eval(j)); x_values.push_back(j); if (process->verbose) { cout << endl; } }
+                                    for (auto j = from; j <= to+step; j+=step) { y_values.push_back(process->eval(j)); x_values.push_back(j); if (process->verbose) { cout << endl; } }
                                     data["y"] = y_values;
                                     data["x"] = x_values;
                                     return this;
@@ -185,19 +188,25 @@
             /* ============================================================================
                 GESTION DE LA PILE D'ANALYSE (EXPRESSIONS POSTFIXEES)
             ============================================================================ */
+                //
+                    double rresult = NAN; bool rreturn = false, rgraph = false ;
                 //Exécute le processus
-                    double eval () { clear(); for (int i = 0; i < (int) tokens.size(); i++) { token(i) ; } auto tmp = (stacked.size()) ? stacked.top() : NAN ; data[RESULT] = tmp; return tmp; }
+                    double eval () { clear(); for (int i = 0; i < (int) tokens.size(); i++) { token(i) ; } return result() ; }
                 //Evalue le processus en x
                     double eval(double x) { vars[var] = x; return eval() ; }
                 //Evalue le processus de a à b par pas de step. Si ce dernier vaut 0, le pas sera calculé automatiquement
                     vector<double> eval(double a, double b, double step = 0) { step = (step) ? step : ((double) (b-a))/DEFAULT_SAMPLE ; vector<double> r ; for (double i = a; i <= b; i++) { r.push_back(eval(i)) ; } ; return r ; }
-
+                //
+                    double result() { rresult = (stacked.size()) ? stacked.top() : NAN ; return rreturn ? rresult : NAN ; }
                 //Résultat (json)
                     Process* jresult () {
                         //Enregistrement des variables
                             data[VARS] = vars ;
+                            data[RESULT] = result();
+                            data[GRAPH] = rgraph ;
                         //
-                            return this->dump() ;
+                            this->dump();
+                            return this ;
                     }
 
             /* ============================================================================

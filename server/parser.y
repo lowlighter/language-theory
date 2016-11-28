@@ -39,8 +39,7 @@
         void eval() { current()->eval() ; current()->jresult(); }
     //Processus principal
         auto master = new Process(Process::MASTER) ;
-
-        int token = 0;
+        int token = 0, plot = 0;
 %}
 
     //Liste des membres de yyval
@@ -56,6 +55,7 @@
 %token        EQU
 %token        FROM TO STEP
 %token        IF THEN ELSE ENDIF
+%token        EEQU DIFF GTE LTE
 
     //Tokens d'opérations
 %token PLS '+'
@@ -70,7 +70,7 @@
     //Tokens de fonctions
 %token PLOT RANGE XRANGE YRANGE COLOR
 %token SQRT SIN COS
-%token EOL RESET
+%token EOL EOLR RESET
 
     //Associativité et priorité
 %left  '<' '>'
@@ -90,9 +90,9 @@
 %%
 
 //Entrée
-line: /* Epsilon */                         { ; }
-    | line expr EOL                         { current()->store(EOL) ; eval() ;}
-    | line decl '=' expr EOL                { Process::close() ;current()->store(EOL) ; eval() ; }
+line: /* Epsilon */                         { }
+    | line expr EOL                         { current()->store(EOL, plot) ; plot = 0; eval() ;}
+    | line decl '=' expr EOL                { current()->store(EOL) ; Process::close() ; current()->store(EOLR) ; eval() ; }
     ;
 
 //Expression
@@ -106,7 +106,7 @@ expr:
     | numrs                                 {}
     //Blocs
     | blocs                                 {}
-    | plot                                  {}
+    | plot                                  { plot = 1 ;}
     //Opérations basiques
     | expr '+' expr                         { current()->store(PLS) ; }
     | expr '-' expr                         { current()->store(MIN) ; }
@@ -114,8 +114,12 @@ expr:
     | expr '/' expr                         { current()->store(DIV) ; }
     //Opérations avancées
     | expr '^' expr                         { current()->store(POW) ; }
+    //Comparaisons
     | expr '<' expr                         { current()->store(LT) ;  }
     | expr '>' expr                         { current()->store(GT) ;  }
+    | expr LTE expr                         { current()->store(LTE) ;  }
+    | expr GTE expr                         { current()->store(GTE) ;  }
+    | expr EEQU expr                         { current()->store(EEQU) ;  }
     //Fonctions mathématiques
     | SQRT '(' expr ')'                     { current()->store(SQRT) ; }
     | COS '(' expr ')'                      { current()->store(COS)  ; }
@@ -132,6 +136,7 @@ decl:
 //Nombres, variables et fonctions
 numr:
       NUMBER                                { current()->store(NUMBER, $1) ; }
+    //Nombres et fonctioné
     | VARIABLE                              { current()->store(VARIABLE, *$1) ; }
     | VARIABLE '(' expr ')'                 { current()->store(FUNCTION, *$1) ; }
     ;
@@ -220,14 +225,16 @@ Process* Process::token(int& i) { switch (tokens[i]) {
     //
         case PLOT: plot(i); break;
     //
-        case LT: lt(i) ; break;
-        case GT: gt(i) ; break;
+        case LT: lt(i) ; break; case LTE: lte(i) ; break;
+        case GT: gt(i) ; break; case GTE: gte(i) ; break;
+        case EEQU: eequ(i) ; break;
     //
         case IF: logic_if(i); break;
         case THEN: logic_then(i); break;
         case ENDIF: logic_endif(i); break;
     //Fin de ligne
         case EOL: eol(i); break ;
+        case EOLR: eolr(i); break;
     //Inconnu
         default: unknown(i) ; break;
 } return this ; }

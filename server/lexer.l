@@ -15,6 +15,10 @@
 
     /* Déclarations Flex */
 operator    [*\+\-\/\=\(\)\^\,\[\]\?\:\<\>]
+gte         \<\=
+lte         \>\=
+eequ        \=\=
+diff        !\=
 number      [0-9]+(\.[0-9]+)?
 variable    [a-zA-Z_][a-zA-Z_0-9]*
 sqrt        (?i:sqrt)
@@ -34,7 +38,14 @@ endline     \n
 %%
     /* Règles flex */
 
+{gte} { return GTE ; }
+{lte} { return LTE ; }
+{eequ} { return EEQU ; }
+{diff} { return DIFF ; }
+
 {operator}    { return yytext[0]; }
+
+
 
 {if}          { return IF ; }
 {then}          { return THEN ; }
