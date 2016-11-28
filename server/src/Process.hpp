@@ -23,7 +23,7 @@
                             static bool reserved(string word) { return (find(RESERVED.begin(), RESERVED.end(), word) != RESERVED.end()) ; }
 
                 //Précision des nombres flottants et valeurs des signes
-                    static const int PRECISION = 10000, DEFAULT_SAMPLE = 10, NEG = -1, POS = +1 ;
+                    static const int PRECISION = 10000, DEFAULT_SAMPLE = 100, NEG = -1, POS = +1 ;
 
                 //Noms des champs et données JSON
                     static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER ;
@@ -63,6 +63,10 @@
                 //Fonctions
                     Process* pow(int i = 0) { pop(2) ; return display("^")->push(std::pow(b, a)) ; }
                     Process* sqrt(int i = 0) { pop(1) ; return display("SQRT")->push(std::sqrt(a)) ; }
+                    Process* log(int i = 0) { pop(1) ; return display("LOG")->push(round(PRECISION*std::log10(a))/PRECISION) ; }
+                    Process* ln(int i = 0) { pop(1) ; return display("LN")->push(round(PRECISION*std::log(a))/PRECISION) ; }
+                    Process* exp(int i = 0) { pop(1) ; return display("EXP")->push(round(PRECISION*std::exp(a))/PRECISION) ; }
+                    Process* abs(int i = 0) { pop(1) ; return display("ABS")->push(std::abs(a)) ; }
 
                 //Trigonométrie
                     Process* cos(int i = 0) { pop(1) ; return display("COS")->push(round(PRECISION*std::cos(a))/PRECISION) ; }
@@ -76,9 +80,9 @@
                     Process* gte(int i = 0) { pop(2) ; return display(">=")->push((b >= a) ? 1 : 0) ; }
                     Process* eequ(int i = 0) { pop(2) ; return display("==")->push((b == a) ? 1 : 0) ; }
 
-                    Process* logic_if(int i = 0) { return display("IF") ; }
-                    Process* logic_then(int i = 0) { return display("THEN") ; }
-                    Process* logic_endif(int i = 0) { return display("ENDIF") ; }
+                    Process* logic_if(int i = 0) {  pop(3); b = pop(); return display("IF")->push(b?c:a);}
+                    Process* logic_then(int i = 0) {  return display("THEN") ; }
+                    Process* logic_else(int i = 0) {  return display("ELSE") ; }
 
                 //Affectation (variable)
                     Process* affect(int i) {

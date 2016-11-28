@@ -69,7 +69,8 @@
 
     //Tokens de fonctions
 %token PLOT RANGE XRANGE YRANGE COLOR
-%token SQRT SIN COS
+
+%token SQRT SIN COS LOG LN EXP ABS POWER
 %token EOL EOLR RESET
 
     //Associativité et priorité
@@ -121,9 +122,20 @@ expr:
     | expr GTE expr                         { current()->store(GTE) ;  }
     | expr EEQU expr                         { current()->store(EEQU) ;  }
     //Fonctions mathématiques
-    | SQRT '(' expr ')'                     { current()->store(SQRT) ; }
-    | COS '(' expr ')'                      { current()->store(COS)  ; }
-    | SIN '(' expr ')'                      { current()->store(SIN)  ; }
+    | SQRT   '(' expr ')'                   { current()->store(SQRT) ; }
+    | COS    '(' expr ')'                   { current()->store(COS)  ; }
+    | SIN    '(' expr ')'                   { current()->store(SIN)  ; }
+    | LN     '(' expr ')'                   { current()->store(LN)  ; }
+    | LOG    '(' expr ')'                   { current()->store(LOG)  ; }
+    | EXP    '(' expr ')'                   { current()->store(EXP)  ; }
+    | ABS    '(' expr ')'                   { current()->store(ABS)  ; }
+    | POWER  '(' expr',' expr')'            { current()->store(POW)  ; }
+    // Ternaire
+    | expr '?' expr ':' expr                {
+                                              current()->store(THEN)  ;
+                                              current()->store(ELSE)  ;
+                                              current()->store(IF)    ;
+                                            }
     //Gestion des erreurs
     | error                                 { ; }
     ;
@@ -162,6 +174,11 @@ range:
                                                 current()->store(FROM, $2) ;
                                                 current()->store(TO, $4) ;
                                                 current()->store(STEP, 0) ;
+                                            }
+    | '[' numr ',' numr ',' numr']'         {
+                                                current()->store(FROM, $2) ;
+                                                current()->store(TO, $4) ;
+                                                current()->store(STEP, $6) ;
                                             }
     ;
     //| '[' numr ',' numr ',' numr ']'        {}
@@ -212,6 +229,10 @@ Process* Process::token(int& i) { switch (tokens[i]) {
     //Fonctions
         case POW: pow(i); break;
         case SQRT: sqrt(i); break;
+        case LOG: log(i); break;
+        case LN: ln(i); break;
+        case EXP: exp(i); break;
+        case ABS: abs(i); break;
     //Trigonométrie
         case COS: cos(i); break;
         case SIN: sin(i); break;
@@ -231,7 +252,7 @@ Process* Process::token(int& i) { switch (tokens[i]) {
     //
         case IF: logic_if(i); break;
         case THEN: logic_then(i); break;
-        case ENDIF: logic_endif(i); break;
+        case ELSE: logic_else(i); break;
     //Fin de ligne
         case EOL: eol(i); break ;
         case EOLR: eolr(i); break;
