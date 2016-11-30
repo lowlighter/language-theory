@@ -42,6 +42,10 @@ body {
 			color: red;
 		}
 
+		.table {
+			text-align: right;
+		}
+
 		.table tr td, .table tr th{
 			padding: 0 15px;
 		}
@@ -51,12 +55,7 @@ body {
 				padding-bottom: 5px;
 				background-color: rgba(255, 255, 255, 0.16);
 			}
-
-		.graphContainer {
-			width: 100%;
-			height: 200px;
-		}
-
+			
 		[contenteditable="true"].single-line {
 				white-space: nowrap;
 				width:200px;

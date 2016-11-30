@@ -3,6 +3,7 @@ var terminal = document.querySelector('#terminal');
 
 test = new WebSocketConnection("ws://localhost:8080/echo");
 
+var a;
 
 var grammar = [{
 				rule: /[\+\-\*\/=\^]/gi,
@@ -19,7 +20,8 @@ input.addEventListener('keyup', function(e) {
 	highlighter('#input', grammar);
 	switch (e.key) {
 		case "Enter":
-			if(input.innerHTML == "clear\n") {
+			
+			if(strip(input.innerHTML) == "clear") {
 				clearTerminal();
 				input.value = "";
 				break;
@@ -30,6 +32,7 @@ input.addEventListener('keyup', function(e) {
 			break;
 	}
 });
+
 
 
 

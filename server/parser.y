@@ -169,18 +169,22 @@ stmt:
      ;
 
 plot:
-      PLOT '(' VARIABLE ',' range ')'       { current()->store(FUNCTION_R, *$3) ; current()->store(PLOT) ; }
+      PLOT '(' VARIABLE range ')'       { current()->store(FUNCTION_R, *$3) ; current()->store(PLOT) ; }
 
-range:
-    | '[' expr ',' expr ']'                 {
-                                                current()->store(FROM, $2) ;
-                                                current()->store(TO, $4) ;
+range:                                      {
+                                                current()->store(FROM, 0) ;
+                                                current()->store(TO, 30) ;
                                                 current()->store(STEP, 0) ;
                                             }
-    | '[' expr ',' expr ',' expr']'         {
-                                                current()->store(FROM, $2) ;
-                                                current()->store(TO, $4) ;
-                                                current()->store(STEP, $6) ;
+    | ',' '[' expr ',' expr ']'                 {
+                                                current()->store(FROM, $3) ;
+                                                current()->store(TO, $5) ;
+                                                current()->store(STEP, 0) ;
+                                            }
+    | ',' '[' expr ',' expr ',' expr']'         {
+                                                current()->store(FROM, $3) ;
+                                                current()->store(TO, $5) ;
+                                                current()->store(STEP, $7) ;
                                             }
     ;
     //| '[' numr ',' numr ',' numr ']'        {}
