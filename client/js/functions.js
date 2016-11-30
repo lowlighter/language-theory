@@ -116,15 +116,16 @@ function appendChartInTerminal(data) {
 
     chart.on('plotly_relayout',
     function(eventdata){
-        //socketConnection.send(strip('plot(f, [0, 10])'));
-        alert( 
-            'x-axis start:' + eventdata['xaxis.range[0]'] + '\n' +
-            'x-axis end:' + eventdata['xaxis.range[1]'] );
+        console.log(eventdata["xaxis.range[0]"]);
+        console.log(eventdata["xaxis.range[1]"]);
+        if(eventdata["xaxis.range[0]"] != undefined && eventdata["xaxis.range[1]"] != undefined) {
+            socketConnection.send(strip('update(_' + (chartId - 1) + ', f, [' + eventdata["xaxis.range[0]"] +', ' + eventdata["xaxis.range[1]"] + '])'));
+        }
     });
 
 
 
-	return chartId += 1;
+	chartId += 1;
 }
 
 

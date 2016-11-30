@@ -37,15 +37,28 @@ function WebSocketConnection(url) {
                 appendTextInTerminal(str_table);
 
             // Si c'est un graph
-            } else if(data.graph) {
-                    appendChartInTerminal(data);
+            } else if(data.graph === true) {
+                appendChartInTerminal(data);
 
             // Si c'est une update de graph
-            //} else if() {
+            } else if(data.graph != false) {
+                console.log('#chart' + data.graph.substr(1));
+                var chart = document.querySelector('#chart' + data.graph.substr(1));
 
-                //chart.data = [{x: [1,2,3,4], y: [4,3,2,1], mode: 'lines'}]
-                //chart.layout.showlegend = false;
-                //Plotly.redraw(chart);
+                var arr_data = [];
+
+                for(var i = 0; i < data.x.length ; i++) {
+                    var obj = {
+                        x: data.x[i],
+                        y: data.y[i]
+                    };
+                    arr_data.push(obj);
+                }
+
+
+                chart.data = arr_data
+                chart.layout.showlegend = false;
+                Plotly.redraw(chart);
 
             // Si c'est une autre réponse 
             } else {
