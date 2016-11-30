@@ -21,9 +21,9 @@
             const string Process::YS = "y";
             const string Process::PLOTTED = "plotted";
         //Mots réservés
-            vector<string> Process::RESERVED = {"TEST"} ;
+            vector<string> Process::RESERVED = {"pi", "sin", "cos", "tan", "prime", "sqrt", "log", "ln", "exp", "abs", "plot", "update", "e", "true", "false"} ;
         //Initialisation diverse
-            map<string, Process*> Process::processes;
+            map<string, Process*> Process::processes, Process::statements;
             stack<Process*> Process::declared;
 
     //Namespace
@@ -35,6 +35,11 @@
         const int POS = +1 ;
         const double C_PI = 3.14159;
         const double C_EXP_E = 2.71828;
+        const double C_TRUE = 1;
+        const double C_FALSE = 0;
+        const int DEFAULT_START = -10 ;
+        const int DEFAULT_END = +10 ;
+        const int DEFAULT_STEP = +1 ;
 
     //Fonctions lexer/bison
         int yylex();
@@ -45,7 +50,7 @@
         void eval() { current()->eval() ; current()->jresult(); }
     //Processus principal
         auto master = new Process(Process::MASTER) ;
-        int token = 0, plot = 0, table = 0, plots = 1;
+        int token = 0, plot = 0, table = 0, plots = 1, stmt = 0;
         string update_id;
 %}
 
@@ -58,12 +63,12 @@
 %token <dbl>  NUMBER PI EXP_E
 %token <str>  VARIABLE FUNCTION FUNCTION_R
 %token        FROM TO STEP
-%token        IF THEN ELSE
+%token        IF THEN ELSE TRUE FALSE
 %token        UPDATE
 
     //Tokens de fonctions
 %token PLOT
-%token SQRT SIN COS LOG LN EXP ABS POWER
+%token SQRT SIN COS TAN LOG LN EXP ABS POWER PRM
 
     //Tokens de fin de lignes
 %token EOL EOLR
@@ -75,9 +80,9 @@
 %left  QM DP
 %right EQU
 %left  PLS MIN
-%left  MUL DIV MOD
-%right POW
-%left  SIGN
+%left  MUL DIV
+%right MOD POW
+%left  FAC SIGN
 %left  LT GT GTE LTE EEQU DIFF AND OR
 
     //Types
@@ -101,8 +106,10 @@ expr:
     //Priorité
      '(' expr ')'                           { $$ =  $2; }
     //Constantes
-    | PI { current()->store(NUMBER, C_PI) ; }
-    | EXP_E { current()->store(NUMBER, C_EXP_E) ; }
+    | PI                                    { current()->store(NUMBER, C_PI) ; }
+    | EXP_E                                 { current()->store(NUMBER, C_EXP_E) ; }
+    | TRUE                                  { current()->store(NUMBER, C_TRUE) ; }
+    | FALSE                                 { current()->store(NUMBER, C_FALSE) ; }
     //Signes
     | PLS expr %prec SIGN                   { current()->store(SIGN, POS) ; }
     | MIN expr %prec SIGN                   { current()->store(SIGN, NEG) ; }
@@ -115,8 +122,10 @@ expr:
     | expr MIN expr                         { current()->store(MIN) ; }
     | expr MUL expr                         { current()->store(MUL) ; }
     | expr DIV expr                         { current()->store(DIV) ; }
+    | expr MOD expr                         { current()->store(MOD) ; }
     //Opérations avancées
     | expr POW expr                         { current()->store(POW) ; }
+    | expr FAC expr                         { current()->store(FAC) ; }
     //Comparaisons
     | expr LT expr                          { current()->store(LT) ;  }
     | expr GT expr                          { current()->store(GT) ;  }
@@ -130,19 +139,24 @@ expr:
     | SQRT   '(' expr ')'                   { current()->store(SQRT) ; }
     | COS    '(' expr ')'                   { current()->store(COS)  ; }
     | SIN    '(' expr ')'                   { current()->store(SIN)  ; }
+    | TAN    '(' expr ')'                   { current()->store(TAN)  ; }
     | LN     '(' expr ')'                   { current()->store(LN)  ; }
     | LOG    '(' expr ')'                   { current()->store(LOG)  ; }
     | EXP    '(' expr ')'                   { current()->store(EXP)  ; }
     | ABS    '(' expr ')'                   { current()->store(ABS)  ; }
+    | PRM    '(' expr ')'                   { current()->store(PRM)  ; }
     | POWER  '(' expr',' expr')'            { current()->store(POW)  ; }
     // Ternaire
-    | expr QM expr DP expr                  {
-                                              current()->store(THEN)  ;
-                                              current()->store(ELSE)  ;
-                                              current()->store(IF)    ;
-                                            }
+    | ternary                               { current()->store(IF) ; current()->store(THEN, stmt) ; current()->store(ELSE, stmt+1) ; stmt+=2 ; }
     //Gestion des erreurs
     | error                                 { current()->store(SYNTAX_ERROR) ; }
+    ;
+
+    //Opérations ternaires
+ternary:
+    expr                                    { Process::open() ;}
+    QM expr                                 { current()->store(EOL) ; Process::close(); Process::open() ; }
+    DP expr                                 { current()->store(EOL) ; Process::close();  }
     ;
 
     //Déclaration de fonctions et de variables
@@ -181,6 +195,7 @@ plot_decl:
     //Liste des fonctions à afficher
 plot_func:
       VARIABLE ',' plot_func                { current()->store(FUNCTION_R, plots, *$1) ; plots++ ; }
+    | VARIABLE ')'                          { current()->store(NUMBER, DEFAULT_START) ; current()->store(NUMBER, DEFAULT_END) ; current()->store(NUMBER, DEFAULT_STEP) ; current()->store(STEP) ; current()->store(TO) ; current()->store(FROM) ; current()->store(PLOT) ; current()->store(FUNCTION_R, plots, *$1) ; plots++ ; }
     | VARIABLE plot_range                   { current()->store(FUNCTION_R, plots, *$1) ; plots++ ; }
 ;
 
@@ -204,7 +219,7 @@ range_to:
 
     //Range (step)
 range_step:
-      ']'                                   {  current()->store(NUMBER, 0) ; current()->store(STEP) ; }
+      ']'                                   { current()->store(NUMBER, 0) ; current()->store(STEP) ; }
     | ',' expr ']'                          { current()->store(STEP) ;}
     ;
 %%
@@ -219,16 +234,20 @@ Process* Process::token(int& i) { switch (tokens[i]) {
         case MIN: sub(i); break;
         case MUL: mul(i); break;
         case DIV: div(i); break;
+        case MOD: mod(i); break;
     //Fonctions
+        case FAC: fac(i); break;
         case POW: pow(i); break;
         case SQRT: sqrt(i); break;
         case LOG: log(i); break;
         case LN: ln(i); break;
         case EXP: exp(i); break;
         case ABS: abs(i); break;
+        case PRM: prm(i); break;
     //Trigonométrie
         case COS: cos(i); break;
         case SIN: sin(i); break;
+        case TAN: tan(i); break;
     //Gestion des variables
         case EQU: affect(i) ; break;
         case VARIABLE: variable(i) ; break;

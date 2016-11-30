@@ -16,20 +16,6 @@
     /* Déclarations Flex */
 number      [0-9]+(\.[0-9]+)?
 variable    [a-zA-Z_][a-zA-Z_0-9]*
-sqrt        (?i:sqrt)
-sin         (?i:sin(us)?)
-cos         (?i:cos(inus)?)
-log         (?i:log?)
-ln          (?i:ln?)
-exp         (?i:exp?)
-abs         (?i:abs?)
-pi          (?i:pi)
-e           (?i:e)
-plot        (?i:plot)
-
-    /* Parameters */
-color       (?i:rc(olor)?)
-endline     \n
 
 %%
     /* Règles flex */
@@ -40,6 +26,7 @@ endline     \n
 \-            { return MIN; }
 \*            { return MUL ;}
 \/            { return DIV ; }
+\%            { return MOD ; }
 
 
     /* Comparaisons */
@@ -63,33 +50,38 @@ endline     \n
 
     /* Logique */
 \&{2}         { return AND ; }
-\|{2}         { return OR ; }
+\|{2}         { return OR  ; }
 
     /* Fonctions mathématiques */
-{sqrt}        { return SQRT; }
-{sin}         { return SIN; }
-{cos}         { return COS; }
-{log}         { return LOG; }
-{ln}          { return LN; }
-{exp}         { return EXP; }
-{abs}         { return ABS; }
+prime         { return PRM ; }
+sqrt          { return SQRT; }
+sin           { return SIN ; }
+cos           { return COS ; }
+tan           { return TAN ; }
+log           { return LOG ; }
+ln            { return LN  ; }
+exp           { return EXP ; }
+abs           { return ABS ; }
 \%            { return MOD ; }
 \^            { return POW ; }
+\!            { return FAC ; }
 
     /* Affichage */
-{plot}        { return PLOT; }
-update        { return UPDATE; }
+plot          { return PLOT   ; }
+update        { return UPDATE ; }
 
     /* Constantes */
-{pi}          { return PI ; }
-{e}           { return EXP_E ;}
+pi            { return PI ; }
+e             { return EXP_E ;}
+true          { return TRUE ; }
+false         { return FALSE ; }
 
     /* Nombre et variable */
 {number}      { yylval.dbl = atof(yytext); return NUMBER; }
 {variable}    { yylval.str = new string(yytext); return VARIABLE; }
 
     /* Fin de ligne */
-{endline}     { return EOL ; }
+\n            { return EOL ; }
 
     /* Autre */
 .             {;}

@@ -63,37 +63,41 @@ extern int yydebug;
     IF = 267,
     THEN = 268,
     ELSE = 269,
-    UPDATE = 270,
-    PLOT = 271,
-    SQRT = 272,
-    SIN = 273,
-    COS = 274,
-    LOG = 275,
-    LN = 276,
-    EXP = 277,
-    ABS = 278,
-    POWER = 279,
-    EOL = 280,
-    EOLR = 281,
-    SYNTAX_ERROR = 282,
-    QM = 283,
-    DP = 284,
-    EQU = 285,
-    PLS = 286,
-    MIN = 287,
-    MUL = 288,
-    DIV = 289,
-    MOD = 290,
-    POW = 291,
-    SIGN = 292,
-    LT = 293,
-    GT = 294,
-    GTE = 295,
-    LTE = 296,
-    EEQU = 297,
-    DIFF = 298,
-    AND = 299,
-    OR = 300
+    TRUE = 270,
+    FALSE = 271,
+    UPDATE = 272,
+    PLOT = 273,
+    SQRT = 274,
+    SIN = 275,
+    COS = 276,
+    LOG = 277,
+    LN = 278,
+    EXP = 279,
+    ABS = 280,
+    POWER = 281,
+    PRM = 282,
+    EOL = 283,
+    EOLR = 284,
+    SYNTAX_ERROR = 285,
+    QM = 286,
+    DP = 287,
+    EQU = 288,
+    PLS = 289,
+    MIN = 290,
+    MUL = 291,
+    DIV = 292,
+    MOD = 293,
+    POW = 294,
+    FAC = 295,
+    SIGN = 296,
+    LT = 297,
+    GT = 298,
+    GTE = 299,
+    LTE = 300,
+    EEQU = 301,
+    DIFF = 302,
+    AND = 303,
+    OR = 304
   };
 #endif
 
@@ -102,12 +106,12 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 54 "parser.y" /* yacc.c:1909  */
+#line 55 "parser.y" /* yacc.c:1909  */
 
     double dbl;
     std::string *str;
 
-#line 111 "parser.tab.h" /* yacc.c:1909  */
+#line 115 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

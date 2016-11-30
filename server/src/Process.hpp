@@ -11,6 +11,16 @@
         using namespace std;
         using json = nlohmann::json;
 
+    //Factorielle
+        int factorial(int n) { return n > 1 ? n*factorial(n-1) : 1 ; }
+        bool prime(int n) {
+            if(n < 2) { return false; }
+            if(n == 2) { return true; }
+            if(n % 2 == 0) { return false; }
+            for(int i=3; (i*i) <= n; i+=2) { if(n % i == 0 ) { return false; } }
+            return true;
+        }
+
     //Processus
         class Process {
             public:
@@ -52,7 +62,6 @@
                             data[GRAPH] = (values[i] == 1)||(values[i] == 2+1);
                             data[TABLE] = (values[i] == 2)||(values[i] == 2+1);
                             if (names[i].size()) { data[GRAPH] = names[i] ; }
-                            cout << values[i] << endl ;
                             if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ;
                         //Affichage
                             rreturn = true ;
@@ -73,7 +82,10 @@
                     Process* div(int i = 0) { pop(2) ; return display("/")->push(b / a) ; }
 
                 //Fonctions
+                    Process* prm(int i = 0) { pop(1) ; return display("PRIME")->push(prime(a)) ; }
+                    Process* mod(int i = 0) { pop(2) ; return display("mod")->push(fmod(a, b)) ; }
                     Process* pow(int i = 0) { pop(2) ; return display("^")->push(std::pow(b, a)) ; }
+                    Process* fac(int i = 0) { pop(1) ; return display("!")->push(factorial(a)) ; }
                     Process* sqrt(int i = 0) { pop(1) ; return display("SQRT")->push(std::sqrt(a)) ; }
                     Process* log(int i = 0) { pop(1) ; return display("LOG")->push(round(PRECISION*std::log10(a))/PRECISION) ; }
                     Process* ln(int i = 0) { pop(1) ; return display("LN")->push(round(PRECISION*std::log(a))/PRECISION) ; }
@@ -83,6 +95,7 @@
                 //Trigonométrie
                     Process* cos(int i = 0) { pop(1) ; return display("COS")->push(round(PRECISION*std::cos(a))/PRECISION) ; }
                     Process* sin(int i = 0) { pop(1) ; return display("SIN")->push(round(PRECISION*std::sin(a))/PRECISION) ; }
+                    Process* tan(int i = 0) { pop(1) ; return display("TAN")->push(round(PRECISION*std::tan(a))/PRECISION) ; }
 
                 //Affichage
                     Process* plot(int i = 0) { xs.clear(); ys.clear(); plotted.clear(); return display("[plot]") ; }
@@ -95,9 +108,18 @@
                     Process* eequ(int i = 0) { pop(2) ; return display("==")->push((b == a) ? 1 : 0) ; }
 
                 //Structure logique
-                    Process* logic_if(int i = 0) {  pop(3); b = pop(); return display("IF")->push(b?c:a);}
-                    Process* logic_then(int i = 0) {  return display("THEN") ; }
-                    Process* logic_else(int i = 0) {  return display("ELSE") ; }
+                    Process* logic_if(int i = 0) { pop(3);
+                        //Récupération du statement
+                            auto process = statements[print(values[i+(a ? 1 : 2)])] ;
+                        //Application du contexte
+                            process->vars.clear();
+                            for (auto it = vars.begin(); it != vars.end(); it++) { process->vars[it->first] = it->second ; }
+                        //Evaluation
+                            auto r = process->eval();
+                            return display("{if;"+string(a ? "true" : "false")+";"+print(r)+"}")->push(r) ;
+                    }
+                    Process* logic_then(int i = 0) { return display("(then=stmt_"+print(values[i])+")") ; }
+                    Process* logic_else(int i = 0) { return display("(else=stmt_"+print(values[i])+")") ; }
 
                 //Logique combinatoire
                     Process* logic_and(int i = 0) { pop(2) ; return display("&&")->push(a && b) ; }
@@ -176,9 +198,10 @@
             ============================================================================ */
                 //Constructeur
                     Process(string name, string var_name = "x") { id = name; var = var_name ; processes[name] = this ; } ;
+                    Process(bool stmt) { id = to_string(statements.size()); statements[id] = this ; var = "x" ; }
 
                 //Liste des processus définis et ceux en cours de définition
-                    static map<string, Process*> processes;
+                    static map<string, Process*> processes, statements;
                     static stack<Process*> declared;
                         //Retourne le processus principal
                             static Process* master() { return processes.count(MASTER) ? processes[MASTER] : NULL ; }
@@ -193,6 +216,13 @@
                                         declared.push(processes[name] = new Process(name, var_name));
                                         return current()->display("["+name+"("+var_name+")]") ;
                                     } else { auto msg = "Error: Use of reserved keyword "+name+" as function."; master()->rerror = true ; master()->data[ERROR] = msg; red("\r"+msg); }
+                            }
+                        //Déclare un nouvel état
+                            static Process* open() {
+                                //Ajout du nouveau processus à la liste des processus en cours de déclaration
+                                    auto stmt = new Process(true);
+                                    declared.push(stmt);
+                                    return current()->display("[stmt_"+stmt->id+"]") ;
                             }
 
             /* ============================================================================
@@ -222,7 +252,7 @@
                 //Retourne et supprime la dernière valeur de la pile d'analyse
                     double pop () { if (stacked.size()) { auto tmp = stacked.top() ; stacked.pop() ; return tmp ; } else { return 0 ;} }
                         //Surchage permettant de récupérer jusqu'à 3 valeurs dans les variables tampons a, b et c
-                            Process* pop(int buffer) { a = pop() ; if (buffer == 2) { b = pop() ; } if (buffer == 3) { c = pop() ; } return this ; }
+                            Process* pop(int buffer) { a = pop() ; if (buffer >= 2) { b = pop() ; } if (buffer >= 3) { c = pop() ; } return this ; }
 
                 //Nettoie la pile d'analyse
                     Process* clear () { while (!stacked.empty()) { stacked.pop() ; } return this ; }
