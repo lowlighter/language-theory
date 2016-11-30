@@ -38,6 +38,20 @@ body {
 			line-height: 1.5em;
 		}
 
+		.terminal_error {
+			color: red;
+		}
+
+		.table tr td, .table tr th{
+			padding: 0 15px;
+		}
+
+			.table tr th{
+				font-weight: bold;
+				padding-bottom: 5px;
+				background-color: rgba(255, 255, 255, 0.16);
+			}
+
 		.graphContainer {
 			width: 100%;
 			height: 200px;

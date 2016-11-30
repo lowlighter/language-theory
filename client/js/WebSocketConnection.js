@@ -15,11 +15,27 @@ function WebSocketConnection(url) {
         };
         ws.onmessage = function (evt) {
             var data = JSON.parse(evt.data);
-            console.log(data.error)
-            if(data.graph) {
-                appendChartInTerminal(data);
+            console.log(data);
+            if(data.error) {
+                appendTextInTerminal('<span class="terminal_resp terminal_error">' + data.error + '</span>');
+            } else if (data.table) {
+
+                var str_table = '<table class="table">';
+                str_table += '<tr><th> x </th><th> y </th></tr>';
+                for (var i = 0; i < data.x.length; i++) {
+                            str_table += '<tr><td>' + data.x[i] +'</td><td>' + data.y[i] +'</td></tr>';
+                        }
+
+                str_table += "</table>";
+
+                appendTextInTerminal(str_table);
+                    //<span class="terminal_resp">' + data.y + '</span>');
+            } else {
+                if(data.graph) {
+                    appendChartInTerminal(data);
             } else{
-                appendTextInTerminal(highlighterLight('<span class="terminal_resp">' + data.result + '</span>', grammar));
+                    if(data.result != null) appendTextInTerminal(highlighterLight('<span class="terminal_resp">' + data.result + '</span>', grammar));
+                }
             }
         };
         ws.onerror = function (evt) {

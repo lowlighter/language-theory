@@ -19,7 +19,7 @@ input.addEventListener('keyup', function(e) {
 	highlighter('#input', grammar);
 	switch (e.key) {
 		case "Enter":
-			if(input.value == "clear") {
+			if(input.innerHTML == "clear\n") {
 				clearTerminal();
 				input.value = "";
 				break;

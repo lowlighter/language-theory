@@ -94,8 +94,8 @@
 //Entrée
 line: /* Epsilon */                         { }
     | line expr EOL                         { current()->store(EOL, plot+table) ; table = plot = 0; eval() ;}
-    | line decl '=' expr EOL                { current()->store(EOL) ; Process::close() ; current()->store(EOLR) ; eval() ; }
-    | line VARIABLE '=' expr EOL            { current()->store(EQU, *$2) ; current()->store(EOLR) ; eval() ; }
+    | line decl '=' expr EOL                { current()->store(EOL) ; Process::close() ; current()->store(EOLR) ; table = plot = 0 ; eval() ; }
+    | line VARIABLE '=' expr EOL            { current()->store(EQU, *$2) ; current()->store(EOLR) ; table = plot = 0; eval() ; }
     ;
 
 //Expression
@@ -172,12 +172,12 @@ plot:
       PLOT '(' VARIABLE ',' range ')'       { current()->store(FUNCTION_R, *$3) ; current()->store(PLOT) ; }
 
 range:
-    | '[' numr ',' numr ']'                 {
+    | '[' expr ',' expr ']'                 {
                                                 current()->store(FROM, $2) ;
                                                 current()->store(TO, $4) ;
                                                 current()->store(STEP, 0) ;
                                             }
-    | '[' numr ',' numr ',' numr']'         {
+    | '[' expr ',' expr ',' expr']'         {
                                                 current()->store(FROM, $2) ;
                                                 current()->store(TO, $4) ;
                                                 current()->store(STEP, $6) ;
