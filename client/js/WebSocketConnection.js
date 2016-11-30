@@ -22,8 +22,8 @@ function WebSocketConnection(url) {
 
                 var str_table = '<table class="table">';
                 str_table += '<tr><th> x </th><th> y </th></tr>';
-                for (var i = 0; i < data.x.length; i++) {
-                            str_table += '<tr><td>' + data.x[i] +'</td><td>' + data.y[i] +'</td></tr>';
+                for (var i = 0; i < data.x[0].length; i++) {
+                            str_table += '<tr><td>' + data.x[0][i] +'</td><td>' + data.y[0][i] +'</td></tr>';
                         }
 
                 str_table += "</table>";

@@ -248,6 +248,7 @@
                             data[PLOTTED] = plotted;
                         //Affichage
                             if (verbose) { this->dump() ; }
+
                             return this ;
                     }
 

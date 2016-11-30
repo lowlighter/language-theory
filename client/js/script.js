@@ -9,7 +9,7 @@ var grammar = [{
 				rule: /[\+\-\*\/=\^]/gi,
 				color: "#FFCCFF"
 			},{
-				rule: /(cos|sin|plot)/gi,
+				rule: /(cos|sin|plot|exp)/gi,
 				color: "#FFFFCC"
 			},{
 				rule: /[\(\)]/gi,
