@@ -26,7 +26,7 @@
                     static const int PRECISION = 10000, DEFAULT_SAMPLE = 100, NEG = -1, POS = +1 ;
 
                 //Noms des champs et données JSON
-                    static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER, TABLE, XS, YS ;
+                    static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER, TABLE, XS, YS, PLOTTED, UPDATE ;
                     json data;
 
                 //Mode verbeux
@@ -37,6 +37,7 @@
                 //Variables temporaires
                     double a = 0, b = 0, c = 0;
                     vector< vector<double> > xs, ys;
+                    vector<string> plotted;
 
             /* ============================================================================
                 GESTION DES ACTIONS
@@ -55,7 +56,7 @@
                             rreturn = true ;
                             return display("(;)\n") ;
                     }
-                    Process* eolr(int i = 0) { data[GRAPH] = rreturn = false ; return display("(§)\n") ; }
+                    Process* eolr(int i = 0) { data[GRAPH] = data[UPDATE] = rreturn = false ; return display("(§)\n") ; }
                 //Opération non repertoriée
                     Process* unknown(int i = 0) { return display("?") ; }
 
@@ -82,7 +83,7 @@
                     Process* sin(int i = 0) { pop(1) ; return display("SIN")->push(round(PRECISION*std::sin(a))/PRECISION) ; }
 
                 //Affichage
-                    Process* plot(int i = 0) { xs.clear(); ys.clear(); return display("[plot]") ; }
+                    Process* plot(int i = 0) { xs.clear(); ys.clear(); plotted.clear(); return display("[plot]") ; }
 
                 //Comparaison
                     Process* lt(int i = 0) { pop(2) ; return display("<")->push((b < a) ? 1 : 0) ; }
@@ -155,7 +156,7 @@
                                     auto process = processes[names[i]] ;
                                     for (auto j = from; j <= to+step; j+=step) { yv.push_back(process->eval(j)); xv.push_back(j); if (process->verbose) { cout << endl; } }
                                 //Retour
-                                    xs.push_back(xv); ys.push_back(yv);
+                                    xs.push_back(xv); ys.push_back(yv); plotted.push_back(process->id) ;
                                     return this;
                             }
                         //Erreurs
@@ -244,7 +245,8 @@
                             data[RESULT] = result();
                             data[XS] = xs;
                             data[YS] = ys;
-                            
+                            data[PLOTTED] = plotted;
+                        //Affichage
                             if (verbose) { this->dump() ; }
 
                             return this ;
