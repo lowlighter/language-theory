@@ -1,4 +1,4 @@
-var graphId = 0
+var graphId = 0;
 
 function WebSocketConnection(url) {
     if ("WebSocket" in window) {
@@ -13,29 +13,43 @@ function WebSocketConnection(url) {
         ws.onclose = function (evt) {
             console.log("I'm sorry. Bye!");
         };
+
+        // Message du serveur
         ws.onmessage = function (evt) {
             var data = JSON.parse(evt.data);
+
+            console.log('Message du serveur:');
             console.log(data);
+
+            // Si c'est une erreur
             if(data.error) {
                 appendTextInTerminal('<span class="terminal_resp terminal_error">' + data.error + '</span>');
+
+            // Si c'est un tableau
             } else if (data.table) {
 
                 var str_table = '<table class="table">';
                 str_table += '<tr><th> x </th><th> y </th></tr>';
                 for (var i = 0; i < data.x[0].length; i++) {
-                            str_table += '<tr><td>' + data.x[0][i] +'</td><td>' + data.y[0][i] +'</td></tr>';
-                        }
-
-                str_table += "</table>";
-
-                appendTextInTerminal(str_table);
-                    //<span class="terminal_resp">' + data.y + '</span>');
-            } else {
-                if(data.graph) {
-                    appendChartInTerminal(data);
-            } else{
-                    if(data.result != null) appendTextInTerminal(highlighterLight('<span class="terminal_resp">' + data.result + '</span>', grammar));
+                    str_table += '<tr><td>' + Math.round(data.x[0][i]*100)/100 +'</td><td>' + Math.round(data.y[0][i]*100)/100 +'</td></tr>';
                 }
+                str_table += "</table>";
+                appendTextInTerminal(str_table);
+
+            // Si c'est un graph
+            } else if(data.graph) {
+                    appendChartInTerminal(data);
+
+            // Si c'est une update de graph
+            //} else if() {
+
+                //chart.data = [{x: [1,2,3,4], y: [4,3,2,1], mode: 'lines'}]
+                //chart.layout.showlegend = false;
+                //Plotly.redraw(chart);
+
+            // Si c'est une autre réponse 
+            } else {
+                if(data.result != null) appendTextInTerminal(highlighterLight('<span class="terminal_resp">' + data.result + '</span>', grammar));
             }
         };
         ws.onerror = function (evt) {

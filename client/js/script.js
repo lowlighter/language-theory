@@ -1,7 +1,7 @@
 var input = document.querySelector('#input');
 var terminal = document.querySelector('#terminal');
 
-test = new WebSocketConnection("ws://localhost:8080/echo");
+socketConnection = new WebSocketConnection("ws://localhost:8080/echo");
 
 var a;
 
@@ -26,12 +26,13 @@ input.addEventListener('keyup', function(e) {
 				input.value = "";
 				break;
 			}
-			test.send(strip(input.innerHTML));
+			socketConnection.send(strip(input.innerHTML));
 		    appendTextInTerminal(highlighterLight('>>> ' + input.innerHTML, grammar));
 		    input.innerHTML = "";
 			break;
 	}
 });
+
 
 
 
