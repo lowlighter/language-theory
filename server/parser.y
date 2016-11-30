@@ -69,12 +69,12 @@
 %token SYNTAX_ERROR
 
     //Associativité et priorité
+%left  SIGN QM DP
 %right EQU
 %left  PLS MIN
 %left  MUL DIV MOD
-%left  LT GT GTE LTE EEQU DIFF AND OR
 %right POW
-%left  SIGN QM DP
+%left  LT GT GTE LTE EEQU DIFF AND OR
 
     //Types
 %type <dbl>   line expr
@@ -166,21 +166,23 @@ numrs:
 
     //Affichage
 plot:
-    //Affichage d'une fonction définie
-      plot_decl { plots = 1 ;}
-    ;
-    plot_decl:
-        PLOT '(' plot_func              {}
+      plot_decl                             { plots = 1 ;}
     ;
 
-    plot_func:
-        VARIABLE ',' plot_func { current()->store(FUNCTION_R, plots, *$1) ; plots++ ; }
-        | VARIABLE plot_range { current()->store(FUNCTION_R, plots, *$1) ; plots++ ; }
-    ;
+    //Déclaration de l'affichage
+plot_decl:
+    PLOT '(' plot_func                      { ; }
+;
 
+    //Liste des fonctions à afficher
+plot_func:
+    VARIABLE ',' plot_func                  { current()->store(FUNCTION_R, plots, *$1) ; plots++ ; }
+    | VARIABLE plot_range                   { current()->store(FUNCTION_R, plots, *$1) ; plots++ ; }
+;
 
-    plot_range:
-        ',' range ')'               { current()->store(PLOT) ; }
+    //Range d'affichage
+plot_range:
+    ',' range ')'                           { current()->store(PLOT) ; }
 
     //Ranges
 range: range_from { ; }
@@ -188,18 +190,18 @@ range: range_from { ; }
 
     //Range (from)
 range_from:
-    '[' expr range_to               { current()->store(FROM) ; }
+    '[' expr range_to                       { current()->store(FROM) ; }
     ;
 
     //Range (to)
 range_to:
-    ',' expr range_step                    { current()->store(TO) ; }
+    ',' expr range_step                     { current()->store(TO) ; }
     ;
 
     //Range (step)
 range_step:
-    ']' {  current()->store(NUMBER, 0) ; current()->store(STEP) ; }
-    | ',' expr ']'                    { current()->store(STEP) ;}
+    ']'                                     {  current()->store(NUMBER, 0) ; current()->store(STEP) ; }
+    | ',' expr ']'                          { current()->store(STEP) ;}
     ;
 %%
 
