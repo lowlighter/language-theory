@@ -19,6 +19,8 @@
             const string Process::ERROR = "error";
             const string Process::XS = "x";
             const string Process::YS = "y";
+            const string Process::UPDATE = "update";
+            const string Process::PLOTTED = "plotted";
         //Mots réservés
             vector<string> Process::RESERVED = {"TEST"} ;
         //Initialisation diverse
