@@ -19,7 +19,6 @@
             const string Process::ERROR = "error";
             const string Process::XS = "x";
             const string Process::YS = "y";
-            const string Process::UPDATE = "update";
             const string Process::PLOTTED = "plotted";
         //Mots réservés
             vector<string> Process::RESERVED = {"TEST"} ;
@@ -46,7 +45,8 @@
         void eval() { current()->eval() ; current()->jresult(); }
     //Processus principal
         auto master = new Process(Process::MASTER) ;
-        int token = 0, plot = 0, table = 0, plots = 1, update = 0;
+        int token = 0, plot = 0, table = 0, plots = 1;
+        string update_id;
 %}
 
     //Liste des membres de yyval
@@ -91,7 +91,7 @@
 
     //Entrée
 line: /* Epsilon */                         { ; }
-    | line expr EOL                         { current()->store(EOL, plot+table+update) ; cout << plot+table+update << endl ;  update = table = plot = 0; eval() ;}
+    | line expr EOL                         { current()->store(EOL, plot+table, update_id) ; update_id = "" ; table = plot = 0; eval() ;}
     | line decl EQU expr EOL                { current()->store(EOL) ; Process::close() ; current()->store(EOLR) ; eval() ; }
     | line VARIABLE EQU expr EOL            { current()->store(EQU, *$2) ; current()->store(EOLR) ; eval() ; }
     ;
@@ -110,7 +110,6 @@ expr:
     | numrs                                 { ; }
     //Blocs
     | plot                                  { plot = 1 ; }
-    | range { ; }
     //Opérations basiques
     | expr PLS expr                         { current()->store(PLS) ; }
     | expr MIN expr                         { current()->store(MIN) ; }
@@ -176,7 +175,7 @@ plot:
     //Déclaration de l'affichage
 plot_decl:
       PLOT '(' plot_func                    { ; }
-    | UPDATE '(' plot_func                  { update = 4; }
+    | UPDATE '(' VARIABLE ',' plot_func     { update_id = *$3 ; }
 ;
 
     //Liste des fonctions à afficher

@@ -26,7 +26,7 @@
                     static const int PRECISION = 10000, DEFAULT_SAMPLE = 100, NEG = -1, POS = +1 ;
 
                 //Noms des champs et données JSON
-                    static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER, TABLE, XS, YS, PLOTTED, UPDATE ;
+                    static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER, TABLE, XS, YS, PLOTTED ;
                     json data;
 
                 //Mode verbeux
@@ -50,8 +50,8 @@
                     Process* eol(int i = 0) {
                         //Données JSON
                             data[GRAPH] = (values[i] == 1)||(values[i] == 2+1);
-                            data[TABLE] = (values[i] == 2)||(values[i] == 2+1)||(values[i] == 2+4);
-                            if (values[i] >= 4) { data[GRAPH] = UPDATE  ; }
+                            data[TABLE] = (values[i] == 2)||(values[i] == 2+1);
+                            if (names[i].size()) { data[GRAPH] = names[i] ; }
                             cout << values[i] << endl ;
                             if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ;
                         //Affichage
