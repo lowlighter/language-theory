@@ -26,7 +26,7 @@
                     static const int PRECISION = 10000, DEFAULT_SAMPLE = 100, NEG = -1, POS = +1 ;
 
                 //Noms des champs et données JSON
-                    static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER, TABLE ;
+                    static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER, TABLE, XS, YS ;
                     json data;
 
                 //Mode verbeux
@@ -36,6 +36,7 @@
                     string id, var;
                 //Variables temporaires
                     double a = 0, b = 0, c = 0;
+                    vector< vector<double> > xs, ys;
 
             /* ============================================================================
                 GESTION DES ACTIONS
@@ -45,8 +46,16 @@
                     Process* token(int& i);
 
                 //Fin de ligne : Met à jour la variable réponse
-                    Process* eol(int i = 0) { data[GRAPH] = (values[i] == 1)||(values[i] == 3); data[TABLE] = (values[i] == 2)||(values[i] == 3); if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ; rreturn = true ; return display("(;)\n") ; }
-                    Process* eolr(int i = 0) { rreturn = false ; return display("(§)\n") ; }
+                    Process* eol(int i = 0) {
+                        //Données JSON
+                            data[GRAPH] = (values[i] == 1)||(values[i] == 3);
+                            data[TABLE] = (values[i] == 2)||(values[i] == 3);
+                            if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ;
+                        //Affichage
+                            rreturn = true ;
+                            return display("(;)\n") ;
+                    }
+                    Process* eolr(int i = 0) { data[GRAPH] = rreturn = false ; return display("(§)\n") ; }
                 //Opération non repertoriée
                     Process* unknown(int i = 0) { return display("?") ; }
 
@@ -73,7 +82,7 @@
                     Process* sin(int i = 0) { pop(1) ; return display("SIN")->push(round(PRECISION*std::sin(a))/PRECISION) ; }
 
                 //Affichage
-                    Process* plot(int i = 0) { return display("[plot]") ; }
+                    Process* plot(int i = 0) { xs.clear(); ys.clear(); return display("[plot]") ; }
 
                 //Comparaison
                     Process* lt(int i = 0) { pop(2) ; return display("<")->push((b < a) ? 1 : 0) ; }
@@ -136,17 +145,16 @@
                         //Vérification que la fonction existe
                             if (processes.count(names[i])) {
                                 //Définition de la range
-                                    auto offset = 1;
-                                    auto from = values[i-offset*1], to = values[i-offset*2], step = values[i-offset*3];
+                                    auto offset = values[i];
+                                    auto from = values[i-1-offset], to = values[i-2-offset], step = values[i-3-offset];
                                     step = (step) ? step : ((double) (to-from)/DEFAULT_SAMPLE);
                                     display("["+names[i]+"("+print(from)+", "+print(to)+", "+(step ? print(step) : "auto")+")]");
                                 //Evaluation
-                                    vector<double> y_values, x_values;
+                                    vector<double> xv, yv;
                                     auto process = processes[names[i]] ;
-                                    for (auto j = from; j <= to+step; j+=step) { y_values.push_back(process->eval(j)); x_values.push_back(j); if (process->verbose) { cout << endl; } }
+                                    for (auto j = from; j <= to+step; j+=step) { yv.push_back(process->eval(j)); xv.push_back(j); if (process->verbose) { cout << endl; } }
                                 //Retour
-                                    data[id]["y"] = y_values;
-                                    data[id]["x"] = x_values;
+                                    xs.push_back(xv); ys.push_back(yv);
                                     return this;
                             }
                         //Erreurs
@@ -233,6 +241,8 @@
                         //Enregistrement des variables
                             data[VARS] = vars ;
                             data[RESULT] = result();
+                            data[XS] = xs;
+                            data[YS] = ys;
                         //
                             //cout << result() << endl;
                             this->dump();

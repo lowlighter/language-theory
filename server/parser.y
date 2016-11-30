@@ -17,6 +17,8 @@
             const string Process::MASTER = "master";
             const string Process::TABLE = "table";
             const string Process::ERROR = "error";
+            const string Process::XS = "x";
+            const string Process::YS = "y";
         //Mots réservés
             vector<string> Process::RESERVED = {"TEST"} ;
         //Initialisation diverse
@@ -42,7 +44,7 @@
         void eval() { current()->eval() ; current()->jresult(); }
     //Processus principal
         auto master = new Process(Process::MASTER) ;
-        int token = 0, plot = 0, table = 0, plots = 0;
+        int token = 0, plot = 0, table = 0, plots = 1;
 %}
 
     //Liste des membres de yyval
@@ -87,7 +89,7 @@
 line: /* Epsilon */                         { ; }
     | line expr EOL                         { current()->store(EOL, plot+table) ; table = plot = 0; eval() ;}
     | line decl EQU expr EOL                { current()->store(EOL) ; Process::close() ; current()->store(EOLR) ; eval() ; }
-    | line VARIABLE EQU expr EOL            { current()->store(EQU, *$2) ; current()->store(EOL) ; current()->store(EOLR) ; eval() ; }
+    | line VARIABLE EQU expr EOL            { current()->store(EQU, *$2) ; current()->store(EOLR) ; eval() ; }
     ;
 
     //Expression
@@ -191,13 +193,13 @@ range_from:
 
     //Range (to)
 range_to:
-     ',' expr ']'                           { current()->store(TO) ; }
-    |',' expr range_step                    { current()->store(TO) ; }
+    ',' expr range_step                    { current()->store(TO) ; }
     ;
 
     //Range (step)
 range_step:
-    ',' expr ']'                    { current()->store(STEP) ;}
+    ']' {  current()->store(NUMBER, 0) ; current()->store(STEP) ; }
+    | ',' expr ']'                    { current()->store(STEP) ;}
     ;
 %%
 
