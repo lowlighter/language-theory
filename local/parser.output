@@ -119,16 +119,16 @@ POWER (278) 33
 EOL (279) 2 3 4
 EOLR (280)
 SYNTAX_ERROR (281)
-SIGN (282)
-QM (283) 34
-DP (284) 34
-EQU (285) 3 4
-PLS (286) 8 13
-MIN (287) 9 14
-MUL (288) 15
-DIV (289) 16
-MOD (290)
-POW (291) 17
+QM (282) 34
+DP (283) 34
+EQU (284) 3 4
+PLS (285) 8 13
+MIN (286) 9 14
+MUL (287) 15
+DIV (288) 16
+MOD (289)
+POW (290) 17
+SIGN (291)
 LT (292) 18
 GT (293) 19
 GTE (294) 21
@@ -904,11 +904,6 @@ range_step (63)
    25     | expr . OR expr
    34     | expr . QM expr DP expr
 
-    PLS   décalage et aller à l'état 47
-    MIN   décalage et aller à l'état 48
-    MUL   décalage et aller à l'état 49
-    DIV   décalage et aller à l'état 50
-    POW   décalage et aller à l'état 51
     LT    décalage et aller à l'état 52
     GT    décalage et aller à l'état 53
     GTE   décalage et aller à l'état 54
@@ -939,11 +934,6 @@ range_step (63)
    25     | expr . OR expr
    34     | expr . QM expr DP expr
 
-    PLS   décalage et aller à l'état 47
-    MIN   décalage et aller à l'état 48
-    MUL   décalage et aller à l'état 49
-    DIV   décalage et aller à l'état 50
-    POW   décalage et aller à l'état 51
     LT    décalage et aller à l'état 52
     GT    décalage et aller à l'état 53
     GTE   décalage et aller à l'état 54
