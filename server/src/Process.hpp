@@ -149,6 +149,7 @@
                                     auto from = values[i-1-offset], to = values[i-2-offset], step = values[i-3-offset];
                                     step = (step) ? step : ((double) (to-from)/DEFAULT_SAMPLE);
                                     display("["+names[i]+"("+print(from)+", "+print(to)+", "+(step ? print(step) : "auto")+")]");
+                                    if (!step) { auto msg = "Error: Couldn't compute range" ; master()->rerror = true ; master()->data[ERROR] = msg; red(string("\r")+msg); }
                                 //Evaluation
                                     vector<double> xv, yv;
                                     auto process = processes[names[i]] ;
@@ -243,9 +244,9 @@
                             data[RESULT] = result();
                             data[XS] = xs;
                             data[YS] = ys;
-                        //
-                            //cout << result() << endl;
-                            //this->dump();
+                            
+                            if (verbose) { this->dump() ; }
+
                             return this ;
                     }
 

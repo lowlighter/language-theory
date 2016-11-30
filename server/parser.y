@@ -69,11 +69,12 @@
 %token SYNTAX_ERROR
 
     //Associativité et priorité
-%left  SIGN QM DP
+%left  QM DP
 %right EQU
 %left  PLS MIN
 %left  MUL DIV MOD
 %right POW
+%left  SIGN
 %left  LT GT GTE LTE EEQU DIFF AND OR
 
     //Types
@@ -161,7 +162,7 @@ numrs:
     //Nombres, variables et fonctions
       numr                                  { ; }
     //Tableau d'évaluation
-    | VARIABLE '(' range ')'                { table = 2 ; current()->store(FUNCTION_R, *$1) ; }
+    | VARIABLE '(' range ')'                { table = 2 ; current()->store(FUNCTION_R, 0, *$1) ; }
     ;
 
     //Affichage
