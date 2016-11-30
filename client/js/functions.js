@@ -95,16 +95,20 @@ function appendChartInTerminal(data) {
     terminal.insertAdjacentHTML('beforeend', '<div id="chart' + chartId +'" class="chart"></div><br>');
 
 
-    var trace1 = {
-        x: data.x,
-        y: data.y,
-    };
 
-    var data = [trace1];
+    var arr_data = [];
+
+    for(var i = 0; i < data.x.length ; i++) {
+        var obj = {
+            x: data.x[i],
+            y: data.y[i]
+        };
+        arr_data.push(obj);
+    }
 
     var layout = {};
 
-    Plotly.newPlot('chart' + chartId, data, layout);
+    Plotly.newPlot('chart' + chartId, arr_data, layout);
 
 
     var chart = document.querySelector('#chart' + chartId);

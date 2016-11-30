@@ -30,7 +30,7 @@
                     json data;
 
                 //Mode verbeux
-                    bool verbose = true ;
+                    bool verbose = false ;
 
                 //Identifiant (nom) du processus et nom de la variable d'évaluation
                     string id, var;
@@ -245,7 +245,7 @@
                             data[YS] = ys;
                         //
                             //cout << result() << endl;
-                            this->dump();
+                            //this->dump();
                             return this ;
                     }
 
