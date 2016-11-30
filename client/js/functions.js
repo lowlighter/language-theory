@@ -95,6 +95,7 @@ function appendChartInTerminal(data) {
     terminal.insertAdjacentHTML('beforeend', '<div id="chart' + chartId +'" class="chart"></div><br>');
 
 
+    var chart = document.querySelector('#chart' + chartId);
 
     var arr_data = [];
 
@@ -111,11 +112,16 @@ function appendChartInTerminal(data) {
     Plotly.newPlot('chart' + chartId, arr_data, layout);
 
 
-    var chart = document.querySelector('#chart' + chartId);
+    
 
-    chart.on('plotly_click', function(data){
-    console.log(data);
-});
+    chart.on('plotly_relayout',
+    function(eventdata){
+        //socketConnection.send(strip('plot(f, [0, 10])'));
+        alert( 
+            'x-axis start:' + eventdata['xaxis.range[0]'] + '\n' +
+            'x-axis end:' + eventdata['xaxis.range[1]'] );
+    });
+
 
 
 	return chartId += 1;
