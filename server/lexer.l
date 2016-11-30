@@ -10,15 +10,10 @@
     //Namespace
         using namespace std;
     //Déclaration de la fonction de parsing
-      extern int yyparse();
+        extern int yyparse();
 %}
 
     /* Déclarations Flex */
-operator    [*\+\-\/\=\(\)\^\,\[\]\?\:\<\>]
-gte         \<\=
-lte         \>\=
-eequ        \=\=
-diff        !\=
 number      [0-9]+(\.[0-9]+)?
 variable    [a-zA-Z_][a-zA-Z_0-9]*
 sqrt        (?i:sqrt)
@@ -31,10 +26,6 @@ abs         (?i:abs?)
 pi          (?i:pi)
 e           (?i:e)
 plot        (?i:plot)
-if          if
-then        then
-else        else
-endif       endif
 
     /* Parameters */
 color       (?i:rc(olor)?)
@@ -43,62 +34,63 @@ endline     \n
 %%
     /* Règles flex */
 
-{gte} { return GTE ; }
-{lte} { return LTE ; }
-{eequ} { return EEQU ; }
-{diff} { return DIFF ; }
+    /* Opérations */
+\=            { return EQU ; }
+\+            { return PLS; }
+\-            { return MIN; }
+\*            { return MUL ;}
+\/            { return DIV ; }
 
-{operator}    { return yytext[0]; }
 
+    /* Comparaisons */
+\<            { return LT ; }
+\>            { return GT ; }
+\<\=          { return GTE ; }
+\>\=          { return LTE ; }
+\=\=          { return EEQU ; }
+!\=           { return DIFF ; }
 
+    /* Structure */
+\(            { return '(' ; }
+\)            { return ')' ; }
+\[            { return '[' ; }
+\]            { return ']' ; }
+\,            { return ',' ; }
 
-{if}          { return IF ; }
-{then}          { return THEN ; }
-{else}          { return ELSE ; }
-{endif}     {return ENDIF ;}
+    /* Ternaire */
+\?            { return QM ; }
+\:            { return DP ; }
 
+    /* Logique */
+\&{2}         { return AND ; }
+\|{2}         { return OR ; }
+
+    /* Fonctions mathématiques */
 {sqrt}        { return SQRT; }
-
 {sin}         { return SIN; }
-
 {cos}         { return COS; }
-
 {log}         { return LOG; }
-
-{ln}         { return LN; }
-
+{ln}          { return LN; }
 {exp}         { return EXP; }
-
 {abs}         { return ABS; }
+\%            { return MOD ; }
+\^            { return POW ; }
 
+    /* Affichage */
 {plot}        { return PLOT; }
 
-{pi}          {
-                yylval.dbl = 3.14159 ;
-                return NUMBER ;
-              }
+    /* Constantes */
+{pi}          { return PI ; }
+{e}           { return EXP_E ;}
 
-{e}          {
-                yylval.dbl = 2.71828;
-                return NUMBER ;
-              }
+    /* Nombre et variable */
+{number}      { yylval.dbl = atof(yytext); return NUMBER; }
+{variable}    { yylval.str = new string(yytext); return VARIABLE; }
 
-{variable}    {
-              yylval.str = new string(yytext);
-              return VARIABLE;
-            }
+    /* Fin de ligne */
+{endline}     { return EOL ; }
 
-{number}      {
-                yylval.dbl = atof(yytext);
-                return NUMBER;
-              }
-
-
-
-{endline}     {
-                return EOL ;
-              }
-
+    /* Autre */
 .             {;}
 
 %%

@@ -1,0 +1,2158 @@
+Terminaux inutilisés dans la grammaire
+
+   FUNCTION
+   FUNCTION_R
+   ARRAY
+   FROM
+   TO
+   STEP
+   IF
+   THEN
+   ELSE
+   ENDIF
+   RANGE
+   XRANGE
+   YRANGE
+   COLOR
+   EOLR
+   RESET
+   SYNTAX_ERROR
+   MOD
+
+
+État 53 conflits: 1 décalage/réduction
+
+
+Grammaire
+
+    0 $accept: line $end
+
+    1 line: %empty
+    2     | line expr EOL
+    3     | line decl EQU expr EOL
+    4     | line VARIABLE EQU expr EOL
+
+    5 expr: '(' expr ')'
+    6     | PLS expr
+    7     | MIN expr
+    8     | numrs
+    9     | plot
+   10     | expr PLS expr
+   11     | expr MIN expr
+   12     | expr MUL expr
+   13     | expr DIV expr
+   14     | expr POW expr
+   15     | expr LT expr
+   16     | expr GT expr
+   17     | expr LTE expr
+   18     | expr GTE expr
+   19     | expr EEQU expr
+   20     | expr DIFF expr
+   21     | SQRT '(' expr ')'
+   22     | COS '(' expr ')'
+   23     | SIN '(' expr ')'
+   24     | LN '(' expr ')'
+   25     | LOG '(' expr ')'
+   26     | EXP '(' expr ')'
+   27     | ABS '(' expr ')'
+   28     | POWER '(' expr ',' expr ')'
+   29     | expr '?' expr ':' expr
+   30     | error
+
+   31 decl: VARIABLE '(' VARIABLE ')'
+
+   32 numr: NUMBER
+   33     | VARIABLE
+   34     | VARIABLE '(' expr ')'
+
+   35 numrs: numr
+   36      | VARIABLE '(' range ')'
+
+   37 plot: PLOT '(' VARIABLE ',' range ')'
+
+   38 range: %empty
+   39      | '[' numr ',' numr ']'
+   40      | '[' numr ',' numr ',' numr ']'
+
+
+Terminaux, suivis des règles où ils apparaissent
+
+$end (0) 0
+'(' (40) 5 21 22 23 24 25 26 27 28 31 34 36 37
+')' (41) 5 21 22 23 24 25 26 27 28 31 34 36 37
+',' (44) 28 37 39 40
+':' (58) 29
+'?' (63) 29
+'[' (91) 39 40
+']' (93) 39 40
+error (256) 30
+NUMBER (258) 32
+VARIABLE (259) 4 31 33 34 36 37
+FUNCTION (260)
+FUNCTION_R (261)
+ARRAY (262)
+FROM (263)
+TO (264)
+STEP (265)
+IF (266)
+THEN (267)
+ELSE (268)
+ENDIF (269)
+PLOT (270) 37
+RANGE (271)
+XRANGE (272)
+YRANGE (273)
+COLOR (274)
+SQRT (275) 21
+SIN (276) 23
+COS (277) 22
+LOG (278) 25
+LN (279) 24
+EXP (280) 26
+ABS (281) 27
+POWER (282) 28
+EOL (283) 2 3 4
+EOLR (284)
+RESET (285)
+SYNTAX_ERROR (286)
+LT (287) 15
+GT (288) 16
+EEQU (289) 19
+DIFF (290) 20
+GTE (291) 18
+LTE (292) 17
+PLS (293) 6 10
+MIN (294) 7 11
+MUL (295) 12
+DIV (296) 13
+MOD (297)
+POW (298) 14
+EQU (299) 3 4
+SIGN (300)
+
+
+Non-terminaux, suivis des règles où ils apparaissent
+
+$accept (53)
+    à gauche: 0
+line (54)
+    à gauche: 1 2 3 4, à droite: 0 2 3 4
+expr (55)
+    à gauche: 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+    24 25 26 27 28 29 30, à droite: 2 3 4 5 6 7 10 11 12 13 14 15
+    16 17 18 19 20 21 22 23 24 25 26 27 28 29 34
+decl (56)
+    à gauche: 31, à droite: 3
+numr (57)
+    à gauche: 32 33 34, à droite: 35 39 40
+numrs (58)
+    à gauche: 35 36, à droite: 8
+plot (59)
+    à gauche: 37, à droite: 9
+range (60)
+    à gauche: 38 39 40, à droite: 36 37
+
+
+État 0
+
+    0 $accept: . line $end
+
+    $défaut  réduction par utilisation de la règle 1 (line)
+
+    line  aller à l'état 1
+
+
+État 1
+
+    0 $accept: line . $end
+    2 line: line . expr EOL
+    3     | line . decl EQU expr EOL
+    4     | line . VARIABLE EQU expr EOL
+
+    $end      décalage et aller à l'état 2
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 5
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 18
+    decl   aller à l'état 19
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 2
+
+    0 $accept: line $end .
+
+    $défaut  accepter
+
+
+État 3
+
+   30 expr: error .
+
+    $défaut  réduction par utilisation de la règle 30 (expr)
+
+
+État 4
+
+   32 numr: NUMBER .
+
+    $défaut  réduction par utilisation de la règle 32 (numr)
+
+
+État 5
+
+    4 line: line VARIABLE . EQU expr EOL
+   31 decl: VARIABLE . '(' VARIABLE ')'
+   33 numr: VARIABLE .
+   34     | VARIABLE . '(' expr ')'
+   36 numrs: VARIABLE . '(' range ')'
+
+    EQU  décalage et aller à l'état 23
+    '('  décalage et aller à l'état 24
+
+    $défaut  réduction par utilisation de la règle 33 (numr)
+
+
+État 6
+
+   37 plot: PLOT . '(' VARIABLE ',' range ')'
+
+    '('  décalage et aller à l'état 25
+
+
+État 7
+
+   21 expr: SQRT . '(' expr ')'
+
+    '('  décalage et aller à l'état 26
+
+
+État 8
+
+   23 expr: SIN . '(' expr ')'
+
+    '('  décalage et aller à l'état 27
+
+
+État 9
+
+   22 expr: COS . '(' expr ')'
+
+    '('  décalage et aller à l'état 28
+
+
+État 10
+
+   25 expr: LOG . '(' expr ')'
+
+    '('  décalage et aller à l'état 29
+
+
+État 11
+
+   24 expr: LN . '(' expr ')'
+
+    '('  décalage et aller à l'état 30
+
+
+État 12
+
+   26 expr: EXP . '(' expr ')'
+
+    '('  décalage et aller à l'état 31
+
+
+État 13
+
+   27 expr: ABS . '(' expr ')'
+
+    '('  décalage et aller à l'état 32
+
+
+État 14
+
+   28 expr: POWER . '(' expr ',' expr ')'
+
+    '('  décalage et aller à l'état 33
+
+
+État 15
+
+    6 expr: PLS . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 35
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 16
+
+    7 expr: MIN . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 36
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 17
+
+    5 expr: '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 37
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 18
+
+    2 line: line expr . EOL
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    EOL   décalage et aller à l'état 38
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+
+
+État 19
+
+    3 line: line decl . EQU expr EOL
+
+    EQU  décalage et aller à l'état 51
+
+
+État 20
+
+   35 numrs: numr .
+
+    $défaut  réduction par utilisation de la règle 35 (numrs)
+
+
+État 21
+
+    8 expr: numrs .
+
+    $défaut  réduction par utilisation de la règle 8 (expr)
+
+
+État 22
+
+    9 expr: plot .
+
+    $défaut  réduction par utilisation de la règle 9 (expr)
+
+
+État 23
+
+    4 line: line VARIABLE EQU . expr EOL
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 52
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 24
+
+   31 decl: VARIABLE '(' . VARIABLE ')'
+   34 numr: VARIABLE '(' . expr ')'
+   36 numrs: VARIABLE '(' . range ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 53
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+    '['       décalage et aller à l'état 54
+
+    ')'  réduction par utilisation de la règle 38 (range)
+
+    expr   aller à l'état 55
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+    range  aller à l'état 56
+
+
+État 25
+
+   37 plot: PLOT '(' . VARIABLE ',' range ')'
+
+    VARIABLE  décalage et aller à l'état 57
+
+
+État 26
+
+   21 expr: SQRT '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 58
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 27
+
+   23 expr: SIN '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 59
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 28
+
+   22 expr: COS '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 60
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 29
+
+   25 expr: LOG '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 61
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 30
+
+   24 expr: LN '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 62
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 31
+
+   26 expr: EXP '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 63
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 32
+
+   27 expr: ABS '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 64
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 33
+
+   28 expr: POWER '(' . expr ',' expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 65
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 34
+
+   33 numr: VARIABLE .
+   34     | VARIABLE . '(' expr ')'
+   36 numrs: VARIABLE . '(' range ')'
+
+    '('  décalage et aller à l'état 66
+
+    $défaut  réduction par utilisation de la règle 33 (numr)
+
+
+État 35
+
+    6 expr: PLS expr .
+   10     | expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    $défaut  réduction par utilisation de la règle 6 (expr)
+
+
+État 36
+
+    7 expr: MIN expr .
+   10     | expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    $défaut  réduction par utilisation de la règle 7 (expr)
+
+
+État 37
+
+    5 expr: '(' expr . ')'
+   10     | expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ')'   décalage et aller à l'état 67
+
+
+État 38
+
+    2 line: line expr EOL .
+
+    $défaut  réduction par utilisation de la règle 2 (line)
+
+
+État 39
+
+   15 expr: expr LT . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 68
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 40
+
+   16 expr: expr GT . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 69
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 41
+
+   19 expr: expr EEQU . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 70
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 42
+
+   20 expr: expr DIFF . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 71
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 43
+
+   18 expr: expr GTE . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 72
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 44
+
+   17 expr: expr LTE . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 73
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 45
+
+   10 expr: expr PLS . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 74
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 46
+
+   11 expr: expr MIN . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 75
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 47
+
+   12 expr: expr MUL . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 76
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 48
+
+   13 expr: expr DIV . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 77
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 49
+
+   14 expr: expr POW . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 78
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 50
+
+   29 expr: expr '?' . expr ':' expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 79
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 51
+
+    3 line: line decl EQU . expr EOL
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 80
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 52
+
+    4 line: line VARIABLE EQU expr . EOL
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    EOL   décalage et aller à l'état 81
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+
+
+État 53
+
+   31 decl: VARIABLE '(' VARIABLE . ')'
+   33 numr: VARIABLE .
+   34     | VARIABLE . '(' expr ')'
+   36 numrs: VARIABLE . '(' range ')'
+
+    '('  décalage et aller à l'état 66
+    ')'  décalage et aller à l'état 82
+
+    ')'       [réduction par utilisation de la règle 33 (numr)]
+    $défaut  réduction par utilisation de la règle 33 (numr)
+
+
+État 54
+
+   39 range: '[' . numr ',' numr ']'
+   40      | '[' . numr ',' numr ',' numr ']'
+
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 83
+
+    numr  aller à l'état 84
+
+
+État 55
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+   34 numr: VARIABLE '(' expr . ')'
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ')'   décalage et aller à l'état 85
+
+
+État 56
+
+   36 numrs: VARIABLE '(' range . ')'
+
+    ')'  décalage et aller à l'état 86
+
+
+État 57
+
+   37 plot: PLOT '(' VARIABLE . ',' range ')'
+
+    ','  décalage et aller à l'état 87
+
+
+État 58
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   21     | SQRT '(' expr . ')'
+   29     | expr . '?' expr ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ')'   décalage et aller à l'état 88
+
+
+État 59
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   23     | SIN '(' expr . ')'
+   29     | expr . '?' expr ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ')'   décalage et aller à l'état 89
+
+
+État 60
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   22     | COS '(' expr . ')'
+   29     | expr . '?' expr ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ')'   décalage et aller à l'état 90
+
+
+État 61
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   25     | LOG '(' expr . ')'
+   29     | expr . '?' expr ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ')'   décalage et aller à l'état 91
+
+
+État 62
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   24     | LN '(' expr . ')'
+   29     | expr . '?' expr ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ')'   décalage et aller à l'état 92
+
+
+État 63
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   26     | EXP '(' expr . ')'
+   29     | expr . '?' expr ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ')'   décalage et aller à l'état 93
+
+
+État 64
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   27     | ABS '(' expr . ')'
+   29     | expr . '?' expr ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ')'   décalage et aller à l'état 94
+
+
+État 65
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   28     | POWER '(' expr . ',' expr ')'
+   29     | expr . '?' expr ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ','   décalage et aller à l'état 95
+
+
+État 66
+
+   34 numr: VARIABLE '(' . expr ')'
+   36 numrs: VARIABLE '(' . range ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+    '['       décalage et aller à l'état 54
+
+    ')'  réduction par utilisation de la règle 38 (range)
+
+    expr   aller à l'état 55
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+    range  aller à l'état 56
+
+
+État 67
+
+    5 expr: '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 5 (expr)
+
+
+État 68
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   15     | expr LT expr .
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    PLS  décalage et aller à l'état 45
+    MIN  décalage et aller à l'état 46
+    MUL  décalage et aller à l'état 47
+    DIV  décalage et aller à l'état 48
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 15 (expr)
+
+
+État 69
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   16     | expr GT expr .
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    PLS  décalage et aller à l'état 45
+    MIN  décalage et aller à l'état 46
+    MUL  décalage et aller à l'état 47
+    DIV  décalage et aller à l'état 48
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 16 (expr)
+
+
+État 70
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   19     | expr EEQU expr .
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    PLS  décalage et aller à l'état 45
+    MIN  décalage et aller à l'état 46
+    MUL  décalage et aller à l'état 47
+    DIV  décalage et aller à l'état 48
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 19 (expr)
+
+
+État 71
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   20     | expr DIFF expr .
+   29     | expr . '?' expr ':' expr
+
+    PLS  décalage et aller à l'état 45
+    MIN  décalage et aller à l'état 46
+    MUL  décalage et aller à l'état 47
+    DIV  décalage et aller à l'état 48
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 20 (expr)
+
+
+État 72
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   18     | expr GTE expr .
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    PLS  décalage et aller à l'état 45
+    MIN  décalage et aller à l'état 46
+    MUL  décalage et aller à l'état 47
+    DIV  décalage et aller à l'état 48
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 18 (expr)
+
+
+État 73
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   17     | expr LTE expr .
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    PLS  décalage et aller à l'état 45
+    MIN  décalage et aller à l'état 46
+    MUL  décalage et aller à l'état 47
+    DIV  décalage et aller à l'état 48
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 17 (expr)
+
+
+État 74
+
+   10 expr: expr . PLS expr
+   10     | expr PLS expr .
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    MUL  décalage et aller à l'état 47
+    DIV  décalage et aller à l'état 48
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 10 (expr)
+
+
+État 75
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   11     | expr MIN expr .
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    MUL  décalage et aller à l'état 47
+    DIV  décalage et aller à l'état 48
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 11 (expr)
+
+
+État 76
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   12     | expr MUL expr .
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 12 (expr)
+
+
+État 77
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   13     | expr DIV expr .
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 13 (expr)
+
+
+État 78
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   14     | expr POW expr .
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    POW  décalage et aller à l'état 49
+    '?'  décalage et aller à l'état 50
+
+    $défaut  réduction par utilisation de la règle 14 (expr)
+
+
+État 79
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+   29     | expr '?' expr . ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ':'   décalage et aller à l'état 96
+
+
+État 80
+
+    3 line: line decl EQU expr . EOL
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+
+    EOL   décalage et aller à l'état 97
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+
+
+État 81
+
+    4 line: line VARIABLE EQU expr EOL .
+
+    $défaut  réduction par utilisation de la règle 4 (line)
+
+
+État 82
+
+   31 decl: VARIABLE '(' VARIABLE ')' .
+
+    $défaut  réduction par utilisation de la règle 31 (decl)
+
+
+État 83
+
+   33 numr: VARIABLE .
+   34     | VARIABLE . '(' expr ')'
+
+    '('  décalage et aller à l'état 98
+
+    $défaut  réduction par utilisation de la règle 33 (numr)
+
+
+État 84
+
+   39 range: '[' numr . ',' numr ']'
+   40      | '[' numr . ',' numr ',' numr ']'
+
+    ','  décalage et aller à l'état 99
+
+
+État 85
+
+   34 numr: VARIABLE '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 34 (numr)
+
+
+État 86
+
+   36 numrs: VARIABLE '(' range ')' .
+
+    $défaut  réduction par utilisation de la règle 36 (numrs)
+
+
+État 87
+
+   37 plot: PLOT '(' VARIABLE ',' . range ')'
+
+    '['  décalage et aller à l'état 54
+
+    $défaut  réduction par utilisation de la règle 38 (range)
+
+    range  aller à l'état 100
+
+
+État 88
+
+   21 expr: SQRT '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 21 (expr)
+
+
+État 89
+
+   23 expr: SIN '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 23 (expr)
+
+
+État 90
+
+   22 expr: COS '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 22 (expr)
+
+
+État 91
+
+   25 expr: LOG '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 25 (expr)
+
+
+État 92
+
+   24 expr: LN '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 24 (expr)
+
+
+État 93
+
+   26 expr: EXP '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 26 (expr)
+
+
+État 94
+
+   27 expr: ABS '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 27 (expr)
+
+
+État 95
+
+   28 expr: POWER '(' expr ',' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 101
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 96
+
+   29 expr: expr '?' expr ':' . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 102
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 97
+
+    3 line: line decl EQU expr EOL .
+
+    $défaut  réduction par utilisation de la règle 3 (line)
+
+
+État 98
+
+   34 numr: VARIABLE '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 34
+    PLOT      décalage et aller à l'état 6
+    SQRT      décalage et aller à l'état 7
+    SIN       décalage et aller à l'état 8
+    COS       décalage et aller à l'état 9
+    LOG       décalage et aller à l'état 10
+    LN        décalage et aller à l'état 11
+    EXP       décalage et aller à l'état 12
+    ABS       décalage et aller à l'état 13
+    POWER     décalage et aller à l'état 14
+    PLS       décalage et aller à l'état 15
+    MIN       décalage et aller à l'état 16
+    '('       décalage et aller à l'état 17
+
+    expr   aller à l'état 55
+    numr   aller à l'état 20
+    numrs  aller à l'état 21
+    plot   aller à l'état 22
+
+
+État 99
+
+   39 range: '[' numr ',' . numr ']'
+   40      | '[' numr ',' . numr ',' numr ']'
+
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 83
+
+    numr  aller à l'état 103
+
+
+État 100
+
+   37 plot: PLOT '(' VARIABLE ',' range . ')'
+
+    ')'  décalage et aller à l'état 104
+
+
+État 101
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   28     | POWER '(' expr ',' expr . ')'
+   29     | expr . '?' expr ':' expr
+
+    LT    décalage et aller à l'état 39
+    GT    décalage et aller à l'état 40
+    EEQU  décalage et aller à l'état 41
+    DIFF  décalage et aller à l'état 42
+    GTE   décalage et aller à l'état 43
+    LTE   décalage et aller à l'état 44
+    PLS   décalage et aller à l'état 45
+    MIN   décalage et aller à l'état 46
+    MUL   décalage et aller à l'état 47
+    DIV   décalage et aller à l'état 48
+    POW   décalage et aller à l'état 49
+    '?'   décalage et aller à l'état 50
+    ')'   décalage et aller à l'état 105
+
+
+État 102
+
+   10 expr: expr . PLS expr
+   11     | expr . MIN expr
+   12     | expr . MUL expr
+   13     | expr . DIV expr
+   14     | expr . POW expr
+   15     | expr . LT expr
+   16     | expr . GT expr
+   17     | expr . LTE expr
+   18     | expr . GTE expr
+   19     | expr . EEQU expr
+   20     | expr . DIFF expr
+   29     | expr . '?' expr ':' expr
+   29     | expr '?' expr ':' expr .
+
+    $défaut  réduction par utilisation de la règle 29 (expr)
+
+
+État 103
+
+   39 range: '[' numr ',' numr . ']'
+   40      | '[' numr ',' numr . ',' numr ']'
+
+    ','  décalage et aller à l'état 106
+    ']'  décalage et aller à l'état 107
+
+
+État 104
+
+   37 plot: PLOT '(' VARIABLE ',' range ')' .
+
+    $défaut  réduction par utilisation de la règle 37 (plot)
+
+
+État 105
+
+   28 expr: POWER '(' expr ',' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 28 (expr)
+
+
+État 106
+
+   40 range: '[' numr ',' numr ',' . numr ']'
+
+    NUMBER    décalage et aller à l'état 4
+    VARIABLE  décalage et aller à l'état 83
+
+    numr  aller à l'état 108
+
+
+État 107
+
+   39 range: '[' numr ',' numr ']' .
+
+    $défaut  réduction par utilisation de la règle 39 (range)
+
+
+État 108
+
+   40 range: '[' numr ',' numr ',' numr . ']'
+
+    ']'  décalage et aller à l'état 109
+
+
+État 109
+
+   40 range: '[' numr ',' numr ',' numr ']' .
+
+    $défaut  réduction par utilisation de la règle 40 (range)
