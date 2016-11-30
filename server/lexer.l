@@ -78,6 +78,7 @@ endline     \n
 
     /* Affichage */
 {plot}        { return PLOT; }
+update        { return UPDATE; }
 
     /* Constantes */
 {pi}          { return PI ; }

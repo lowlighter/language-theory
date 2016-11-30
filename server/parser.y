@@ -46,7 +46,7 @@
         void eval() { current()->eval() ; current()->jresult(); }
     //Processus principal
         auto master = new Process(Process::MASTER) ;
-        int token = 0, plot = 0, table = 0, plots = 1;
+        int token = 0, plot = 0, table = 0, plots = 1, update = 0;
 %}
 
     //Liste des membres de yyval
@@ -59,6 +59,7 @@
 %token <str>  VARIABLE FUNCTION FUNCTION_R
 %token        FROM TO STEP
 %token        IF THEN ELSE
+%token        UPDATE
 
     //Tokens de fonctions
 %token PLOT
@@ -90,7 +91,7 @@
 
     //Entrée
 line: /* Epsilon */                         { ; }
-    | line expr EOL                         { current()->store(EOL, plot+table) ; table = plot = 0; eval() ;}
+    | line expr EOL                         { current()->store(EOL, plot+table+update) ; cout << plot+table+update << endl ;  update = table = plot = 0; eval() ;}
     | line decl EQU expr EOL                { current()->store(EOL) ; Process::close() ; current()->store(EOLR) ; eval() ; }
     | line VARIABLE EQU expr EOL            { current()->store(EQU, *$2) ; current()->store(EOLR) ; eval() ; }
     ;
@@ -108,7 +109,7 @@ expr:
     //Variables numériques
     | numrs                                 { ; }
     //Blocs
-    | plot                                  { plot = 1 ;}
+    | plot                                  { plot = 1 ; }
     | range { ; }
     //Opérations basiques
     | expr PLS expr                         { current()->store(PLS) ; }
@@ -169,17 +170,18 @@ numrs:
 
     //Affichage
 plot:
-      plot_decl                             { plots = 1 ;}
+      plot_decl                             { plots = 1 ; }
     ;
 
     //Déclaration de l'affichage
 plot_decl:
-    PLOT '(' plot_func                      { ; }
+      PLOT '(' plot_func                    { ; }
+    | UPDATE '(' plot_func                  { update = 4; }
 ;
 
     //Liste des fonctions à afficher
 plot_func:
-    VARIABLE ',' plot_func                  { current()->store(FUNCTION_R, plots, *$1) ; plots++ ; }
+      VARIABLE ',' plot_func                { current()->store(FUNCTION_R, plots, *$1) ; plots++ ; }
     | VARIABLE plot_range                   { current()->store(FUNCTION_R, plots, *$1) ; plots++ ; }
 ;
 
@@ -203,7 +205,7 @@ range_to:
 
     //Range (step)
 range_step:
-    ']'                                     {  current()->store(NUMBER, 0) ; current()->store(STEP) ; }
+      ']'                                   {  current()->store(NUMBER, 0) ; current()->store(STEP) ; }
     | ',' expr ']'                          { current()->store(STEP) ;}
     ;
 %%

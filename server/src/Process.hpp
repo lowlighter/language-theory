@@ -30,7 +30,7 @@
                     json data;
 
                 //Mode verbeux
-                    bool verbose = false ;
+                    bool verbose = true ;
 
                 //Identifiant (nom) du processus et nom de la variable d'évaluation
                     string id, var;
@@ -49,14 +49,16 @@
                 //Fin de ligne : Met à jour la variable réponse
                     Process* eol(int i = 0) {
                         //Données JSON
-                            data[GRAPH] = (values[i] == 1)||(values[i] == 3);
-                            data[TABLE] = (values[i] == 2)||(values[i] == 3);
+                            data[GRAPH] = (values[i] == 1)||(values[i] == 2+1);
+                            data[TABLE] = (values[i] == 2)||(values[i] == 2+1)||(values[i] == 2+4);
+                            if (values[i] >= 4) { data[GRAPH] = UPDATE  ; }
+                            cout << values[i] << endl ;
                             if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ;
                         //Affichage
                             rreturn = true ;
                             return display("(;)\n") ;
                     }
-                    Process* eolr(int i = 0) { data[GRAPH] = data[UPDATE] = rreturn = false ; return display("(§)\n") ; }
+                    Process* eolr(int i = 0) { data[GRAPH] = rreturn = false ; return display("(§)\n") ; }
                 //Opération non repertoriée
                     Process* unknown(int i = 0) { return display("?") ; }
 
