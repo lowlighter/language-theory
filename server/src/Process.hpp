@@ -12,15 +12,17 @@
         using json = nlohmann::json;
 
     //Factorielle
-        int factorial(int n) { return n > 1 ? n*factorial(n-1) : 1 ; }
-        bool prime(int n) {
+
+        
+        inline int factorial(int n) { return n > 1 ? n*factorial(n-1) : 1 ; }
+        inline bool prime(int n) {
             if(n < 2) { return false; }
             if(n == 2) { return true; }
             if(n % 2 == 0) { return false; }
             for(int i=3; (i*i) <= n; i+=2) { if(n % i == 0 ) { return false; } }
             return true;
         }
-
+        
     //Processus
         class Process {
             public:
