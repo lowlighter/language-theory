@@ -33,14 +33,14 @@
                             static bool reserved(string word) { return (find(RESERVED.begin(), RESERVED.end(), word) != RESERVED.end()) ; }
 
                 //Précision des nombres flottants et valeurs des signes
-                    static const int PRECISION = 10000, DEFAULT_SAMPLE = 100, NEG = -1, POS = +1 ;
+                    static const int PRECISION = 10000, DEFAULT_SAMPLE = 100, NEG = -1, POS = +1, PRELOAD = 3 ;
 
                 //Noms des champs et données JSON
                     static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER, TABLE, XS, YS, PLOTTED ;
                     json data;
 
                 //Mode verbeux
-                    bool verbose = true ;
+                    bool verbose = false ;
 
                 //Identifiant (nom) du processus et nom de la variable d'évaluation
                     string id, var;
@@ -178,7 +178,7 @@
                                 //Evaluation
                                     vector<double> xv, yv;
                                     auto process = processes[names[i]] ;
-                                    for (auto j = from; j <= to+step; j+=step) { yv.push_back(process->eval(j)); xv.push_back(j); if (process->verbose) { cout << endl; } }
+                                    for (auto j = (from-to)*PRELOAD; j <= (to-from)*PRELOAD; j+=step) { yv.push_back(process->eval(j)); xv.push_back(j); if (process->verbose) { cout << endl; } }
                                 //Retour
                                     xs.push_back(xv); ys.push_back(yv); plotted.push_back(process->id) ;
                                     return this;

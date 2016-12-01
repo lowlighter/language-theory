@@ -84,6 +84,7 @@
 %right MOD POW
 %left  FAC SIGN
 %left  LT GT GTE LTE EEQU DIFF AND OR
+%precedence RULE
 
     //Types
 %type <dbl>   line expr
@@ -147,7 +148,7 @@ expr:
     | PRM    '(' expr ')'                   { current()->store(PRM)  ; }
     | POWER  '(' expr',' expr')'            { current()->store(POW)  ; }
     // Ternaire
-    | ternary                               { current()->store(IF) ; current()->store(THEN, stmt) ; current()->store(ELSE, stmt+1) ; stmt+=2 ; }
+    | ternary %prec RULE                    { current()->store(IF) ; current()->store(THEN, stmt) ; current()->store(ELSE, stmt+1) ; stmt+=2 ; }
     //Gestion des erreurs
     | error                                 { current()->store(SYNTAX_ERROR) ; }
     ;
@@ -170,7 +171,7 @@ numr:
       NUMBER                                { current()->store(NUMBER, $1) ; }
     //Variables et fonctions
     | VARIABLE                              { current()->store(VARIABLE, *$1) ; }
-    | VARIABLE '(' expr ')'                 { current()->store(FUNCTION, *$1) ; }
+    | VARIABLE '(' expr ')' %prec RULE      { current()->store(FUNCTION, *$1) ; }
     ;
 
     //Nomre, variables et fonctions évalués sur un tableau

@@ -70,34 +70,36 @@ extern int yydebug;
     SQRT = 274,
     SIN = 275,
     COS = 276,
-    LOG = 277,
-    LN = 278,
-    EXP = 279,
-    ABS = 280,
-    POWER = 281,
-    PRM = 282,
-    EOL = 283,
-    EOLR = 284,
-    SYNTAX_ERROR = 285,
-    QM = 286,
-    DP = 287,
-    EQU = 288,
-    PLS = 289,
-    MIN = 290,
-    MUL = 291,
-    DIV = 292,
-    MOD = 293,
-    POW = 294,
-    FAC = 295,
-    SIGN = 296,
-    LT = 297,
-    GT = 298,
-    GTE = 299,
-    LTE = 300,
-    EEQU = 301,
-    DIFF = 302,
-    AND = 303,
-    OR = 304
+    TAN = 277,
+    LOG = 278,
+    LN = 279,
+    EXP = 280,
+    ABS = 281,
+    POWER = 282,
+    PRM = 283,
+    EOL = 284,
+    EOLR = 285,
+    SYNTAX_ERROR = 286,
+    QM = 287,
+    DP = 288,
+    EQU = 289,
+    PLS = 290,
+    MIN = 291,
+    MUL = 292,
+    DIV = 293,
+    MOD = 294,
+    POW = 295,
+    FAC = 296,
+    SIGN = 297,
+    LT = 298,
+    GT = 299,
+    GTE = 300,
+    LTE = 301,
+    EEQU = 302,
+    DIFF = 303,
+    AND = 304,
+    OR = 305,
+    RULE = 306
   };
 #endif
 
@@ -106,12 +108,12 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 55 "parser.y" /* yacc.c:1909  */
+#line 58 "parser.y" /* yacc.c:1909  */
 
     double dbl;
     std::string *str;
 
-#line 115 "parser.tab.h" /* yacc.c:1909  */
+#line 117 "parser.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
