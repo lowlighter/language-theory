@@ -89,16 +89,19 @@ function clearTerminal() {
 
 var chartId = 0;
 
+
+// Ajoute un chart dans le terminal
+
 function appendChartInTerminal(data) {
 
-
+    // ON ajoute la div qui contient le graph
     terminal.insertAdjacentHTML('beforeend', '<div id="chart' + chartId +'" class="chart"></div><br>');
 
 
     var chart = document.querySelector('#chart' + chartId);
 
+    // On récupère les données du serveur et on les passent à plotly
     var arr_data = [];
-
     for(var i = 0; i < data.x.length ; i++) {
         var obj = {
             x: data.x[i],
@@ -109,22 +112,24 @@ function appendChartInTerminal(data) {
 
     var layout = {};
 
+    // On créé le plot
     Plotly.newPlot('chart' + chartId, arr_data, layout);
 
+    // On récupère les fonctions contenues dans le graph
+    var functions_str = data.plotted.join(', ');
 
-    
-
+    // On y attache un évènement qui va appeler le serveur à chaque fois que l'utilisateur bouge le viewport
     chart.on('plotly_relayout',
     function(eventdata){
         console.log(eventdata["xaxis.range[0]"]);
         console.log(eventdata["xaxis.range[1]"]);
         if(eventdata["xaxis.range[0]"] != undefined && eventdata["xaxis.range[1]"] != undefined) {
-            socketConnection.send(strip('update(_' + (chartId - 1) + ', f, [' + eventdata["xaxis.range[0]"] +', ' + eventdata["xaxis.range[1]"] + '])'));
+            socketConnection.send(strip('update(_' + (chartId - 1) + ', ' + functions_str + ', [' + eventdata["xaxis.range[0]"] +', ' + eventdata["xaxis.range[1]"] + '])'));
         }
     });
 
 
-
+    // On incrémente l'id des charts
 	chartId += 1;
 }
 
