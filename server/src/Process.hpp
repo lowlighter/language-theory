@@ -13,7 +13,7 @@
 
     //Factorielle
 
-        
+
         inline int factorial(int n) { return n > 1 ? n*factorial(n-1) : 1 ; }
         inline bool prime(int n) {
             if(n < 2) { return false; }
@@ -22,7 +22,7 @@
             for(int i=3; (i*i) <= n; i+=2) { if(n % i == 0 ) { return false; } }
             return true;
         }
-        
+
     //Processus
         class Process {
             public:
@@ -35,7 +35,7 @@
                             static bool reserved(string word) { return (find(RESERVED.begin(), RESERVED.end(), word) != RESERVED.end()) ; }
 
                 //Précision des nombres flottants et valeurs des signes
-                    static const int PRECISION = 10000, DEFAULT_SAMPLE = 100, NEG = -1, POS = +1, PRELOAD = 3 ;
+                    static const int DEFAULT_SAMPLE = 10000, NEG = -1, POS = +1 ;
 
                 //Noms des champs et données JSON
                     static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER, TABLE, XS, YS, PLOTTED ;
@@ -89,15 +89,15 @@
                     Process* pow(int i = 0) { pop(2) ; return display("^")->push(std::pow(b, a)) ; }
                     Process* fac(int i = 0) { pop(1) ; return display("!")->push(factorial(a)) ; }
                     Process* sqrt(int i = 0) { pop(1) ; return display("SQRT")->push(std::sqrt(a)) ; }
-                    Process* log(int i = 0) { pop(1) ; return display("LOG")->push(round(PRECISION*std::log10(a))/PRECISION) ; }
-                    Process* ln(int i = 0) { pop(1) ; return display("LN")->push(round(PRECISION*std::log(a))/PRECISION) ; }
-                    Process* exp(int i = 0) { pop(1) ; return display("EXP")->push(round(PRECISION*std::exp(a))/PRECISION) ; }
+                    Process* log(int i = 0) { pop(1) ; return display("LOG")->push(std::log10(a)) ; }
+                    Process* ln(int i = 0) { pop(1) ; return display("LN")->push(std::log(a)) ; }
+                    Process* exp(int i = 0) { pop(1) ; return display("EXP")->push(std::exp(a)) ; }
                     Process* abs(int i = 0) { pop(1) ; return display("ABS")->push(std::abs(a)) ; }
 
                 //Trigonométrie
-                    Process* cos(int i = 0) { pop(1) ; return display("COS")->push(round(PRECISION*std::cos(a))/PRECISION) ; }
-                    Process* sin(int i = 0) { pop(1) ; return display("SIN")->push(round(PRECISION*std::sin(a))/PRECISION) ; }
-                    Process* tan(int i = 0) { pop(1) ; return display("TAN")->push(round(PRECISION*std::tan(a))/PRECISION) ; }
+                    Process* cos(int i = 0) { pop(1) ; return display("COS")->push(std::cos(a)) ; }
+                    Process* sin(int i = 0) { pop(1) ; return display("SIN")->push(std::sin(a)) ; }
+                    Process* tan(int i = 0) { pop(1) ; return display("TAN")->push(std::tan(a)) ; }
 
                 //Affichage
                     Process* plot(int i = 0) { xs.clear(); ys.clear(); plotted.clear(); return display("[plot]") ; }
@@ -180,7 +180,7 @@
                                 //Evaluation
                                     vector<double> xv, yv;
                                     auto process = processes[names[i]] ;
-                                    for (auto j = (from-to)*PRELOAD; j <= (to-from)*PRELOAD; j+=step) { yv.push_back(process->eval(j)); xv.push_back(j); if (process->verbose) { cout << endl; } }
+                                    for (auto j = from; j <= to; j+=step) { yv.push_back(process->eval(j)); xv.push_back(j); if (process->verbose) { cout << endl; } }
                                 //Retour
                                     xs.push_back(xv); ys.push_back(yv); plotted.push_back(process->id) ;
                                     return this;

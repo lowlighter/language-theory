@@ -33,8 +33,8 @@
     //Constantes
         const int NEG = -1 ;
         const int POS = +1 ;
-        const double C_PI = 3.14159;
-        const double C_EXP_E = 2.71828;
+        const double C_PI = 3.14159265359;
+        const double C_EXP_E = 2.71828182846;
         const double C_TRUE = 1;
         const double C_FALSE = 0;
         const int DEFAULT_START = -10 ;
