@@ -28,6 +28,7 @@ input.addEventListener('keyup', function(e) {
 			}
 			socketConnection.send(strip(input.innerHTML));
 		    appendTextInTerminal(highlighterLight('>>> ' + input.innerHTML, grammar));
+		    terminal.scrollTop = terminal.scrollHeight;
 		    input.innerHTML = "";
 			break;
 	}

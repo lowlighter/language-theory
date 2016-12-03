@@ -131,6 +131,7 @@ function appendChartInTerminal(data) {
 
     // On incrémente l'id des charts
 	chartId += 1;
+    terminal.scrollTop = terminal.scrollHeight;
 }
 
 
