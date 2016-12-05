@@ -3,6 +3,9 @@ var terminal = document.querySelector('#terminal');
 
 socketConnection = new WebSocketConnection("ws://localhost:8080/echo");
 
+var historyArr = [];
+historyPtr = 0;
+
 var a;
 
 var grammar = [{
@@ -18,17 +21,34 @@ var grammar = [{
 
 input.addEventListener('keyup', function(e) {
 	highlighter('#input', grammar);
+	console.log(e.key)
 	switch (e.key) {
 		case "Enter":
-			
 			if(strip(input.innerHTML) == "clear") {
 				clearTerminal();
-				input.value = "";
+				input.innerHTML = "";
 				break;
 			}
 			socketConnection.send(strip(input.innerHTML));
 		    appendTextInTerminal(highlighterLight('>>> ' + input.innerHTML, grammar));
+		    terminal.scrollTop = terminal.scrollHeight;
+		    historyArr.push(input.innerHTML);
+		    historyPtr = historyArr.length;
 		    input.innerHTML = "";
+			break;
+		case "ArrowUp":
+		console.log(historyPtr);
+			if(historyPtr > 0) {
+				historyPtr -- ;
+				input.innerHTML = historyArr[historyPtr];
+			}
+			break;
+		case "ArrowDown":
+			console.log(historyPtr);
+			if(historyPtr < historyArr.length-1) {
+				historyPtr ++ ;
+				input.innerHTML = historyArr[historyPtr];
+			}
 			break;
 	}
 });
