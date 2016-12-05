@@ -33,8 +33,8 @@
     //Constantes
         const int NEG = -1 ;
         const int POS = +1 ;
-        const double C_PI = 3.14159265359;
-        const double C_EXP_E = 2.71828182846;
+        const double C_PI = 3.14159;
+        const double C_EXP_E = 2.71828;
         const double C_TRUE = 1;
         const double C_FALSE = 0;
         const int DEFAULT_START = -10 ;
@@ -162,7 +162,7 @@ ternary:
 
     //Déclaration de fonctions et de variables
 decl:
-      VARIABLE '(' VARIABLE ')'             { Process::open(*$1, *$3) ; }
+      VARIABLE '(' VARIABLE ')'             { Process::open(*$1, *$3) ; } /* HERE */
     ;
 
     //Nombres, variables et fonctions
@@ -171,7 +171,7 @@ numr:
       NUMBER                                { current()->store(NUMBER, $1) ; }
     //Variables et fonctions
     | VARIABLE                              { current()->store(VARIABLE, *$1) ; }
-    | VARIABLE '(' expr ')' %prec RULE      { current()->store(FUNCTION, *$1) ; }
+    | VARIABLE '(' expr ')' %prec RULE      { current()->store(FUNCTION, *$1) ; } /* HERE */
     ;
 
     //Nomre, variables et fonctions évalués sur un tableau

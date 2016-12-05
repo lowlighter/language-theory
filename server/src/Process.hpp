@@ -42,7 +42,7 @@
                     json data;
 
                 //Mode verbeux
-                    bool verbose = false ;
+                    bool verbose = false;
 
                 //Identifiant (nom) du processus et nom de la variable d'évaluation
                     string id, var;
@@ -132,15 +132,15 @@
                         //Vérification que l'identificateur n'est pas un mot reservé
                             if (!reserved(names[i])) { vars[names[i]] = pop() ; return display("[="+names[i]+"]") ; }
                         //Erreurs
-                            rerror = true ;
-                            auto msg = "Error: Use of reserved keyword "+names[i]+" as variable."; data[ERROR] = msg; red("\r"+msg); return this ;
+                            master()->rerror = true ;
+                            auto msg = "Error: Use of reserved keyword "+names[i]+" as variable."; master()->data[ERROR] = msg; red("\r"+msg); return this ;
                     }
 
                 //Erreur de syntaxe
                     Process* syntax_error(int i) {
                         //Erreurs
-                            rerror = true ;
-                            auto msg = "Error: Syntax error."; data[ERROR] = msg; red(string("\r")+msg); return this ;
+                            master()->rerror = true ;
+                            auto msg = "Error: Syntax error."; master()->data[ERROR] = msg; red(string("\r")+msg); return this ;
                     }
 
                 //Récupération (variable)
@@ -149,8 +149,8 @@
                             if (vars.count(names[i])) { return display("["+names[i]+"="+print(vars[names[i]])+"]")->push(vars[names[i]]) ; }
                             if (master()->vars.count(names[i])) { return display("[global_"+names[i]+"="+print(vars[names[i]])+"]")->push(master()->vars[names[i]]) ; }
                         //Erreurs
-                            rerror = true ;
-                            auto msg = "Error: Undefined variable "+names[i]+"." ; data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
+                            master()->rerror = true ;
+                            auto msg = "Error: Undefined variable "+names[i]+"." ; master()->data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
                     }
 
                 //Evaluation (fonction)
@@ -159,12 +159,15 @@
                             if (processes.count(names[i])) {
                                 auto process = processes[names[i]];
                                 auto a = process->vars[process->var] = pop() ;
+                            //Application du contexte
+                                process->vars.clear();
+                                for (auto it = vars.begin(); it != vars.end(); it++) { process->vars[it->first] = it->second ; }
                                 b = process->eval(a) ;
                                 return display("["+names[i]+"("+process->var+"="+print(a)+")="+print(b)+"]")->push(b) ;
                             }
                         //Erreurs
-                            rerror = true ;
-                            auto msg = "Error: Undefined call to function "+names[i]+"." ; data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
+                            master()->rerror = true ;
+                            auto msg = "Error: Undefined call to function "+names[i]+"." ; master()->data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
                     }
 
                 //Sous-fonction
@@ -186,8 +189,8 @@
                                     return this;
                             }
                         //Erreurs
-                            rerror = true ;
-                            auto msg = "Error: Undefined call to function "+names[i]+"." ; data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
+                            master()->rerror = true ;
+                            auto msg = "Error: Undefined call to function "+names[i]+"." ; master()->data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
                     }
 
                 //Ranges
