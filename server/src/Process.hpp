@@ -12,8 +12,6 @@
         using json = nlohmann::json;
 
     //Factorielle
-
-
         inline int factorial(int n) { return n > 1 ? n*factorial(n-1) : 1 ; }
         inline bool prime(int n) {
             if(n < 2) { return false; }
@@ -43,6 +41,7 @@
 
                 //Mode verbeux
                     bool verbose = false;
+                    bool vresult = true ;
 
                 //Identifiant (nom) du processus et nom de la variable d'évaluation
                     string id, var;
@@ -61,53 +60,59 @@
                 //Fin de ligne : Met à jour la variable réponse
                     Process* eol(int i = 0) {
                         //Données JSON
-                            data[GRAPH] = (values[i] == 1)||(values[i] == 2+1);
-                            data[TABLE] = (values[i] == 2)||(values[i] == 2+1);
-                            if (names[i].size()) { data[GRAPH] = names[i] ; }
+                            data[TABLE] = (values[i] == 2);
+                            if (names[i].size() > 1) { data[GRAPH] = names[i] ; } else { data[GRAPH] = (values[i] == 1); }
                             if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ;
                         //Affichage
                             rreturn = true ;
                             return display("(;)\n") ;
                     }
-                    Process* eolr(int i = 0) { data[GRAPH] = rreturn = false ; return display("(§)\n") ; }
+                    Process* eolr() { if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ; data[GRAPH] = rreturn = false ; return display("(§)\n") ; }
                 //Opération non repertoriée
-                    Process* unknown(int i = 0) { return display("?") ; }
+                    Process* unknown() { return display("?") ; }
 
                 //Gestion des nombres et de leurs signes
                     Process* number(int i) { return display(print(values[i]))->push(values[i]) ; }
                     Process* sign(int i) { pop(1) ; return display((values[i] > 0 ? "(+)" : "(-)"))->push(values[i]*a) ; }
 
                 //Opération basiques
-                    Process* add(int i = 0) { pop(2) ; return display("+")->push(b + a) ; }
-                    Process* sub(int i = 0) { pop(2) ; return display("-")->push(b - a) ; }
-                    Process* mul(int i = 0) { pop(2) ; return display("*")->push(b * a) ; }
-                    Process* div(int i = 0) { pop(2) ; return display("/")->push(b / a) ; }
+                    Process* add() { pop(2) ; return display("+")->push(b + a) ; }
+                    Process* sub() { pop(2) ; return display("-")->push(b - a) ; }
+                    Process* mul() { pop(2) ; return display("*")->push(b * a) ; }
+                    Process* div() { pop(2) ; return display("/")->push(b / a) ; }
 
                 //Fonctions
-                    Process* prm(int i = 0) { pop(1) ; return display("PRIME")->push(prime(a)) ; }
-                    Process* mod(int i = 0) { pop(2) ; return display("mod")->push(fmod(a, b)) ; }
-                    Process* pow(int i = 0) { pop(2) ; return display("^")->push(std::pow(b, a)) ; }
-                    Process* fac(int i = 0) { pop(1) ; return display("!")->push(factorial(a)) ; }
-                    Process* sqrt(int i = 0) { pop(1) ; return display("SQRT")->push(std::sqrt(a)) ; }
-                    Process* log(int i = 0) { pop(1) ; return display("LOG")->push(std::log10(a)) ; }
-                    Process* ln(int i = 0) { pop(1) ; return display("LN")->push(std::log(a)) ; }
-                    Process* exp(int i = 0) { pop(1) ; return display("EXP")->push(std::exp(a)) ; }
-                    Process* abs(int i = 0) { pop(1) ; return display("ABS")->push(std::abs(a)) ; }
+                    Process* prm() { pop(1) ; return display("PRIME")->push(prime(a)) ; }
+                    Process* mod() { pop(2) ; return display("mod")->push(fmod(b, a)) ; }
+                    Process* pow() { pop(2) ; return display("^")->push(std::pow(b, a)) ; }
+                    Process* fac() { pop(1) ; return display("!")->push(factorial(a)) ; }
+                    Process* sqrt() { pop(1) ; return display("SQRT")->push(a >= 0 ? std::sqrt(a) : NAN) ; }
+                    Process* log() { pop(1) ; return display("LOG")->push(std::log10(a)) ; }
+                    Process* ln() { pop(1) ; return display("LN")->push(std::log(a)) ; }
+                    Process* exp() { pop(1) ; return display("EXP")->push(std::exp(a)) ; }
+                    Process* abs() { pop(1) ; return display("ABS")->push(std::abs(a)) ; }
+
+                //Autres fonctions
+                    Process* v_isset(int i = 0) { return display("[isset("+names[i]+")]")->push(vars.count(names[i])) ; }
+                    Process* max() { pop(2) ; return display("max("+print(a)+","+print(b)+")")->push(std::max(a, b)) ; }
+                    Process* min() { pop(2) ; return display("min("+print(a)+","+print(b)+")")->push(std::min(a, b)) ; }
 
                 //Trigonométrie
-                    Process* cos(int i = 0) { pop(1) ; return display("COS")->push(std::cos(a)) ; }
-                    Process* sin(int i = 0) { pop(1) ; return display("SIN")->push(std::sin(a)) ; }
-                    Process* tan(int i = 0) { pop(1) ; return display("TAN")->push(std::tan(a)) ; }
+                    Process* cos() { pop(1) ; return display("COS")->push(std::cos(a)) ; }
+                    Process* sin() { pop(1) ; return display("SIN")->push(std::sin(a)) ; }
+                    Process* tan() { pop(1) ; return display("TAN")->push(std::tan(a)) ; }
 
                 //Affichage
-                    Process* plot(int i = 0) { xs.clear(); ys.clear(); plotted.clear(); return display("[plot]") ; }
+                    Process* plot() { xs.clear(); ys.clear(); plotted.clear(); return display("[plot]") ; }
+                    Process* table() { xs.clear(); ys.clear(); plotted.clear(); return display("[table]") ; }
 
                 //Comparaison
-                    Process* lt(int i = 0) { pop(2) ; return display("<")->push((b < a) ? 1 : 0) ; }
-                    Process* gt(int i = 0) { pop(2) ; return display(">")->push((b > a) ? 1 : 0) ; }
-                    Process* lte(int i = 0) { pop(2) ; return display("<=")->push((b <= a) ? 1 : 0) ; }
-                    Process* gte(int i = 0) { pop(2) ; return display(">=")->push((b >= a) ? 1 : 0) ; }
-                    Process* eequ(int i = 0) { pop(2) ; return display("==")->push((b == a) ? 1 : 0) ; }
+                    Process* lt() { pop(2) ; return display("<")->push((b < a) ? 1 : 0) ; }
+                    Process* gt() { pop(2) ; return display(">")->push((b > a) ? 1 : 0) ; }
+                    Process* lte() { pop(2) ; return display("<=")->push((b <= a) ? 1 : 0) ; }
+                    Process* gte() { pop(2) ; return display(">=")->push((b >= a) ? 1 : 0) ; }
+                    Process* eequ() { pop(2) ; return display("==")->push((b == a) ? 1 : 0) ; }
+                    Process* diff() { pop(2) ; return display("!=")->push((b != a) ? 1 : 0) ; }
 
                 //Structure logique
                     Process* logic_if(int i = 0) { pop(3);
@@ -124,37 +129,35 @@
                     Process* logic_else(int i = 0) { return display("(else=stmt_"+print(values[i])+")") ; }
 
                 //Logique combinatoire
-                    Process* logic_and(int i = 0) { pop(2) ; return display("&&")->push(a && b) ; }
-                    Process* logic_or(int i = 0) { pop(2) ; return display("||")->push(a || b) ; }
+                    Process* logic_and() { pop(2) ; return display("&&")->push(a && b) ; }
+                    Process* logic_or() { pop(2) ; return display("||")->push(a || b) ; }
 
                 //Affectation (variable)
-                    Process* affect(int i) {
+                    Process* affect(int i = 0) {
                         //Vérification que l'identificateur n'est pas un mot reservé
                             if (!reserved(names[i])) { vars[names[i]] = pop() ; return display("[="+names[i]+"]") ; }
                         //Erreurs
-                            master()->rerror = true ;
-                            auto msg = "Error: Use of reserved keyword "+names[i]+" as variable."; master()->data[ERROR] = msg; red("\r"+msg); return this ;
+                            return (error("Error: Use of reserved keyword "+names[i]+" as variable."), this);
                     }
 
                 //Erreur de syntaxe
-                    Process* syntax_error(int i) {
+                    Process* syntax_error() {
                         //Erreurs
-                            master()->rerror = true ;
-                            auto msg = "Error: Syntax error."; master()->data[ERROR] = msg; red(string("\r")+msg); return this ;
+                            return (error("Error: Syntax error."), this);
                     }
 
                 //Récupération (variable)
-                    Process* variable(int i) {
+                    Process* variable(int i = 0) {
                         //Véirification que la variable existe
                             if (vars.count(names[i])) { return display("["+names[i]+"="+print(vars[names[i]])+"]")->push(vars[names[i]]) ; }
                             if (master()->vars.count(names[i])) { return display("[global_"+names[i]+"="+print(vars[names[i]])+"]")->push(master()->vars[names[i]]) ; }
                         //Erreurs
-                            master()->rerror = true ;
-                            auto msg = "Error: Undefined variable "+names[i]+"." ; master()->data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
+                            push(NAN);
+                            return (error("Error: Undefined variable "+names[i]+"."), this);
                     }
 
                 //Evaluation (fonction)
-                    Process* function(int i) {
+                    Process* function(int i = 0) {
                         //Vérification que la fonction existe
                             if (processes.count(names[i])) {
                                 auto process = processes[names[i]];
@@ -166,12 +169,12 @@
                                 return display("["+names[i]+"("+process->var+"="+print(a)+")="+print(b)+"]")->push(b) ;
                             }
                         //Erreurs
-                            master()->rerror = true ;
-                            auto msg = "Error: Undefined call to function "+names[i]+"." ; master()->data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
+                            push(NAN) ;
+                            return (error("Error: Undefined call to function "+names[i]+"."), this) ;
                     }
 
                 //Sous-fonction
-                    Process* function_r(int i) {
+                    Process* function_r(int i = 0) {
                         //Vérification que la fonction existe
                             if (processes.count(names[i])) {
                                 //Définition de la range
@@ -179,7 +182,7 @@
                                     auto from = values[i-1-offset], to = values[i-2-offset], step = values[i-3-offset];
                                     step = (step) ? step : ((double) (to-from)/DEFAULT_SAMPLE);
                                     display("["+names[i]+"("+print(from)+", "+print(to)+", "+(step ? print(step) : "auto")+")]");
-                                    if (!step) { auto msg = "Error: Couldn't compute range" ; master()->rerror = true ; master()->data[ERROR] = msg; red(string("\r")+msg); }
+                                    if (!step) { return (error("Error: Couldn't compute range"), this); }
                                 //Evaluation
                                     vector<double> xv, yv;
                                     auto process = processes[names[i]] ;
@@ -189,21 +192,21 @@
                                     return this;
                             }
                         //Erreurs
-                            master()->rerror = true ;
-                            auto msg = "Error: Undefined call to function "+names[i]+"." ; master()->data[ERROR] = msg; red("\r"+msg); push(NAN) ; return this ;
+                            push(NAN) ;
+                            return (error("Error: Undefined call to function "+names[i]+"."), this) ;
                     }
 
                 //Ranges
-                    Process* range_start(int i) { values[i] = pop() ; return display("(from"+print(values[i])+")") ; }
-                    Process* range_end(int i) { values[i] = pop() ; return display("(to"+print(values[i])+")") ; }
-                    Process* range_step(int i) { values[i] = pop() ; return display("(step"+print(values[i])+")") ; }
+                    Process* range_start(int i = 0) { values[i] = pop() ; return display("(from"+print(values[i])+")") ; }
+                    Process* range_end(int i = 0) { values[i] = pop() ; return display("(to"+print(values[i])+")") ; }
+                    Process* range_step(int i = 0) { values[i] = pop() ; return display("(step"+print(values[i])+")") ; }
 
             /* ============================================================================
                 GESTION DES PROCESSUS
             ============================================================================ */
                 //Constructeur
                     Process(string name, string var_name = "x") { id = name; var = var_name ; processes[name] = this ; } ;
-                    Process(bool stmt) { id = to_string(statements.size()); statements[id] = this ; var = "x" ; }
+                    Process(bool stmt) { if (stmt) { id = to_string(statements.size()); statements[id] = this ; var = "x" ; } }
 
                 //Liste des processus définis et ceux en cours de définition
                     static map<string, Process*> processes, statements;
@@ -220,7 +223,8 @@
                                     if (!reserved(name)) {
                                         declared.push(processes[name] = new Process(name, var_name));
                                         return current()->display("["+name+"("+var_name+")]") ;
-                                    } else { auto msg = "Error: Use of reserved keyword "+name+" as function."; master()->rerror = true ; master()->data[ERROR] = msg; red("\r"+msg); }
+                                    } else { error("Error: Use of reserved keyword "+name+" as function.") ; }
+                                    return master() ;
                             }
                         //Déclare un nouvel état
                             static Process* open() {
@@ -274,7 +278,8 @@
                 //Evalue le processus de a à b par pas de step. Si ce dernier vaut 0, le pas sera calculé automatiquement
                     vector<double> eval(double a, double b, double step = 0) { step = (step) ? step : ((double) (b-a))/DEFAULT_SAMPLE ; vector<double> r ; for (double i = a; i <= b; i++) { r.push_back(eval(i)) ; } ; return r ; }
                 //
-                    double result() { rresult = (stacked.size()) ? stacked.top() : NAN ; return rreturn ? rresult : NAN ; }
+                    double result() { rresult = (stacked.size()) ? stacked.top() : NAN ; vars[ANSWER] = rreturn ? rresult : NAN ; return vars[ANSWER] ; }
+                    static void mresult() { if (master()->vresult) { ; cout << master()->rresult << endl ; } }
                 //Résultat (json)
                     Process* jresult () {
                         //Enregistrement des variables
@@ -292,6 +297,12 @@
             /* ============================================================================
                 GESTION DE L'AFFICHAGE ET DU DEBUG
             ============================================================================ */
+                //Gestion des erreurs
+                    static Process* error(string msg) {
+                        master()->rerror = true ;
+                        master()->data[ERROR] = msg;
+                        if (master()->verbose) { red("\r"+msg); }
+                    }
                 //Affiche le contenu des données json
                     Process* dump() { green(data.dump()) ; cout << endl ; return this ; }
                 //Affiche la notation polonaise si le mode verbeux est actif

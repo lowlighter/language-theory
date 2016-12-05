@@ -20,3 +20,11 @@ fast: ./local/main.cpp
 	rm -f ./local/lexer.cpp ./local/parser.cpp ./local/parser.hpp
 	clear
 	./local/interpreter
+
+test: ./local/main.cpp
+	flex -o ./local/lexer.cpp ./server/lexer.l
+	bison -o ./local/parser.cpp ./server/parser.y -v
+	$(CC) $(CFLAGS) ./local/main.cpp ./local/lexer.cpp ./local/parser.cpp -o ./local/interpreter
+	rm -f ./local/lexer.cpp ./local/parser.cpp ./local/parser.hpp
+	clear
+	./local/test

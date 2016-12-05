@@ -21,19 +21,18 @@ variable    [a-zA-Z_][a-zA-Z_0-9]*
     /* Règles flex */
 
     /* Opérations */
+\)\=          { return FEQU ; }
 \=            { return EQU ; }
 \+            { return PLS; }
-\-            { return MIN; }
+\-            { return SUB; }
 \*            { return MUL ;}
 \/            { return DIV ; }
-\%            { return MOD ; }
-
 
     /* Comparaisons */
 \<            { return LT ; }
 \>            { return GT ; }
-\<\=          { return GTE ; }
-\>\=          { return LTE ; }
+\<\=          { return LTE ; }
+\>\=          { return GTE ; }
 \=\=          { return EEQU ; }
 !\=           { return DIFF ; }
 
@@ -66,6 +65,11 @@ abs           { return ABS ; }
 \^            { return POW ; }
 \!            { return FAC ; }
 
+    /* Autres fonctions */
+isset         { return ISSET; }
+max           { return MAX ; }
+min           { return MIN ; }
+
     /* Affichage */
 plot          { return PLOT   ; }
 update        { return UPDATE ; }
@@ -81,7 +85,7 @@ false         { return FALSE ; }
 {variable}    { yylval.str = new string(yytext); return VARIABLE; }
 
     /* Fin de ligne */
-\n            { return EOL ; }
+\n|;            { return EOL ; }
 
     /* Autre */
 .             {;}

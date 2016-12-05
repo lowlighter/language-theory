@@ -1,0 +1,90 @@
+#!/bin/bash
+
+function test() {
+  output=$(./local/interpreter <<< $1)
+  if [ "$output" = $2 ]; then
+    echo -e "\033[1;32m \xE2\x9C\x93 \033[0m| $1 "
+  else
+    echo -e "\033[1;31m \xE2\x9C\x97 \033[0m| $1 \033[1;31m[$output was found instead of $2]\033[0m"
+  fi
+}
+
+##
+# DEFINE TESTS BELOW
+##
+
+# test <'formula'> <result>
+echo -e "\033[1;36m CONSTANTES \033[0m"
+test 'pi' '3.14159'
+test 'e' '2.71828'
+test 'true' '1'
+test 'false' '0'
+
+echo -e "\033[1;36m SIGNES \033[0m"
+test '-+1' '-1'
+test '--1' '1'
+
+echo -e "\033[1;36m OPERATIONS \033[0m"
+test '9' '9'
+test '1+1' '2'
+test '1-0.1' '0.9'
+test '3/2' '1.5'
+test '1+3/2' '2.5'
+test '1/0' 'inf'
+test '1+3*2' '7'
+test '4%2' '0'
+test '4%3' '1'
+test '1+2^3' '9'
+test '2^(3+1)' '16'
+test '2^2%2' '0'
+test '5!' '120'
+
+echo -e "\033[1;36m FONCTION MATHEMATIQUES \033[0m"
+test 'sqrt(2^2)' '2'
+test 'sqrt(-1)' 'nan'
+test 'cos(pi)' '-1'
+test 'sin(-pi/2)' '-1'
+test 'tan(pi/4)' '1'
+test 'ln(1)' '0'
+test 'log(10)' '1'
+test 'exp(0)' '1'
+test 'abs(-1) == abs(1)' '1'
+test 'prime(1)' 0
+test 'prime(11)' 1
+
+echo -e "\033[1;36m FONCTION DIVERSES \033[0m"
+test 'isset(a)' '0'
+test 'a=1;isset(a)' '1'
+test 'min(4+2, 2)' '2'
+test 'max(4*2, 2)' '8'
+
+echo -e "\033[1;36m COMPARAISONS \033[0m"
+test '1 == 1' '1'
+test '1 != 1' '0'
+test '1 >= 1' '1'
+test '1 <= 1' '1'
+test '1 > 1' '0'
+test '1 < 1' '0'
+test '1 > 2' '0'
+test '1 < 2' '1'
+
+echo -e "\033[1;36m TESTS LOGIQUE \033[0m"
+test 'true || false' '1'
+test 'false || false' '0'
+test 'true && true' '1'
+
+echo -e "\033[1;36m VARIABLES \033[0m"
+test 'a' 'nan'
+test 'a=1;a' '1'
+test 'a=1;b=a+2;a+b' '4'
+
+echo -e "\033[1;36m FONCTIONS \033[0m"
+test 'f(x)' 'nan'
+test 'f(x)=x+1;f(1)' '2'
+test 'f(t)=t;g(alpha)=alpha*2;f(g(1))' '2'
+test 'f(t)= t > 0 ? 1+f(t-1) : 1; f(2)' '4'
+test 's(x)=cos(x)^2+sin(x)^2; s(2+1*exp(1))' '1'
+test 's(x)= (x > 0)&&(x <= 1); s(0.77)' '1'
+test 's(x)= (x > 0)&&(x <= 1); a=5; s(2-a)' '0'
+test 'z(x)= a*x; a=2; z(2)' '4'
+test 'toto(tata)=tata; toto(1)' '1'

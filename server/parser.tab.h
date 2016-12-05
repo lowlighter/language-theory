@@ -83,23 +83,23 @@ extern int yydebug;
     QM = 287,
     DP = 288,
     EQU = 289,
-    PLS = 290,
-    MIN = 291,
-    MUL = 292,
-    DIV = 293,
-    MOD = 294,
-    POW = 295,
-    FAC = 296,
-    SIGN = 297,
-    LT = 298,
-    GT = 299,
-    GTE = 300,
-    LTE = 301,
-    EEQU = 302,
-    DIFF = 303,
-    AND = 304,
-    OR = 305,
-    RULE = 306
+    FEQU = 290,
+    PLS = 291,
+    MIN = 292,
+    MUL = 293,
+    DIV = 294,
+    MOD = 295,
+    POW = 296,
+    FAC = 297,
+    SIGN = 298,
+    LT = 299,
+    GT = 300,
+    GTE = 301,
+    LTE = 302,
+    EEQU = 303,
+    DIFF = 304,
+    AND = 305,
+    OR = 306
   };
 #endif
 
@@ -108,7 +108,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 58 "parser.y" /* yacc.c:1909  */
+#line 59 "parser.y" /* yacc.c:1909  */
 
     double dbl;
     std::string *str;

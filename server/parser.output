@@ -12,87 +12,67 @@ Terminaux inutilisés dans la grammaire
    SYNTAX_ERROR
 
 
-État 47 conflits: 1 réduction/réduction
-État 48 conflits: 1 réduction/réduction
-État 69 conflits: 1 décalage/réduction
-État 89 conflits: 1 réduction/réduction
-État 90 conflits: 1 réduction/réduction
-État 91 conflits: 1 réduction/réduction
-État 92 conflits: 1 réduction/réduction
-État 93 conflits: 1 réduction/réduction
-État 94 conflits: 1 réduction/réduction
-État 95 conflits: 1 réduction/réduction
-État 96 conflits: 1 réduction/réduction
-État 97 conflits: 1 réduction/réduction
-État 98 conflits: 1 réduction/réduction
-État 99 conflits: 1 réduction/réduction
-État 100 conflits: 1 réduction/réduction
-État 101 conflits: 1 réduction/réduction
-État 102 conflits: 1 réduction/réduction
-État 103 conflits: 1 réduction/réduction
-État 141 conflits: 1 réduction/réduction
-
-
 Grammaire
 
     0 $accept: line $end
 
     1 line: %empty
-    2     | line expr EOL
-    3     | line decl EQU expr EOL
-    4     | line VARIABLE EQU expr EOL
+    2     | line type
 
-    5 expr: '(' expr ')'
-    6     | PI
-    7     | EXP_E
-    8     | TRUE
-    9     | FALSE
-   10     | PLS expr
-   11     | MIN expr
-   12     | numrs
-   13     | plot
-   14     | expr PLS expr
-   15     | expr MIN expr
-   16     | expr MUL expr
-   17     | expr DIV expr
-   18     | expr MOD expr
-   19     | expr POW expr
-   20     | expr FAC expr
-   21     | expr LT expr
-   22     | expr GT expr
-   23     | expr LTE expr
-   24     | expr GTE expr
-   25     | expr EEQU expr
-   26     | expr DIFF expr
-   27     | expr AND expr
-   28     | expr OR expr
-   29     | SQRT '(' expr ')'
-   30     | COS '(' expr ')'
-   31     | SIN '(' expr ')'
-   32     | TAN '(' expr ')'
-   33     | LN '(' expr ')'
-   34     | LOG '(' expr ')'
-   35     | EXP '(' expr ')'
-   36     | ABS '(' expr ')'
-   37     | PRM '(' expr ')'
-   38     | POWER '(' expr ',' expr ')'
-   39     | ternary
-   40     | error
+    3 $@1: %empty
 
-   41 $@1: %empty
+    4 type: VARIABLE '(' VARIABLE FEQU $@1 expr EOL
+    5     | VARIABLE EQU expr EOL
+    6     | expr EOL
 
-   42 $@2: %empty
+    7 expr: '(' expr ')'
+    8     | PI
+    9     | EXP_E
+   10     | TRUE
+   11     | FALSE
+   12     | PLS expr
+   13     | MIN expr
 
-   43 ternary: expr $@1 QM expr $@2 DP expr
+   14 $@2: %empty
 
-   44 decl: VARIABLE '(' VARIABLE ')'
+   15 expr: expr QM $@2 ternary
+   16     | plot
+   17     | numr
+   18     | expr PLS expr
+   19     | expr MIN expr
+   20     | expr MUL expr
+   21     | expr DIV expr
+   22     | expr MOD expr
+   23     | expr POW expr
+   24     | expr FAC expr
+   25     | expr LT expr
+   26     | expr GT expr
+   27     | expr LTE expr
+   28     | expr GTE expr
+   29     | expr EEQU expr
+   30     | expr DIFF expr
+   31     | expr AND expr
+   32     | expr OR expr
+   33     | SQRT '(' expr ')'
+   34     | COS '(' expr ')'
+   35     | SIN '(' expr ')'
+   36     | TAN '(' expr ')'
+   37     | LN '(' expr ')'
+   38     | LOG '(' expr ')'
+   39     | EXP '(' expr ')'
+   40     | ABS '(' expr ')'
+   41     | PRM '(' expr ')'
+   42     | POWER '(' expr ',' expr ')'
+   43     | error
 
-   45 numr: NUMBER
-   46     | VARIABLE
-   47     | VARIABLE '(' expr ')'
+   44 numr: NUMBER
+   45     | VARIABLE
+   46     | VARIABLE '(' expr ')'
+   47     | VARIABLE '(' range ')'
 
-   48 numrs: numr
-   49      | VARIABLE '(' range ')'
+   48 $@3: %empty
+
+   49 ternary: expr $@3 DP expr
 
    50 plot: plot_decl
 
@@ -118,16 +98,16 @@ Grammaire
 Terminaux, suivis des règles où ils apparaissent
 
 $end (0) 0
-'(' (40) 5 29 30 31 32 33 34 35 36 37 38 44 47 49 51 52
-')' (41) 5 29 30 31 32 33 34 35 36 37 38 44 47 49 54 56
-',' (44) 38 52 53 56 59 61
+'(' (40) 4 7 33 34 35 36 37 38 39 40 41 42 46 47 51 52
+')' (41) 7 33 34 35 36 37 38 39 40 41 42 46 47 54 56
+',' (44) 42 52 53 56 59 61
 '[' (91) 58
 ']' (93) 60 61
-error (256) 40
-NUMBER (258) 45
-PI (259) 6
-EXP_E (260) 7
-VARIABLE (261) 4 44 46 47 49 52 53 54 55
+error (256) 43
+NUMBER (258) 44
+PI (259) 8
+EXP_E (260) 9
+VARIABLE (261) 4 5 45 46 47 52 53 54 55
 FUNCTION (262)
 FUNCTION_R (263)
 FROM (264)
@@ -136,43 +116,43 @@ STEP (266)
 IF (267)
 THEN (268)
 ELSE (269)
-TRUE (270) 8
-FALSE (271) 9
+TRUE (270) 10
+FALSE (271) 11
 UPDATE (272) 52
 PLOT (273) 51
-SQRT (274) 29
-SIN (275) 31
-COS (276) 30
-TAN (277) 32
-LOG (278) 34
-LN (279) 33
-EXP (280) 35
-ABS (281) 36
-POWER (282) 38
-PRM (283) 37
-EOL (284) 2 3 4
+SQRT (274) 33
+SIN (275) 35
+COS (276) 34
+TAN (277) 36
+LOG (278) 38
+LN (279) 37
+EXP (280) 39
+ABS (281) 40
+POWER (282) 42
+PRM (283) 41
+EOL (284) 4 5 6
 EOLR (285)
 SYNTAX_ERROR (286)
-QM (287) 43
-DP (288) 43
-EQU (289) 3 4
-PLS (290) 10 14
-MIN (291) 11 15
-MUL (292) 16
-DIV (293) 17
-MOD (294) 18
-POW (295) 19
-FAC (296) 20
-SIGN (297)
-LT (298) 21
-GT (299) 22
-GTE (300) 24
-LTE (301) 23
-EEQU (302) 25
-DIFF (303) 26
-AND (304) 27
-OR (305) 28
-RULE (306)
+QM (287) 15
+DP (288) 49
+EQU (289) 5
+FEQU (290) 4
+PLS (291) 12 18
+MIN (292) 13 19
+MUL (293) 20
+DIV (294) 21
+MOD (295) 22
+POW (296) 23
+FAC (297) 24
+SIGN (298)
+LT (299) 25
+GT (300) 26
+GTE (301) 28
+LTE (302) 27
+EEQU (303) 29
+DIFF (304) 30
+AND (305) 31
+OR (306) 32
 
 
 Non-terminaux, suivis des règles où ils apparaissent
@@ -180,26 +160,26 @@ Non-terminaux, suivis des règles où ils apparaissent
 $accept (57)
     à gauche: 0
 line (58)
-    à gauche: 1 2 3 4, à droite: 0 2 3 4
-expr (59)
-    à gauche: 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
-    24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40, à droite:
-    2 3 4 5 10 11 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30
-    31 32 33 34 35 36 37 38 43 47 58 59 61
-ternary (60)
-    à gauche: 43, à droite: 39
-$@1 (61)
-    à gauche: 41, à droite: 43
+    à gauche: 1 2, à droite: 0 2
+type (59)
+    à gauche: 4 5 6, à droite: 2
+$@1 (60)
+    à gauche: 3, à droite: 4
+expr (61)
+    à gauche: 7 8 9 10 11 12 13 15 16 17 18 19 20 21 22 23 24 25 26
+    27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43, à droite:
+    4 5 6 7 12 13 15 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33
+    34 35 36 37 38 39 40 41 42 46 49 58 59 61
 $@2 (62)
-    à gauche: 42, à droite: 43
-decl (63)
-    à gauche: 44, à droite: 3
-numr (64)
-    à gauche: 45 46 47, à droite: 48
-numrs (65)
-    à gauche: 48 49, à droite: 12
+    à gauche: 14, à droite: 15
+numr (63)
+    à gauche: 44 45 46 47, à droite: 17
+ternary (64)
+    à gauche: 49, à droite: 15
+$@3 (65)
+    à gauche: 48, à droite: 49
 plot (66)
-    à gauche: 50, à droite: 13
+    à gauche: 50, à droite: 16
 plot_decl (67)
     à gauche: 51 52, à droite: 50
 plot_func (68)
@@ -207,7 +187,7 @@ plot_func (68)
 plot_range (69)
     à gauche: 56, à droite: 55
 range (70)
-    à gauche: 57, à droite: 49 56
+    à gauche: 57, à droite: 47 56
 range_from (71)
     à gauche: 58, à droite: 57
 range_to (72)
@@ -228,9 +208,7 @@ range_step (73)
 État 1
 
     0 $accept: line . $end
-    2 line: line . expr EOL
-    3     | line . decl EQU expr EOL
-    4     | line . VARIABLE EQU expr EOL
+    2 line: line . type
 
     $end      décalage et aller à l'état 2
     error     décalage et aller à l'état 3
@@ -256,13 +234,11 @@ range_step (73)
     MIN       décalage et aller à l'état 23
     '('       décalage et aller à l'état 24
 
-    expr       aller à l'état 25
-    ternary    aller à l'état 26
-    decl       aller à l'état 27
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    type       aller à l'état 25
+    expr       aller à l'état 26
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
 État 2
@@ -274,153 +250,219 @@ range_step (73)
 
 État 3
 
-   40 expr: error .
+   43 expr: error .
 
-    $défaut  réduction par utilisation de la règle 40 (expr)
+    $défaut  réduction par utilisation de la règle 43 (expr)
 
 
 État 4
 
-   45 numr: NUMBER .
+   44 numr: NUMBER .
 
-    $défaut  réduction par utilisation de la règle 45 (numr)
+    $défaut  réduction par utilisation de la règle 44 (numr)
 
 
 État 5
 
-    6 expr: PI .
-
-    $défaut  réduction par utilisation de la règle 6 (expr)
-
-
-État 6
-
-    7 expr: EXP_E .
-
-    $défaut  réduction par utilisation de la règle 7 (expr)
-
-
-État 7
-
-    4 line: line VARIABLE . EQU expr EOL
-   44 decl: VARIABLE . '(' VARIABLE ')'
-   46 numr: VARIABLE .
-   47     | VARIABLE . '(' expr ')'
-   49 numrs: VARIABLE . '(' range ')'
-
-    EQU  décalage et aller à l'état 32
-    '('  décalage et aller à l'état 33
-
-    $défaut  réduction par utilisation de la règle 46 (numr)
-
-
-État 8
-
-    8 expr: TRUE .
+    8 expr: PI .
 
     $défaut  réduction par utilisation de la règle 8 (expr)
 
 
-État 9
+État 6
 
-    9 expr: FALSE .
+    9 expr: EXP_E .
 
     $défaut  réduction par utilisation de la règle 9 (expr)
+
+
+État 7
+
+    4 type: VARIABLE . '(' VARIABLE FEQU $@1 expr EOL
+    5     | VARIABLE . EQU expr EOL
+   45 numr: VARIABLE .
+   46     | VARIABLE . '(' expr ')'
+   47     | VARIABLE . '(' range ')'
+
+    EQU  décalage et aller à l'état 30
+    '('  décalage et aller à l'état 31
+
+    $défaut  réduction par utilisation de la règle 45 (numr)
+
+
+État 8
+
+   10 expr: TRUE .
+
+    $défaut  réduction par utilisation de la règle 10 (expr)
+
+
+État 9
+
+   11 expr: FALSE .
+
+    $défaut  réduction par utilisation de la règle 11 (expr)
 
 
 État 10
 
    52 plot_decl: UPDATE . '(' VARIABLE ',' plot_func
 
-    '('  décalage et aller à l'état 34
+    '('  décalage et aller à l'état 32
 
 
 État 11
 
    51 plot_decl: PLOT . '(' plot_func
 
-    '('  décalage et aller à l'état 35
+    '('  décalage et aller à l'état 33
 
 
 État 12
 
-   29 expr: SQRT . '(' expr ')'
+   33 expr: SQRT . '(' expr ')'
 
-    '('  décalage et aller à l'état 36
+    '('  décalage et aller à l'état 34
 
 
 État 13
 
-   31 expr: SIN . '(' expr ')'
+   35 expr: SIN . '(' expr ')'
 
-    '('  décalage et aller à l'état 37
+    '('  décalage et aller à l'état 35
 
 
 État 14
 
-   30 expr: COS . '(' expr ')'
+   34 expr: COS . '(' expr ')'
 
-    '('  décalage et aller à l'état 38
+    '('  décalage et aller à l'état 36
 
 
 État 15
 
-   32 expr: TAN . '(' expr ')'
+   36 expr: TAN . '(' expr ')'
 
-    '('  décalage et aller à l'état 39
+    '('  décalage et aller à l'état 37
 
 
 État 16
 
-   34 expr: LOG . '(' expr ')'
+   38 expr: LOG . '(' expr ')'
 
-    '('  décalage et aller à l'état 40
+    '('  décalage et aller à l'état 38
 
 
 État 17
 
-   33 expr: LN . '(' expr ')'
+   37 expr: LN . '(' expr ')'
 
-    '('  décalage et aller à l'état 41
+    '('  décalage et aller à l'état 39
 
 
 État 18
 
-   35 expr: EXP . '(' expr ')'
+   39 expr: EXP . '(' expr ')'
 
-    '('  décalage et aller à l'état 42
+    '('  décalage et aller à l'état 40
 
 
 État 19
 
-   36 expr: ABS . '(' expr ')'
+   40 expr: ABS . '(' expr ')'
 
-    '('  décalage et aller à l'état 43
+    '('  décalage et aller à l'état 41
 
 
 État 20
 
-   38 expr: POWER . '(' expr ',' expr ')'
+   42 expr: POWER . '(' expr ',' expr ')'
 
-    '('  décalage et aller à l'état 44
+    '('  décalage et aller à l'état 42
 
 
 État 21
 
-   37 expr: PRM . '(' expr ')'
+   41 expr: PRM . '(' expr ')'
 
-    '('  décalage et aller à l'état 45
+    '('  décalage et aller à l'état 43
 
 
 État 22
 
-   10 expr: PLS . expr
+   12 expr: PLS . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
+    TRUE      décalage et aller à l'état 8
+    FALSE     décalage et aller à l'état 9
+    UPDATE    décalage et aller à l'état 10
+    PLOT      décalage et aller à l'état 11
+    SQRT      décalage et aller à l'état 12
+    SIN       décalage et aller à l'état 13
+    COS       décalage et aller à l'état 14
+    TAN       décalage et aller à l'état 15
+    LOG       décalage et aller à l'état 16
+    LN        décalage et aller à l'état 17
+    EXP       décalage et aller à l'état 18
+    ABS       décalage et aller à l'état 19
+    POWER     décalage et aller à l'état 20
+    PRM       décalage et aller à l'état 21
+    PLS       décalage et aller à l'état 22
+    MIN       décalage et aller à l'état 23
+    '('       décalage et aller à l'état 24
+
+    expr       aller à l'état 45
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
+
+
+État 23
+
+   13 expr: MIN . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    PI        décalage et aller à l'état 5
+    EXP_E     décalage et aller à l'état 6
+    VARIABLE  décalage et aller à l'état 44
+    TRUE      décalage et aller à l'état 8
+    FALSE     décalage et aller à l'état 9
+    UPDATE    décalage et aller à l'état 10
+    PLOT      décalage et aller à l'état 11
+    SQRT      décalage et aller à l'état 12
+    SIN       décalage et aller à l'état 13
+    COS       décalage et aller à l'état 14
+    TAN       décalage et aller à l'état 15
+    LOG       décalage et aller à l'état 16
+    LN        décalage et aller à l'état 17
+    EXP       décalage et aller à l'état 18
+    ABS       décalage et aller à l'état 19
+    POWER     décalage et aller à l'état 20
+    PRM       décalage et aller à l'état 21
+    PLS       décalage et aller à l'état 22
+    MIN       décalage et aller à l'état 23
+    '('       décalage et aller à l'état 24
+
+    expr       aller à l'état 46
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
+
+
+État 24
+
+    7 expr: '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    PI        décalage et aller à l'état 5
+    EXP_E     décalage et aller à l'état 6
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -440,176 +482,87 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 47
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
-
-
-État 23
-
-   11 expr: MIN . expr
-
-    error     décalage et aller à l'état 3
-    NUMBER    décalage et aller à l'état 4
-    PI        décalage et aller à l'état 5
-    EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
-    TRUE      décalage et aller à l'état 8
-    FALSE     décalage et aller à l'état 9
-    UPDATE    décalage et aller à l'état 10
-    PLOT      décalage et aller à l'état 11
-    SQRT      décalage et aller à l'état 12
-    SIN       décalage et aller à l'état 13
-    COS       décalage et aller à l'état 14
-    TAN       décalage et aller à l'état 15
-    LOG       décalage et aller à l'état 16
-    LN        décalage et aller à l'état 17
-    EXP       décalage et aller à l'état 18
-    ABS       décalage et aller à l'état 19
-    POWER     décalage et aller à l'état 20
-    PRM       décalage et aller à l'état 21
-    PLS       décalage et aller à l'état 22
-    MIN       décalage et aller à l'état 23
-    '('       décalage et aller à l'état 24
-
-    expr       aller à l'état 48
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
-
-
-État 24
-
-    5 expr: '(' . expr ')'
-
-    error     décalage et aller à l'état 3
-    NUMBER    décalage et aller à l'état 4
-    PI        décalage et aller à l'état 5
-    EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
-    TRUE      décalage et aller à l'état 8
-    FALSE     décalage et aller à l'état 9
-    UPDATE    décalage et aller à l'état 10
-    PLOT      décalage et aller à l'état 11
-    SQRT      décalage et aller à l'état 12
-    SIN       décalage et aller à l'état 13
-    COS       décalage et aller à l'état 14
-    TAN       décalage et aller à l'état 15
-    LOG       décalage et aller à l'état 16
-    LN        décalage et aller à l'état 17
-    EXP       décalage et aller à l'état 18
-    ABS       décalage et aller à l'état 19
-    POWER     décalage et aller à l'état 20
-    PRM       décalage et aller à l'état 21
-    PLS       décalage et aller à l'état 22
-    MIN       décalage et aller à l'état 23
-    '('       décalage et aller à l'état 24
-
-    expr       aller à l'état 49
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
 État 25
 
-    2 line: line expr . EOL
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+    2 line: line type .
 
-    EOL   décalage et aller à l'état 50
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 2 (line)
 
 
 État 26
 
-   39 expr: ternary .
+    6 type: expr . EOL
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    $défaut  réduction par utilisation de la règle 39 (expr)
+    EOL   décalage et aller à l'état 48
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
 
 
 État 27
 
-    3 line: line decl . EQU expr EOL
+   17 expr: numr .
 
-    EQU  décalage et aller à l'état 67
+    $défaut  réduction par utilisation de la règle 17 (expr)
 
 
 État 28
 
-   48 numrs: numr .
+   16 expr: plot .
 
-    $défaut  réduction par utilisation de la règle 48 (numrs)
+    $défaut  réduction par utilisation de la règle 16 (expr)
 
 
 État 29
-
-   12 expr: numrs .
-
-    $défaut  réduction par utilisation de la règle 12 (expr)
-
-
-État 30
-
-   13 expr: plot .
-
-    $défaut  réduction par utilisation de la règle 13 (expr)
-
-
-État 31
 
    50 plot: plot_decl .
 
     $défaut  réduction par utilisation de la règle 50 (plot)
 
 
-État 32
+État 30
 
-    4 line: line VARIABLE EQU . expr EOL
+    5 type: VARIABLE EQU . expr EOL
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -628,25 +581,75 @@ range_step (73)
     MIN       décalage et aller à l'état 23
     '('       décalage et aller à l'état 24
 
-    expr       aller à l'état 68
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    expr       aller à l'état 65
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
+
+
+État 31
+
+    4 type: VARIABLE '(' . VARIABLE FEQU $@1 expr EOL
+   46 numr: VARIABLE '(' . expr ')'
+   47     | VARIABLE '(' . range ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    PI        décalage et aller à l'état 5
+    EXP_E     décalage et aller à l'état 6
+    VARIABLE  décalage et aller à l'état 66
+    TRUE      décalage et aller à l'état 8
+    FALSE     décalage et aller à l'état 9
+    UPDATE    décalage et aller à l'état 10
+    PLOT      décalage et aller à l'état 11
+    SQRT      décalage et aller à l'état 12
+    SIN       décalage et aller à l'état 13
+    COS       décalage et aller à l'état 14
+    TAN       décalage et aller à l'état 15
+    LOG       décalage et aller à l'état 16
+    LN        décalage et aller à l'état 17
+    EXP       décalage et aller à l'état 18
+    ABS       décalage et aller à l'état 19
+    POWER     décalage et aller à l'état 20
+    PRM       décalage et aller à l'état 21
+    PLS       décalage et aller à l'état 22
+    MIN       décalage et aller à l'état 23
+    '('       décalage et aller à l'état 24
+    '['       décalage et aller à l'état 67
+
+    expr        aller à l'état 68
+    numr        aller à l'état 27
+    plot        aller à l'état 28
+    plot_decl   aller à l'état 29
+    range       aller à l'état 69
+    range_from  aller à l'état 70
+
+
+État 32
+
+   52 plot_decl: UPDATE '(' . VARIABLE ',' plot_func
+
+    VARIABLE  décalage et aller à l'état 71
 
 
 État 33
 
-   44 decl: VARIABLE '(' . VARIABLE ')'
-   47 numr: VARIABLE '(' . expr ')'
-   49 numrs: VARIABLE '(' . range ')'
+   51 plot_decl: PLOT '(' . plot_func
+
+    VARIABLE  décalage et aller à l'état 72
+
+    plot_func  aller à l'état 73
+
+
+État 34
+
+   33 expr: SQRT '(' . expr ')'
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 69
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -664,43 +667,88 @@ range_step (73)
     PLS       décalage et aller à l'état 22
     MIN       décalage et aller à l'état 23
     '('       décalage et aller à l'état 24
-    '['       décalage et aller à l'état 70
 
-    expr        aller à l'état 71
-    ternary     aller à l'état 26
-    numr        aller à l'état 28
-    numrs       aller à l'état 29
-    plot        aller à l'état 30
-    plot_decl   aller à l'état 31
-    range       aller à l'état 72
-    range_from  aller à l'état 73
-
-
-État 34
-
-   52 plot_decl: UPDATE '(' . VARIABLE ',' plot_func
-
-    VARIABLE  décalage et aller à l'état 74
+    expr       aller à l'état 74
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
 État 35
 
-   51 plot_decl: PLOT '(' . plot_func
-
-    VARIABLE  décalage et aller à l'état 75
-
-    plot_func  aller à l'état 76
-
-
-État 36
-
-   29 expr: SQRT '(' . expr ')'
+   35 expr: SIN '(' . expr ')'
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
+    TRUE      décalage et aller à l'état 8
+    FALSE     décalage et aller à l'état 9
+    UPDATE    décalage et aller à l'état 10
+    PLOT      décalage et aller à l'état 11
+    SQRT      décalage et aller à l'état 12
+    SIN       décalage et aller à l'état 13
+    COS       décalage et aller à l'état 14
+    TAN       décalage et aller à l'état 15
+    LOG       décalage et aller à l'état 16
+    LN        décalage et aller à l'état 17
+    EXP       décalage et aller à l'état 18
+    ABS       décalage et aller à l'état 19
+    POWER     décalage et aller à l'état 20
+    PRM       décalage et aller à l'état 21
+    PLS       décalage et aller à l'état 22
+    MIN       décalage et aller à l'état 23
+    '('       décalage et aller à l'état 24
+
+    expr       aller à l'état 75
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
+
+
+État 36
+
+   34 expr: COS '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    PI        décalage et aller à l'état 5
+    EXP_E     décalage et aller à l'état 6
+    VARIABLE  décalage et aller à l'état 44
+    TRUE      décalage et aller à l'état 8
+    FALSE     décalage et aller à l'état 9
+    UPDATE    décalage et aller à l'état 10
+    PLOT      décalage et aller à l'état 11
+    SQRT      décalage et aller à l'état 12
+    SIN       décalage et aller à l'état 13
+    COS       décalage et aller à l'état 14
+    TAN       décalage et aller à l'état 15
+    LOG       décalage et aller à l'état 16
+    LN        décalage et aller à l'état 17
+    EXP       décalage et aller à l'état 18
+    ABS       décalage et aller à l'état 19
+    POWER     décalage et aller à l'état 20
+    PRM       décalage et aller à l'état 21
+    PLS       décalage et aller à l'état 22
+    MIN       décalage et aller à l'état 23
+    '('       décalage et aller à l'état 24
+
+    expr       aller à l'état 76
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
+
+
+État 37
+
+   36 expr: TAN '(' . expr ')'
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    PI        décalage et aller à l'état 5
+    EXP_E     décalage et aller à l'état 6
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -720,22 +768,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 77
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 37
+État 38
 
-   31 expr: SIN '(' . expr ')'
+   38 expr: LOG '(' . expr ')'
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -755,22 +801,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 78
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 38
+État 39
 
-   30 expr: COS '(' . expr ')'
+   37 expr: LN '(' . expr ')'
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -790,22 +834,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 79
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 39
+État 40
 
-   32 expr: TAN '(' . expr ')'
+   39 expr: EXP '(' . expr ')'
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -825,22 +867,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 80
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 40
+État 41
 
-   34 expr: LOG '(' . expr ')'
+   40 expr: ABS '(' . expr ')'
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -860,22 +900,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 81
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 41
+État 42
 
-   33 expr: LN '(' . expr ')'
+   42 expr: POWER '(' . expr ',' expr ')'
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -895,22 +933,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 82
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 42
+État 43
 
-   35 expr: EXP '(' . expr ')'
+   41 expr: PRM '(' . expr ')'
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -930,92 +966,150 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 83
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
-
-
-État 43
-
-   36 expr: ABS '(' . expr ')'
-
-    error     décalage et aller à l'état 3
-    NUMBER    décalage et aller à l'état 4
-    PI        décalage et aller à l'état 5
-    EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
-    TRUE      décalage et aller à l'état 8
-    FALSE     décalage et aller à l'état 9
-    UPDATE    décalage et aller à l'état 10
-    PLOT      décalage et aller à l'état 11
-    SQRT      décalage et aller à l'état 12
-    SIN       décalage et aller à l'état 13
-    COS       décalage et aller à l'état 14
-    TAN       décalage et aller à l'état 15
-    LOG       décalage et aller à l'état 16
-    LN        décalage et aller à l'état 17
-    EXP       décalage et aller à l'état 18
-    ABS       décalage et aller à l'état 19
-    POWER     décalage et aller à l'état 20
-    PRM       décalage et aller à l'état 21
-    PLS       décalage et aller à l'état 22
-    MIN       décalage et aller à l'état 23
-    '('       décalage et aller à l'état 24
-
-    expr       aller à l'état 84
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
 État 44
 
-   38 expr: POWER '(' . expr ',' expr ')'
+   45 numr: VARIABLE .
+   46     | VARIABLE . '(' expr ')'
+   47     | VARIABLE . '(' range ')'
 
-    error     décalage et aller à l'état 3
-    NUMBER    décalage et aller à l'état 4
-    PI        décalage et aller à l'état 5
-    EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
-    TRUE      décalage et aller à l'état 8
-    FALSE     décalage et aller à l'état 9
-    UPDATE    décalage et aller à l'état 10
-    PLOT      décalage et aller à l'état 11
-    SQRT      décalage et aller à l'état 12
-    SIN       décalage et aller à l'état 13
-    COS       décalage et aller à l'état 14
-    TAN       décalage et aller à l'état 15
-    LOG       décalage et aller à l'état 16
-    LN        décalage et aller à l'état 17
-    EXP       décalage et aller à l'état 18
-    ABS       décalage et aller à l'état 19
-    POWER     décalage et aller à l'état 20
-    PRM       décalage et aller à l'état 21
-    PLS       décalage et aller à l'état 22
-    MIN       décalage et aller à l'état 23
-    '('       décalage et aller à l'état 24
+    '('  décalage et aller à l'état 84
 
-    expr       aller à l'état 85
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    $défaut  réduction par utilisation de la règle 45 (numr)
 
 
 État 45
 
-   37 expr: PRM '(' . expr ')'
+   12 expr: PLS expr .
+   15     | expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+
+    $défaut  réduction par utilisation de la règle 12 (expr)
+
+
+État 46
+
+   13 expr: MIN expr .
+   15     | expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+
+    $défaut  réduction par utilisation de la règle 13 (expr)
+
+
+État 47
+
+    7 expr: '(' expr . ')'
+   15     | expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 85
+
+
+État 48
+
+    6 type: expr EOL .
+
+    $défaut  réduction par utilisation de la règle 6 (type)
+
+
+État 49
+
+   15 expr: expr QM . $@2 ternary
+
+    $défaut  réduction par utilisation de la règle 14 ($@2)
+
+    $@2  aller à l'état 86
+
+
+État 50
+
+   18 expr: expr PLS . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1034,155 +1128,54 @@ range_step (73)
     MIN       décalage et aller à l'état 23
     '('       décalage et aller à l'état 24
 
-    expr       aller à l'état 86
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
-
-
-État 46
-
-   46 numr: VARIABLE .
-   47     | VARIABLE . '(' expr ')'
-   49 numrs: VARIABLE . '(' range ')'
-
-    '('  décalage et aller à l'état 87
-
-    $défaut  réduction par utilisation de la règle 46 (numr)
-
-
-État 47
-
-   10 expr: PLS expr .
-   14     | expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-
-    QM        réduction par utilisation de la règle 10 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 10 (expr)
-
-    $@1  aller à l'état 66
-
-
-État 48
-
-   11 expr: MIN expr .
-   14     | expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-
-    QM        réduction par utilisation de la règle 11 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 11 (expr)
-
-    $@1  aller à l'état 66
-
-
-État 49
-
-    5 expr: '(' expr . ')'
-   14     | expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 88
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
-
-
-État 50
-
-    2 line: line expr EOL .
-
-    $défaut  réduction par utilisation de la règle 2 (line)
+    expr       aller à l'état 87
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
 État 51
 
-   14 expr: expr PLS . expr
+   19 expr: expr MIN . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
+    TRUE      décalage et aller à l'état 8
+    FALSE     décalage et aller à l'état 9
+    UPDATE    décalage et aller à l'état 10
+    PLOT      décalage et aller à l'état 11
+    SQRT      décalage et aller à l'état 12
+    SIN       décalage et aller à l'état 13
+    COS       décalage et aller à l'état 14
+    TAN       décalage et aller à l'état 15
+    LOG       décalage et aller à l'état 16
+    LN        décalage et aller à l'état 17
+    EXP       décalage et aller à l'état 18
+    ABS       décalage et aller à l'état 19
+    POWER     décalage et aller à l'état 20
+    PRM       décalage et aller à l'état 21
+    PLS       décalage et aller à l'état 22
+    MIN       décalage et aller à l'état 23
+    '('       décalage et aller à l'état 24
+
+    expr       aller à l'état 88
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
+
+
+État 52
+
+   20 expr: expr MUL . expr
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    PI        décalage et aller à l'état 5
+    EXP_E     décalage et aller à l'état 6
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1202,22 +1195,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 89
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 52
+État 53
 
-   15 expr: expr MIN . expr
+   21 expr: expr DIV . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1237,22 +1228,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 90
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 53
+État 54
 
-   16 expr: expr MUL . expr
+   22 expr: expr MOD . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1272,22 +1261,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 91
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 54
+État 55
 
-   17 expr: expr DIV . expr
+   23 expr: expr POW . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1307,22 +1294,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 92
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 55
+État 56
 
-   18 expr: expr MOD . expr
+   24 expr: expr FAC . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1342,22 +1327,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 93
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 56
+État 57
 
-   19 expr: expr POW . expr
+   25 expr: expr LT . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1377,22 +1360,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 94
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 57
+État 58
 
-   20 expr: expr FAC . expr
+   26 expr: expr GT . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1412,22 +1393,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 95
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 58
+État 59
 
-   21 expr: expr LT . expr
+   28 expr: expr GTE . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1447,22 +1426,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 96
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 59
+État 60
 
-   22 expr: expr GT . expr
+   27 expr: expr LTE . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1482,22 +1459,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 97
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 60
+État 61
 
-   24 expr: expr GTE . expr
+   29 expr: expr EEQU . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1517,22 +1492,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 98
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 61
+État 62
 
-   23 expr: expr LTE . expr
+   30 expr: expr DIFF . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1552,22 +1525,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 99
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 62
+État 63
 
-   25 expr: expr EEQU . expr
+   31 expr: expr AND . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1587,22 +1558,20 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 100
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 63
+État 64
 
-   26 expr: expr DIFF . expr
+   32 expr: expr OR . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1622,182 +1591,64 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 101
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
-
-
-État 64
-
-   27 expr: expr AND . expr
-
-    error     décalage et aller à l'état 3
-    NUMBER    décalage et aller à l'état 4
-    PI        décalage et aller à l'état 5
-    EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
-    TRUE      décalage et aller à l'état 8
-    FALSE     décalage et aller à l'état 9
-    UPDATE    décalage et aller à l'état 10
-    PLOT      décalage et aller à l'état 11
-    SQRT      décalage et aller à l'état 12
-    SIN       décalage et aller à l'état 13
-    COS       décalage et aller à l'état 14
-    TAN       décalage et aller à l'état 15
-    LOG       décalage et aller à l'état 16
-    LN        décalage et aller à l'état 17
-    EXP       décalage et aller à l'état 18
-    ABS       décalage et aller à l'état 19
-    POWER     décalage et aller à l'état 20
-    PRM       décalage et aller à l'état 21
-    PLS       décalage et aller à l'état 22
-    MIN       décalage et aller à l'état 23
-    '('       décalage et aller à l'état 24
-
-    expr       aller à l'état 102
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
 État 65
 
-   28 expr: expr OR . expr
+    5 type: VARIABLE EQU expr . EOL
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    error     décalage et aller à l'état 3
-    NUMBER    décalage et aller à l'état 4
-    PI        décalage et aller à l'état 5
-    EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
-    TRUE      décalage et aller à l'état 8
-    FALSE     décalage et aller à l'état 9
-    UPDATE    décalage et aller à l'état 10
-    PLOT      décalage et aller à l'état 11
-    SQRT      décalage et aller à l'état 12
-    SIN       décalage et aller à l'état 13
-    COS       décalage et aller à l'état 14
-    TAN       décalage et aller à l'état 15
-    LOG       décalage et aller à l'état 16
-    LN        décalage et aller à l'état 17
-    EXP       décalage et aller à l'état 18
-    ABS       décalage et aller à l'état 19
-    POWER     décalage et aller à l'état 20
-    PRM       décalage et aller à l'état 21
-    PLS       décalage et aller à l'état 22
-    MIN       décalage et aller à l'état 23
-    '('       décalage et aller à l'état 24
-
-    expr       aller à l'état 103
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    EOL   décalage et aller à l'état 102
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
 
 
 État 66
 
-   43 ternary: expr $@1 . QM expr $@2 DP expr
+    4 type: VARIABLE '(' VARIABLE . FEQU $@1 expr EOL
+   45 numr: VARIABLE .
+   46     | VARIABLE . '(' expr ')'
+   47     | VARIABLE . '(' range ')'
 
-    QM  décalage et aller à l'état 104
+    FEQU  décalage et aller à l'état 103
+    '('   décalage et aller à l'état 84
+
+    $défaut  réduction par utilisation de la règle 45 (numr)
 
 
 État 67
-
-    3 line: line decl EQU . expr EOL
-
-    error     décalage et aller à l'état 3
-    NUMBER    décalage et aller à l'état 4
-    PI        décalage et aller à l'état 5
-    EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
-    TRUE      décalage et aller à l'état 8
-    FALSE     décalage et aller à l'état 9
-    UPDATE    décalage et aller à l'état 10
-    PLOT      décalage et aller à l'état 11
-    SQRT      décalage et aller à l'état 12
-    SIN       décalage et aller à l'état 13
-    COS       décalage et aller à l'état 14
-    TAN       décalage et aller à l'état 15
-    LOG       décalage et aller à l'état 16
-    LN        décalage et aller à l'état 17
-    EXP       décalage et aller à l'état 18
-    ABS       décalage et aller à l'état 19
-    POWER     décalage et aller à l'état 20
-    PRM       décalage et aller à l'état 21
-    PLS       décalage et aller à l'état 22
-    MIN       décalage et aller à l'état 23
-    '('       décalage et aller à l'état 24
-
-    expr       aller à l'état 105
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
-
-
-État 68
-
-    4 line: line VARIABLE EQU expr . EOL
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-
-    EOL   décalage et aller à l'état 106
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
-
-
-État 69
-
-   44 decl: VARIABLE '(' VARIABLE . ')'
-   46 numr: VARIABLE .
-   47     | VARIABLE . '(' expr ')'
-   49 numrs: VARIABLE . '(' range ')'
-
-    '('  décalage et aller à l'état 87
-    ')'  décalage et aller à l'état 107
-
-    ')'       [réduction par utilisation de la règle 46 (numr)]
-    $défaut  réduction par utilisation de la règle 46 (numr)
-
-
-État 70
 
    58 range_from: '[' . expr range_to
 
@@ -1805,7 +1656,7 @@ range_step (73)
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -1824,1301 +1675,1283 @@ range_step (73)
     MIN       décalage et aller à l'état 23
     '('       décalage et aller à l'état 24
 
-    expr       aller à l'état 108
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    expr       aller à l'état 104
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
-État 71
+État 68
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-   47 numr: VARIABLE '(' expr . ')'
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   46 numr: VARIABLE '(' expr . ')'
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 109
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 105
 
 
-État 72
+État 69
 
-   49 numrs: VARIABLE '(' range . ')'
+   47 numr: VARIABLE '(' range . ')'
 
-    ')'  décalage et aller à l'état 110
+    ')'  décalage et aller à l'état 106
 
 
-État 73
+État 70
 
    57 range: range_from .
 
     $défaut  réduction par utilisation de la règle 57 (range)
 
 
-État 74
+État 71
 
    52 plot_decl: UPDATE '(' VARIABLE . ',' plot_func
 
-    ','  décalage et aller à l'état 111
+    ','  décalage et aller à l'état 107
 
 
-État 75
+État 72
 
    53 plot_func: VARIABLE . ',' plot_func
    54          | VARIABLE . ')'
    55          | VARIABLE . plot_range
 
-    ')'  décalage et aller à l'état 112
-    ','  décalage et aller à l'état 113
+    ')'  décalage et aller à l'état 108
+    ','  décalage et aller à l'état 109
 
-    plot_range  aller à l'état 114
+    plot_range  aller à l'état 110
 
 
-État 76
+État 73
 
    51 plot_decl: PLOT '(' plot_func .
 
     $défaut  réduction par utilisation de la règle 51 (plot_decl)
 
 
+État 74
+
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   33     | SQRT '(' expr . ')'
+
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 111
+
+
+État 75
+
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   35     | SIN '(' expr . ')'
+
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 112
+
+
+État 76
+
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   34     | COS '(' expr . ')'
+
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 113
+
+
 État 77
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   29     | SQRT '(' expr . ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   36     | TAN '(' expr . ')'
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 115
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 114
 
 
 État 78
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   31     | SIN '(' expr . ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   38     | LOG '(' expr . ')'
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 116
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 115
 
 
 État 79
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   30     | COS '(' expr . ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   37     | LN '(' expr . ')'
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 117
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 116
 
 
 État 80
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   32     | TAN '(' expr . ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   39     | EXP '(' expr . ')'
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 118
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 117
 
 
 État 81
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   34     | LOG '(' expr . ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   40     | ABS '(' expr . ')'
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 119
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 118
 
 
 État 82
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   33     | LN '(' expr . ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   42     | POWER '(' expr . ',' expr ')'
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 120
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ','   décalage et aller à l'état 119
 
 
 État 83
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   35     | EXP '(' expr . ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   41     | PRM '(' expr . ')'
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 121
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 120
 
 
 État 84
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   36     | ABS '(' expr . ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   46 numr: VARIABLE '(' . expr ')'
+   47     | VARIABLE '(' . range ')'
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 122
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    PI        décalage et aller à l'état 5
+    EXP_E     décalage et aller à l'état 6
+    VARIABLE  décalage et aller à l'état 44
+    TRUE      décalage et aller à l'état 8
+    FALSE     décalage et aller à l'état 9
+    UPDATE    décalage et aller à l'état 10
+    PLOT      décalage et aller à l'état 11
+    SQRT      décalage et aller à l'état 12
+    SIN       décalage et aller à l'état 13
+    COS       décalage et aller à l'état 14
+    TAN       décalage et aller à l'état 15
+    LOG       décalage et aller à l'état 16
+    LN        décalage et aller à l'état 17
+    EXP       décalage et aller à l'état 18
+    ABS       décalage et aller à l'état 19
+    POWER     décalage et aller à l'état 20
+    PRM       décalage et aller à l'état 21
+    PLS       décalage et aller à l'état 22
+    MIN       décalage et aller à l'état 23
+    '('       décalage et aller à l'état 24
+    '['       décalage et aller à l'état 67
 
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    expr        aller à l'état 68
+    numr        aller à l'état 27
+    plot        aller à l'état 28
+    plot_decl   aller à l'état 29
+    range       aller à l'état 69
+    range_from  aller à l'état 70
 
 
 État 85
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   38     | POWER '(' expr . ',' expr ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+    7 expr: '(' expr ')' .
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ','   décalage et aller à l'état 123
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 7 (expr)
 
 
 État 86
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   37     | PRM '(' expr . ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr QM $@2 . ternary
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 124
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    PI        décalage et aller à l'état 5
+    EXP_E     décalage et aller à l'état 6
+    VARIABLE  décalage et aller à l'état 44
+    TRUE      décalage et aller à l'état 8
+    FALSE     décalage et aller à l'état 9
+    UPDATE    décalage et aller à l'état 10
+    PLOT      décalage et aller à l'état 11
+    SQRT      décalage et aller à l'état 12
+    SIN       décalage et aller à l'état 13
+    COS       décalage et aller à l'état 14
+    TAN       décalage et aller à l'état 15
+    LOG       décalage et aller à l'état 16
+    LN        décalage et aller à l'état 17
+    EXP       décalage et aller à l'état 18
+    ABS       décalage et aller à l'état 19
+    POWER     décalage et aller à l'état 20
+    PRM       décalage et aller à l'état 21
+    PLS       décalage et aller à l'état 22
+    MIN       décalage et aller à l'état 23
+    '('       décalage et aller à l'état 24
 
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    expr       aller à l'état 121
+    numr       aller à l'état 27
+    ternary    aller à l'état 122
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
 État 87
 
-   47 numr: VARIABLE '(' . expr ')'
-   49 numrs: VARIABLE '(' . range ')'
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   18     | expr PLS expr .
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    error     décalage et aller à l'état 3
-    NUMBER    décalage et aller à l'état 4
-    PI        décalage et aller à l'état 5
-    EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
-    TRUE      décalage et aller à l'état 8
-    FALSE     décalage et aller à l'état 9
-    UPDATE    décalage et aller à l'état 10
-    PLOT      décalage et aller à l'état 11
-    SQRT      décalage et aller à l'état 12
-    SIN       décalage et aller à l'état 13
-    COS       décalage et aller à l'état 14
-    TAN       décalage et aller à l'état 15
-    LOG       décalage et aller à l'état 16
-    LN        décalage et aller à l'état 17
-    EXP       décalage et aller à l'état 18
-    ABS       décalage et aller à l'état 19
-    POWER     décalage et aller à l'état 20
-    PRM       décalage et aller à l'état 21
-    PLS       décalage et aller à l'état 22
-    MIN       décalage et aller à l'état 23
-    '('       décalage et aller à l'état 24
-    '['       décalage et aller à l'état 70
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
 
-    expr        aller à l'état 71
-    ternary     aller à l'état 26
-    numr        aller à l'état 28
-    numrs       aller à l'état 29
-    plot        aller à l'état 30
-    plot_decl   aller à l'état 31
-    range       aller à l'état 72
-    range_from  aller à l'état 73
+    $défaut  réduction par utilisation de la règle 18 (expr)
 
 
 État 88
 
-    5 expr: '(' expr ')' .
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   19     | expr MIN expr .
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    $défaut  réduction par utilisation de la règle 5 (expr)
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+
+    $défaut  réduction par utilisation de la règle 19 (expr)
 
 
 État 89
 
-   14 expr: expr . PLS expr
-   14     | expr PLS expr .
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   20     | expr MUL expr .
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
 
-    QM        réduction par utilisation de la règle 14 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 14 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 20 (expr)
 
 
 État 90
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   15     | expr MIN expr .
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   21     | expr DIV expr .
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
 
-    QM        réduction par utilisation de la règle 15 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 15 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 21 (expr)
 
 
 État 91
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   16     | expr MUL expr .
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   22     | expr MOD expr .
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
 
-    QM        réduction par utilisation de la règle 16 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 16 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 22 (expr)
 
 
 État 92
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   17     | expr DIV expr .
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   23     | expr POW expr .
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
 
-    QM        réduction par utilisation de la règle 17 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 17 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 23 (expr)
 
 
 État 93
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   18     | expr MOD expr .
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   24     | expr FAC expr .
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
 
-    QM        réduction par utilisation de la règle 18 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 18 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 24 (expr)
 
 
 État 94
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   19     | expr POW expr .
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   25     | expr LT expr .
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-
-    QM        réduction par utilisation de la règle 19 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 19 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 25 (expr)
 
 
 État 95
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   20     | expr FAC expr .
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   26     | expr GT expr .
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-
-    QM        réduction par utilisation de la règle 20 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 20 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 26 (expr)
 
 
 État 96
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   21     | expr LT expr .
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   28     | expr GTE expr .
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    QM        réduction par utilisation de la règle 21 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 21 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 28 (expr)
 
 
 État 97
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   22     | expr GT expr .
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   27     | expr LTE expr .
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    QM        réduction par utilisation de la règle 22 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 22 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 27 (expr)
 
 
 État 98
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   24     | expr GTE expr .
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   29     | expr EEQU expr .
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    QM        réduction par utilisation de la règle 24 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 24 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 29 (expr)
 
 
 État 99
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   23     | expr LTE expr .
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   30     | expr DIFF expr .
+   31     | expr . AND expr
+   32     | expr . OR expr
 
-    QM        réduction par utilisation de la règle 23 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 23 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 30 (expr)
 
 
 État 100
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   25     | expr EEQU expr .
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   31     | expr AND expr .
+   32     | expr . OR expr
 
-    QM        réduction par utilisation de la règle 25 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 25 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 31 (expr)
 
 
 État 101
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   26     | expr DIFF expr .
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   32     | expr OR expr .
 
-    QM        réduction par utilisation de la règle 26 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 26 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 32 (expr)
 
 
 État 102
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   27     | expr AND expr .
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+    5 type: VARIABLE EQU expr EOL .
 
-    QM        réduction par utilisation de la règle 27 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 27 (expr)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 5 (type)
 
 
 État 103
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   28     | expr OR expr .
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+    4 type: VARIABLE '(' VARIABLE FEQU . $@1 expr EOL
 
-    QM        réduction par utilisation de la règle 28 (expr)
-    QM        [réduction par utilisation de la règle 41 ($@1)]
-    $défaut  réduction par utilisation de la règle 28 (expr)
+    $défaut  réduction par utilisation de la règle 3 ($@1)
 
-    $@1  aller à l'état 66
+    $@1  aller à l'état 123
 
 
 État 104
 
-   43 ternary: expr $@1 QM . expr $@2 DP expr
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   58 range_from: '[' expr . range_to
 
-    error     décalage et aller à l'état 3
-    NUMBER    décalage et aller à l'état 4
-    PI        décalage et aller à l'état 5
-    EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
-    TRUE      décalage et aller à l'état 8
-    FALSE     décalage et aller à l'état 9
-    UPDATE    décalage et aller à l'état 10
-    PLOT      décalage et aller à l'état 11
-    SQRT      décalage et aller à l'état 12
-    SIN       décalage et aller à l'état 13
-    COS       décalage et aller à l'état 14
-    TAN       décalage et aller à l'état 15
-    LOG       décalage et aller à l'état 16
-    LN        décalage et aller à l'état 17
-    EXP       décalage et aller à l'état 18
-    ABS       décalage et aller à l'état 19
-    POWER     décalage et aller à l'état 20
-    PRM       décalage et aller à l'état 21
-    PLS       décalage et aller à l'état 22
-    MIN       décalage et aller à l'état 23
-    '('       décalage et aller à l'état 24
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ','   décalage et aller à l'état 124
 
-    expr       aller à l'état 125
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    range_to  aller à l'état 125
 
 
 État 105
 
-    3 line: line decl EQU expr . EOL
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
+   46 numr: VARIABLE '(' expr ')' .
 
-    EOL   décalage et aller à l'état 126
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
+    $défaut  réduction par utilisation de la règle 46 (numr)
 
 
 État 106
 
-    4 line: line VARIABLE EQU expr EOL .
-
-    $défaut  réduction par utilisation de la règle 4 (line)
-
-
-État 107
-
-   44 decl: VARIABLE '(' VARIABLE ')' .
-
-    $défaut  réduction par utilisation de la règle 44 (decl)
-
-
-État 108
-
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-   58 range_from: '[' expr . range_to
-
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ','   décalage et aller à l'état 127
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1       aller à l'état 66
-    range_to  aller à l'état 128
-
-
-État 109
-
-   47 numr: VARIABLE '(' expr ')' .
+   47 numr: VARIABLE '(' range ')' .
 
     $défaut  réduction par utilisation de la règle 47 (numr)
 
 
-État 110
-
-   49 numrs: VARIABLE '(' range ')' .
-
-    $défaut  réduction par utilisation de la règle 49 (numrs)
-
-
-État 111
+État 107
 
    52 plot_decl: UPDATE '(' VARIABLE ',' . plot_func
 
-    VARIABLE  décalage et aller à l'état 75
+    VARIABLE  décalage et aller à l'état 72
 
-    plot_func  aller à l'état 129
+    plot_func  aller à l'état 126
 
 
-État 112
+État 108
 
    54 plot_func: VARIABLE ')' .
 
     $défaut  réduction par utilisation de la règle 54 (plot_func)
 
 
-État 113
+État 109
 
    53 plot_func: VARIABLE ',' . plot_func
    56 plot_range: ',' . range ')'
 
-    VARIABLE  décalage et aller à l'état 75
-    '['       décalage et aller à l'état 70
+    VARIABLE  décalage et aller à l'état 72
+    '['       décalage et aller à l'état 67
 
-    plot_func   aller à l'état 130
-    range       aller à l'état 131
-    range_from  aller à l'état 73
+    plot_func   aller à l'état 127
+    range       aller à l'état 128
+    range_from  aller à l'état 70
 
 
-État 114
+État 110
 
    55 plot_func: VARIABLE plot_range .
 
     $défaut  réduction par utilisation de la règle 55 (plot_func)
 
 
-État 115
+État 111
 
-   29 expr: SQRT '(' expr ')' .
-
-    $défaut  réduction par utilisation de la règle 29 (expr)
-
-
-État 116
-
-   31 expr: SIN '(' expr ')' .
-
-    $défaut  réduction par utilisation de la règle 31 (expr)
-
-
-État 117
-
-   30 expr: COS '(' expr ')' .
-
-    $défaut  réduction par utilisation de la règle 30 (expr)
-
-
-État 118
-
-   32 expr: TAN '(' expr ')' .
-
-    $défaut  réduction par utilisation de la règle 32 (expr)
-
-
-État 119
-
-   34 expr: LOG '(' expr ')' .
-
-    $défaut  réduction par utilisation de la règle 34 (expr)
-
-
-État 120
-
-   33 expr: LN '(' expr ')' .
+   33 expr: SQRT '(' expr ')' .
 
     $défaut  réduction par utilisation de la règle 33 (expr)
 
 
-État 121
+État 112
 
-   35 expr: EXP '(' expr ')' .
+   35 expr: SIN '(' expr ')' .
 
     $défaut  réduction par utilisation de la règle 35 (expr)
 
 
-État 122
+État 113
 
-   36 expr: ABS '(' expr ')' .
+   34 expr: COS '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 34 (expr)
+
+
+État 114
+
+   36 expr: TAN '(' expr ')' .
 
     $défaut  réduction par utilisation de la règle 36 (expr)
 
 
-État 123
+État 115
 
-   38 expr: POWER '(' expr ',' . expr ')'
+   38 expr: LOG '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 38 (expr)
+
+
+État 116
+
+   37 expr: LN '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 37 (expr)
+
+
+État 117
+
+   39 expr: EXP '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 39 (expr)
+
+
+État 118
+
+   40 expr: ABS '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 40 (expr)
+
+
+État 119
+
+   42 expr: POWER '(' expr ',' . expr ')'
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
+    TRUE      décalage et aller à l'état 8
+    FALSE     décalage et aller à l'état 9
+    UPDATE    décalage et aller à l'état 10
+    PLOT      décalage et aller à l'état 11
+    SQRT      décalage et aller à l'état 12
+    SIN       décalage et aller à l'état 13
+    COS       décalage et aller à l'état 14
+    TAN       décalage et aller à l'état 15
+    LOG       décalage et aller à l'état 16
+    LN        décalage et aller à l'état 17
+    EXP       décalage et aller à l'état 18
+    ABS       décalage et aller à l'état 19
+    POWER     décalage et aller à l'état 20
+    PRM       décalage et aller à l'état 21
+    PLS       décalage et aller à l'état 22
+    MIN       décalage et aller à l'état 23
+    '('       décalage et aller à l'état 24
+
+    expr       aller à l'état 129
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
+
+
+État 120
+
+   41 expr: PRM '(' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 41 (expr)
+
+
+État 121
+
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   49 ternary: expr . $@3 DP expr
+
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+
+    $défaut  réduction par utilisation de la règle 48 ($@3)
+
+    $@3  aller à l'état 130
+
+
+État 122
+
+   15 expr: expr QM $@2 ternary .
+
+    $défaut  réduction par utilisation de la règle 15 (expr)
+
+
+État 123
+
+    4 type: VARIABLE '(' VARIABLE FEQU $@1 . expr EOL
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    PI        décalage et aller à l'état 5
+    EXP_E     décalage et aller à l'état 6
+    VARIABLE  décalage et aller à l'état 44
+    TRUE      décalage et aller à l'état 8
+    FALSE     décalage et aller à l'état 9
+    UPDATE    décalage et aller à l'état 10
+    PLOT      décalage et aller à l'état 11
+    SQRT      décalage et aller à l'état 12
+    SIN       décalage et aller à l'état 13
+    COS       décalage et aller à l'état 14
+    TAN       décalage et aller à l'état 15
+    LOG       décalage et aller à l'état 16
+    LN        décalage et aller à l'état 17
+    EXP       décalage et aller à l'état 18
+    ABS       décalage et aller à l'état 19
+    POWER     décalage et aller à l'état 20
+    PRM       décalage et aller à l'état 21
+    PLS       décalage et aller à l'état 22
+    MIN       décalage et aller à l'état 23
+    '('       décalage et aller à l'état 24
+
+    expr       aller à l'état 131
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
+
+
+État 124
+
+   59 range_to: ',' . expr range_step
+
+    error     décalage et aller à l'état 3
+    NUMBER    décalage et aller à l'état 4
+    PI        décalage et aller à l'état 5
+    EXP_E     décalage et aller à l'état 6
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -3138,79 +2971,189 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 132
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
-
-
-État 124
-
-   37 expr: PRM '(' expr ')' .
-
-    $défaut  réduction par utilisation de la règle 37 (expr)
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
 État 125
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-   43        | expr $@1 QM expr . $@2 DP expr
+   58 range_from: '[' expr range_to .
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-
-    DP        réduction par utilisation de la règle 42 ($@2)
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
-    $@2  aller à l'état 133
+    $défaut  réduction par utilisation de la règle 58 (range_from)
 
 
 État 126
 
-    3 line: line decl EQU expr EOL .
+   52 plot_decl: UPDATE '(' VARIABLE ',' plot_func .
 
-    $défaut  réduction par utilisation de la règle 3 (line)
+    $défaut  réduction par utilisation de la règle 52 (plot_decl)
 
 
 État 127
 
-   59 range_to: ',' . expr range_step
+   53 plot_func: VARIABLE ',' plot_func .
+
+    $défaut  réduction par utilisation de la règle 53 (plot_func)
+
+
+État 128
+
+   56 plot_range: ',' range . ')'
+
+    ')'  décalage et aller à l'état 133
+
+
+État 129
+
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   42     | POWER '(' expr ',' expr . ')'
+
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ')'   décalage et aller à l'état 134
+
+
+État 130
+
+   49 ternary: expr $@3 . DP expr
+
+    DP  décalage et aller à l'état 135
+
+
+État 131
+
+    4 type: VARIABLE '(' VARIABLE FEQU $@1 expr . EOL
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+
+    EOL   décalage et aller à l'état 136
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+
+
+État 132
+
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   59 range_to: ',' expr . range_step
+
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ','   décalage et aller à l'état 137
+    ']'   décalage et aller à l'état 138
+
+    range_step  aller à l'état 139
+
+
+État 133
+
+   56 plot_range: ',' range ')' .
+
+    $défaut  réduction par utilisation de la règle 56 (plot_range)
+
+
+État 134
+
+   42 expr: POWER '(' expr ',' expr ')' .
+
+    $défaut  réduction par utilisation de la règle 42 (expr)
+
+
+État 135
+
+   49 ternary: expr $@3 DP . expr
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -3229,158 +3172,28 @@ range_step (73)
     MIN       décalage et aller à l'état 23
     '('       décalage et aller à l'état 24
 
-    expr       aller à l'état 134
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
-
-
-État 128
-
-   58 range_from: '[' expr range_to .
-
-    $défaut  réduction par utilisation de la règle 58 (range_from)
-
-
-État 129
-
-   52 plot_decl: UPDATE '(' VARIABLE ',' plot_func .
-
-    $défaut  réduction par utilisation de la règle 52 (plot_decl)
-
-
-État 130
-
-   53 plot_func: VARIABLE ',' plot_func .
-
-    $défaut  réduction par utilisation de la règle 53 (plot_func)
-
-
-État 131
-
-   56 plot_range: ',' range . ')'
-
-    ')'  décalage et aller à l'état 135
-
-
-État 132
-
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   38     | POWER '(' expr ',' expr . ')'
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ')'   décalage et aller à l'état 136
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
-
-
-État 133
-
-   43 ternary: expr $@1 QM expr $@2 . DP expr
-
-    DP  décalage et aller à l'état 137
-
-
-État 134
-
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-   59 range_to: ',' expr . range_step
-
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ','   décalage et aller à l'état 138
-    ']'   décalage et aller à l'état 139
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1         aller à l'état 66
-    range_step  aller à l'état 140
-
-
-État 135
-
-   56 plot_range: ',' range ')' .
-
-    $défaut  réduction par utilisation de la règle 56 (plot_range)
+    expr       aller à l'état 140
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
 État 136
 
-   38 expr: POWER '(' expr ',' expr ')' .
+    4 type: VARIABLE '(' VARIABLE FEQU $@1 expr EOL .
 
-    $défaut  réduction par utilisation de la règle 38 (expr)
+    $défaut  réduction par utilisation de la règle 4 (type)
 
 
 État 137
 
-   43 ternary: expr $@1 QM expr $@2 DP . expr
+   61 range_step: ',' . expr ']'
 
     error     décalage et aller à l'état 3
     NUMBER    décalage et aller à l'état 4
     PI        décalage et aller à l'état 5
     EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
+    VARIABLE  décalage et aller à l'état 44
     TRUE      décalage et aller à l'état 8
     FALSE     décalage et aller à l'état 9
     UPDATE    décalage et aller à l'état 10
@@ -3400,148 +3213,104 @@ range_step (73)
     '('       décalage et aller à l'état 24
 
     expr       aller à l'état 141
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
+    numr       aller à l'état 27
+    plot       aller à l'état 28
+    plot_decl  aller à l'état 29
 
 
 État 138
-
-   61 range_step: ',' . expr ']'
-
-    error     décalage et aller à l'état 3
-    NUMBER    décalage et aller à l'état 4
-    PI        décalage et aller à l'état 5
-    EXP_E     décalage et aller à l'état 6
-    VARIABLE  décalage et aller à l'état 46
-    TRUE      décalage et aller à l'état 8
-    FALSE     décalage et aller à l'état 9
-    UPDATE    décalage et aller à l'état 10
-    PLOT      décalage et aller à l'état 11
-    SQRT      décalage et aller à l'état 12
-    SIN       décalage et aller à l'état 13
-    COS       décalage et aller à l'état 14
-    TAN       décalage et aller à l'état 15
-    LOG       décalage et aller à l'état 16
-    LN        décalage et aller à l'état 17
-    EXP       décalage et aller à l'état 18
-    ABS       décalage et aller à l'état 19
-    POWER     décalage et aller à l'état 20
-    PRM       décalage et aller à l'état 21
-    PLS       décalage et aller à l'état 22
-    MIN       décalage et aller à l'état 23
-    '('       décalage et aller à l'état 24
-
-    expr       aller à l'état 142
-    ternary    aller à l'état 26
-    numr       aller à l'état 28
-    numrs      aller à l'état 29
-    plot       aller à l'état 30
-    plot_decl  aller à l'état 31
-
-
-État 139
 
    60 range_step: ']' .
 
     $défaut  réduction par utilisation de la règle 60 (range_step)
 
 
-État 140
+État 139
 
    59 range_to: ',' expr range_step .
 
     $défaut  réduction par utilisation de la règle 59 (range_to)
 
 
+État 140
+
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   49 ternary: expr $@3 DP expr .
+
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+
+    $défaut  réduction par utilisation de la règle 49 (ternary)
+
+
 État 141
 
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-   43        | expr $@1 QM expr $@2 DP expr .
+   15 expr: expr . QM $@2 ternary
+   18     | expr . PLS expr
+   19     | expr . MIN expr
+   20     | expr . MUL expr
+   21     | expr . DIV expr
+   22     | expr . MOD expr
+   23     | expr . POW expr
+   24     | expr . FAC expr
+   25     | expr . LT expr
+   26     | expr . GT expr
+   27     | expr . LTE expr
+   28     | expr . GTE expr
+   29     | expr . EEQU expr
+   30     | expr . DIFF expr
+   31     | expr . AND expr
+   32     | expr . OR expr
+   61 range_step: ',' expr . ']'
 
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-
-    QM        réduction par utilisation de la règle 41 ($@1)
-    QM        [réduction par utilisation de la règle 43 (ternary)]
-    $défaut  réduction par utilisation de la règle 43 (ternary)
-
-    $@1  aller à l'état 66
+    QM    décalage et aller à l'état 49
+    PLS   décalage et aller à l'état 50
+    MIN   décalage et aller à l'état 51
+    MUL   décalage et aller à l'état 52
+    DIV   décalage et aller à l'état 53
+    MOD   décalage et aller à l'état 54
+    POW   décalage et aller à l'état 55
+    FAC   décalage et aller à l'état 56
+    LT    décalage et aller à l'état 57
+    GT    décalage et aller à l'état 58
+    GTE   décalage et aller à l'état 59
+    LTE   décalage et aller à l'état 60
+    EEQU  décalage et aller à l'état 61
+    DIFF  décalage et aller à l'état 62
+    AND   décalage et aller à l'état 63
+    OR    décalage et aller à l'état 64
+    ']'   décalage et aller à l'état 142
 
 
 État 142
-
-   14 expr: expr . PLS expr
-   15     | expr . MIN expr
-   16     | expr . MUL expr
-   17     | expr . DIV expr
-   18     | expr . MOD expr
-   19     | expr . POW expr
-   20     | expr . FAC expr
-   21     | expr . LT expr
-   22     | expr . GT expr
-   23     | expr . LTE expr
-   24     | expr . GTE expr
-   25     | expr . EEQU expr
-   26     | expr . DIFF expr
-   27     | expr . AND expr
-   28     | expr . OR expr
-   43 ternary: expr . $@1 QM expr $@2 DP expr
-   61 range_step: ',' expr . ']'
-
-    PLS   décalage et aller à l'état 51
-    MIN   décalage et aller à l'état 52
-    MUL   décalage et aller à l'état 53
-    DIV   décalage et aller à l'état 54
-    MOD   décalage et aller à l'état 55
-    POW   décalage et aller à l'état 56
-    FAC   décalage et aller à l'état 57
-    LT    décalage et aller à l'état 58
-    GT    décalage et aller à l'état 59
-    GTE   décalage et aller à l'état 60
-    LTE   décalage et aller à l'état 61
-    EEQU  décalage et aller à l'état 62
-    DIFF  décalage et aller à l'état 63
-    AND   décalage et aller à l'état 64
-    OR    décalage et aller à l'état 65
-    ']'   décalage et aller à l'état 143
-
-    $défaut  réduction par utilisation de la règle 41 ($@1)
-
-    $@1  aller à l'état 66
-
-
-État 143
 
    61 range_step: ',' expr ']' .
 
