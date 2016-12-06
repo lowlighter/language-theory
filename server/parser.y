@@ -111,7 +111,7 @@ type:
     //Affichage
     | plot EOL                              { current()->store(EOL, 1, update_id) ; update_id = ""; }
     //Tableau d'évaluation
-    | VARIABLE '(' range ')' EOL            { current()->store(RTABLE) ; current()->store(FUNCTION_R, 2, *$1) ; current()->store(EOL) ; }
+    | VARIABLE '(' range ')' EOL            { current()->store(RTABLE) ; current()->store(FUNCTION_R, 1, *$1) ; current()->store(EOL) ; }
     ;
 
 expr:

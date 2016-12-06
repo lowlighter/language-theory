@@ -60,7 +60,7 @@
                 //Fin de ligne : Met à jour la variable réponse
                     Process* eol(int i = 0) {
                         //Données JSON
-                            data[TABLE] = (values[i] == 2);
+                            data[TABLE] = rtable ; rtable = false ;
                             if (names[i].size() > 1) { data[GRAPH] = names[i] ; } else { data[GRAPH] = (values[i] == 1); }
                             if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ;
                         //Affichage
@@ -104,7 +104,7 @@
 
                 //Affichage
                     Process* plot() { xs.clear(); ys.clear(); plotted.clear(); return display("[plot]") ; }
-                    Process* table() { xs.clear(); ys.clear(); plotted.clear(); return display("[table]") ; }
+                    Process* table() { rtable = true ; xs.clear(); ys.clear(); plotted.clear(); return display("[table]") ; }
 
                 //Comparaison
                     Process* lt() { pop(2) ; return display("<")->push((b < a) ? 1 : 0) ; }
@@ -270,7 +270,7 @@
                 GESTION DE LA PILE D'ANALYSE (EXPRESSIONS POSTFIXEES)
             ============================================================================ */
                 //
-                    double rresult = NAN; bool rreturn = false, rerror = false ;
+                    double rresult = NAN; bool rreturn = false, rerror = false, rtable = false ;
                 //Exécute le processus
                     double eval () { clear(); for (int i = 0; i < (int) tokens.size(); i++) { token(i) ; } return result() ; }
                 //Evalue le processus en x
