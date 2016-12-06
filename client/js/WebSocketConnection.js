@@ -48,6 +48,7 @@ function WebSocketConnection(url) {
 
                 for(var i = 0; i < data.x.length ; i++) {
                     var obj = {
+                        name: data.plotted[i],
                         x: data.x[i],
                         y: data.y[i]
                     };
