@@ -104,6 +104,7 @@ function appendChartInTerminal(data) {
     var arr_data = [];
     for(var i = 0; i < data.x.length ; i++) {
         var obj = {
+            name: data.plotted[i],
             x: data.x[i],
             y: data.y[i]
         };
@@ -120,26 +121,17 @@ function appendChartInTerminal(data) {
             b   :   50,
             pad :   0
         },
-        font: {color: '#ccc'}
+        font: {color: '#ccc'},
+        xaxis: {
+            color: '#ddd'
+        },
+        yaxis: {
+            color: '#ddd'
+        }
     };
-
-     
-
 
     // On créé le plot
     Plotly.newPlot('chart' + chartId, arr_data, layout);
-
-
-    Plotly.animate('chart' + chartId, {
-            data: arr_data,
-            layout: layout
-        }, {
-            transition: {
-            duration: 500,
-            ease: 'cubic-in-out'
-            }
-    });
-
 
     // On récupère les fonctions contenues dans le graph
     var functions_str = data.plotted.join(', ');
