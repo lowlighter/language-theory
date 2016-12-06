@@ -101,6 +101,15 @@
                     Process* cos() { pop(1) ; return display("COS")->push(std::cos(a)) ; }
                     Process* sin() { pop(1) ; return display("SIN")->push(std::sin(a)) ; }
                     Process* tan() { pop(1) ; return display("TAN")->push(std::tan(a)) ; }
+                    Process* acos() { pop(1) ; return display("ACOS")->push(std::acos(a)) ; }
+                    Process* asin() { pop(1) ; return display("ASIN")->push(std::asin(a)) ; }
+                    Process* atan() { pop(1) ; return display("ATAN")->push(std::atan(a)) ; }
+                    Process* cosh() { pop(1) ; return display("COSH")->push(std::cosh(a)) ; }
+                    Process* sinh() { pop(1) ; return display("SINH")->push(std::sinh(a)) ; }
+                    Process* tanh() { pop(1) ; return display("TANH")->push(std::tanh(a)) ; }
+                    Process* acosh() { pop(1) ; return display("ACOSH")->push(std::acosh(a)) ; }
+                    Process* asinh() { pop(1) ; return display("ASINH")->push(std::asinh(a)) ; }
+                    Process* atanh() { pop(1) ; return display("ATANH")->push(std::atanh(a)) ; }
 
                 //Affichage
                     Process* plot() { xs.clear(); ys.clear(); plotted.clear(); return display("[plot]") ; }

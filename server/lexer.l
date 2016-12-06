@@ -55,8 +55,17 @@ variable    [a-zA-Z_][a-zA-Z_0-9]*
 prime         { return PRM ; }
 sqrt          { return SQRT; }
 sin           { return SIN ; }
+asin          { return ASIN ; }
 cos           { return COS ; }
+acos          { return ACOS ; }
 tan           { return TAN ; }
+atan          { return ATAN ; }
+sinh          { return SINH ; }
+asinh         { return ASINH ; }
+cosh          { return COSH ; }
+acosh         { return ACOSH ; }
+tanh          { return TANH ; }
+atanh         { return ATANH ; }
 log           { return LOG ; }
 ln            { return LN  ; }
 exp           { return EXP ; }

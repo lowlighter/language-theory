@@ -45,12 +45,21 @@ test 'sqrt(-1)' 'nan'
 test 'cos(pi)' '-1'
 test 'sin(-pi/2)' '-1'
 test 'tan(pi/4)' '1'
+test 'acos(1)' '0'
+test 'asin(1)' '1.5708'
+test 'atan(1)' '0.785398'
 test 'ln(1)' '0'
 test 'log(10)' '1'
 test 'exp(0)' '1'
 test 'abs(-1) == abs(1)' '1'
 test 'prime(1)' 0
 test 'prime(11)' 1
+test 'cosh(1)' '1.54308'
+test 'sinh(1)' '1.1752'
+test 'tanh(1)' '0.761594'
+test 'acosh(1.5)' '0.962424'
+test 'asinh(0.5)' '0.481212'
+test 'atanh(0.5)' '0.549306'
 
 echo -e "\033[1;36m FONCTION DIVERSES \033[0m"
 test 'isset(a)' '0'
@@ -67,6 +76,7 @@ test '1 > 1' '0'
 test '1 < 1' '0'
 test '1 > 2' '0'
 test '1 < 2' '1'
+test '1 < 1*2+1' '1'
 
 echo -e "\033[1;36m TESTS LOGIQUE \033[0m"
 test 'true || false' '1'

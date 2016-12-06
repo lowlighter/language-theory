@@ -33,8 +33,8 @@
     //Constantes
         const int NEG = -1 ;
         const int POS = +1 ;
-        const double C_PI = 3.14159;
-        const double C_EXP_E = 2.71828;
+        const double C_PI = M_PI;
+        const double C_EXP_E = M_E;
         const double C_TRUE = 1;
         const double C_FALSE = 0;
         const int DEFAULT_START = -5 ;
@@ -69,7 +69,7 @@
 
     //Tokens de fonctions
 %token PLOT
-%token SQRT SIN COS TAN LOG LN EXP ABS POWER PRM MAX MIN
+%token SQRT SIN COS TAN LOG LN EXP ABS POWER PRM MAX MIN ACOS ASIN ATAN SINH COSH TANH ACOSH ASINH ATANH
 
     //Tokens de fin de lignes
 %token EOL EOLR
@@ -78,13 +78,13 @@
 %token SYNTAX_ERROR
 
     //Associativité et priorité
-%left  QM DP
 %right EQU FEQU
+%left  QM DP
+%left  LT GT GTE LTE EEQU DIFF AND OR
 %left  PLS SUB
 %left  MUL DIV MOD
 %right POW
 %left  FAC SIGN
-%left  LT GT GTE LTE EEQU DIFF AND OR
 
     //Types
 %type <dbl>   line expr
@@ -153,6 +153,15 @@ expr:
     | COS    '(' expr ')'                   { current()->store(COS)  ; }
     | SIN    '(' expr ')'                   { current()->store(SIN)  ; }
     | TAN    '(' expr ')'                   { current()->store(TAN)  ; }
+    | ACOS   '(' expr ')'                   { current()->store(ACOS)  ; }
+    | ASIN   '(' expr ')'                   { current()->store(ASIN)  ; }
+    | ATAN   '(' expr ')'                   { current()->store(ATAN)  ; }
+    | COSH    '(' expr ')'                  { current()->store(COSH)  ; }
+    | SINH    '(' expr ')'                  { current()->store(SINH)  ; }
+    | TANH    '(' expr ')'                  { current()->store(TANH)  ; }
+    | ACOSH   '(' expr ')'                  { current()->store(ACOSH)  ; }
+    | ASINH   '(' expr ')'                  { current()->store(ASINH)  ; }
+    | ATANH   '(' expr ')'                  { current()->store(ATANH)  ; }
     | LN     '(' expr ')'                   { current()->store(LN)  ; }
     | LOG    '(' expr ')'                   { current()->store(LOG)  ; }
     | EXP    '(' expr ')'                   { current()->store(EXP)  ; }
@@ -250,6 +259,15 @@ Process* Process::token(int& i) { switch (tokens[i]) {
         case COS: cos(); break;
         case SIN: sin(); break;
         case TAN: tan(); break;
+        case ACOS: acos(); break;
+        case ASIN: asin(); break;
+        case ATAN: atan(); break;
+        case COSH: cosh(); break;
+        case SINH: sinh(); break;
+        case TANH: tanh(); break;
+        case ACOSH: acosh(); break;
+        case ASINH: asinh(); break;
+        case ATANH: atanh(); break;
     //Autre
         case ISSET: v_isset(i); break;
         case MAX: max(); break;
