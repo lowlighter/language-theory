@@ -133,6 +133,7 @@ expr:
     | expr PLS expr                         { current()->store(PLS) ; }
     | expr SUB expr                         { current()->store(SUB) ; }
     | expr MUL expr                         { current()->store(MUL) ; }
+    | NUMBER VARIABLE                       { current()->store(NUMBER, $1) ; current()->store(VARIABLE, *$2) ; current()->store(MUL) ; }
     | expr DIV expr                         { current()->store(DIV) ; }
     | expr MOD expr                         { current()->store(MOD) ; }
     //Opérations avancées
