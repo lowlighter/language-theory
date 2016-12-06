@@ -21,7 +21,7 @@ variable    [a-zA-Z_][a-zA-Z_0-9]*
     /* Règles flex */
 
     /* Opérations */
-\)\=          { return FEQU ; }
+\)[ ]*\=/[^=] { return FEQU ; }
 \=            { return EQU ; }
 \+            { return PLS; }
 \-            { return SUB; }
@@ -94,9 +94,9 @@ false         { return FALSE ; }
 {variable}    { yylval.str = new string(yytext); return VARIABLE; }
 
     /* Fin de ligne */
-\n|;            { return EOL ; }
+\n|;          { return EOL ; }
 
     /* Autre */
-.             {;}
+.             { ;}
 
 %%

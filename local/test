@@ -38,6 +38,7 @@ test '1+2^3' '9'
 test '2^(3+1)' '16'
 test '2^2%2' '0'
 test '5!' '120'
+test '3!^2' '36'
 
 echo -e "\033[1;36m FONCTION MATHEMATIQUES \033[0m"
 test 'sqrt(2^2)' '2'
@@ -51,6 +52,7 @@ test 'atan(1)' '0.785398'
 test 'ln(1)' '0'
 test 'log(10)' '1'
 test 'exp(0)' '1'
+test 'exp(5) == e^5' '1'
 test 'abs(-1) == abs(1)' '1'
 test 'prime(1)' 0
 test 'prime(11)' 1

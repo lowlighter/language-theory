@@ -5,6 +5,7 @@
         #include <map>
         #include <stack>
         #include <vector>
+        #include <limits>
         #include "json.hpp"
 
     //Namespace
@@ -20,6 +21,15 @@
             for(int i=3; (i*i) <= n; i+=2) { if(n % i == 0 ) { return false; } }
             return true;
         }
+    //Comparaison de double (en prenant en compte l'epsilon machine)
+        template<class T> typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type
+        almost_equal(T x, T y, int ulp) {
+            // the machine epsilon has to be scaled to the magnitude of the values used
+            // and multiplied by the desired precision in ULPs (units in the last place)
+            return std::abs(x-y) < std::numeric_limits<T>::epsilon() * std::abs(x+y) * ulp
+            // unless the result is subnormal
+                   || std::abs(x-y) < std::numeric_limits<T>::min();
+        }
 
     //Processus
         class Process {
@@ -33,14 +43,14 @@
                             static bool reserved(string word) { return (find(RESERVED.begin(), RESERVED.end(), word) != RESERVED.end()) ; }
 
                 //Précision des nombres flottants et valeurs des signes
-                    static const int DEFAULT_SAMPLE = 10000, NEG = -1, POS = +1 ;
+                    static const int DEFAULT_SAMPLE = 10000, NEG = -1, POS = +1, PRECISION = 10 ;
 
                 //Noms des champs et données JSON
                     static const string RESULT, RESULTS, VARS, ANSWER, ERROR, GRAPH, MASTER, TABLE, XS, YS, PLOTTED ;
                     json data;
 
                 //Mode verbeux
-                    bool verbose = false;
+                    bool verbose = false ;
                     bool vresult = true ;
 
                 //Identifiant (nom) du processus et nom de la variable d'évaluation
@@ -67,7 +77,7 @@
                             rreturn = true ;
                             return display("(;)\n") ;
                     }
-                    Process* eolr() { if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ; data[GRAPH] = rreturn = false ; return display("(§)\n") ; }
+                    Process* eolr() { if (!rerror) { data[ERROR] = false ; } else { rerror = false; } ; data[TABLE] = data[GRAPH] = rtable = rreturn = false ; return display("(§)\n") ; }
                 //Opération non repertoriée
                     Process* unknown() { return display("?") ; }
 
@@ -120,7 +130,7 @@
                     Process* gt() { pop(2) ; return display(">")->push((b > a) ? 1 : 0) ; }
                     Process* lte() { pop(2) ; return display("<=")->push((b <= a) ? 1 : 0) ; }
                     Process* gte() { pop(2) ; return display(">=")->push((b >= a) ? 1 : 0) ; }
-                    Process* eequ() { pop(2) ; return display("==")->push((b == a) ? 1 : 0) ; }
+                    Process* eequ() { pop(2) ; return display("==")->push(almost_equal(a, b, PRECISION) ? 1 : 0) ; }
                     Process* diff() { pop(2) ; return display("!=")->push((b != a) ? 1 : 0) ; }
 
                 //Structure logique
