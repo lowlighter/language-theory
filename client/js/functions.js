@@ -110,10 +110,36 @@ function appendChartInTerminal(data) {
         arr_data.push(obj);
     }
 
-    var layout = {};
+    var layout = {
+        paper_bgcolor: 'rgb(29, 41, 51)',
+        plot_bgcolor: 'rgb(29, 41, 51)',
+        margin: {
+            l   :   80,
+            r   :   80,
+            t   :   50,
+            b   :   50,
+            pad :   0
+        },
+        font: {color: '#ccc'}
+    };
+
+     
+
 
     // On créé le plot
     Plotly.newPlot('chart' + chartId, arr_data, layout);
+
+
+    Plotly.animate('chart' + chartId, {
+            data: arr_data,
+            layout: layout
+        }, {
+            transition: {
+            duration: 500,
+            ease: 'cubic-in-out'
+            }
+    });
+
 
     // On récupère les fonctions contenues dans le graph
     var functions_str = data.plotted.join(', ');
@@ -121,8 +147,6 @@ function appendChartInTerminal(data) {
     // On y attache un évènement qui va appeler le serveur à chaque fois que l'utilisateur bouge le viewport
     chart.on('plotly_relayout',
     function(eventdata){
-        console.log(eventdata["xaxis.range[0]"]);
-        console.log(eventdata["xaxis.range[1]"]);
         if(eventdata["xaxis.range[0]"] != undefined && eventdata["xaxis.range[1]"] != undefined) {
             socketConnection.send(strip('update(_' + (chartId - 1) + ', ' + functions_str + ', [' + eventdata["xaxis.range[0]"] +', ' + eventdata["xaxis.range[1]"] + '])'));
         }

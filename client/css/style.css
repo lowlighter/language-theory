@@ -33,6 +33,7 @@ body {
 		background-color: rgb(29, 41, 51);
 		padding: 20px;
 		overflow-y: scroll;
+		line-height: 2;
 	}
 		.terminal_resp {
 			line-height: 1.5em;
@@ -44,6 +45,9 @@ body {
 
 		.table {
 			text-align: right;
+			line-height: 1.4;
+			margin-top: 10px;
+			margin-left: 10px;
 		}
 
 		.table tr td, .table tr th{

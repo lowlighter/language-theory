@@ -21,7 +21,6 @@ var grammar = [{
 
 input.addEventListener('keyup', function(e) {
 	highlighter('#input', grammar);
-	console.log(e.key)
 	switch (e.key) {
 		case "Enter":
 			if(strip(input.innerHTML) == "clear") {
@@ -37,14 +36,12 @@ input.addEventListener('keyup', function(e) {
 		    input.innerHTML = "";
 			break;
 		case "ArrowUp":
-		console.log(historyPtr);
 			if(historyPtr > 0) {
 				historyPtr -- ;
 				input.innerHTML = historyArr[historyPtr];
 			}
 			break;
 		case "ArrowDown":
-			console.log(historyPtr);
 			if(historyPtr < historyArr.length-1) {
 				historyPtr ++ ;
 				input.innerHTML = historyArr[historyPtr];
