@@ -42,7 +42,6 @@ function WebSocketConnection(url) {
 
             // Si c'est une update de graph
             } else if(data.graph != false) {
-                console.log('#chart' + data.graph.substr(1));
                 var chart = document.querySelector('#chart' + data.graph.substr(1));
 
                 var arr_data = [];
@@ -55,9 +54,7 @@ function WebSocketConnection(url) {
                     arr_data.push(obj);
                 }
 
-
-                chart.data = arr_data
-                chart.layout.showlegend = false;
+                chart.data = arr_data;
                 Plotly.redraw(chart);
 
             // Si c'est une autre réponse 
