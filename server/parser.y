@@ -47,8 +47,9 @@
 
     //Processus principal
         auto master = new Process(Process::MASTER) ;
-        int token = 0, plots = 1, stmt = 0, show = 0;
+        int token = 0, plots = 1, show = 0;
         string update_id;
+        stack<string> stmt_then, stmt_else ;
 
     //Raccourcis
         Process* current() { return Process::current() ; }
@@ -126,7 +127,8 @@ expr:
     | PLS expr %prec SIGN                   { current()->store(SIGN, POS) ; }
     | SUB expr %prec SIGN                   { current()->store(SIGN, NEG) ; }
     //Ternaire
-    | expr QM { Process::open() ;} ternary  { current()->store(IF) ; current()->store(THEN, stmt) ; current()->store(ELSE, stmt+1) ; stmt+=2 ; }
+    | expr QM                               { stmt_then.push(Process::open()->id) ;}
+      ternary                               { current()->store(IF) ; current()->store(THEN, stoi(stmt_then.top())) ; current()->store(ELSE, stoi(stmt_else.top())) ; stmt_then.pop() ; stmt_else.pop(); }
     //Nombre
     | numr                                  { ; }
     //Opérations basiques
@@ -188,7 +190,7 @@ numr:
 
     //Opérations ternaires
 ternary:
-      expr                                  { current()->store(EOL) ; Process::close(); Process::open() ; }
+      expr                                  { current()->store(EOL) ; Process::close(); stmt_else.push(Process::open()->id) ; }
       DP expr                               { current()->store(EOL) ; Process::close();  }
     ;
 
