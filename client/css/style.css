@@ -92,6 +92,14 @@ body {
 			width: 100% !important;
 		}
 
+	.documentation {
+		color: white;
+		position: absolute;
+		right: 20px;
+		bottom: 20px;
+		text-decoration: none;
+	}
+
 /**
  * Coloration syntaxique
  */
