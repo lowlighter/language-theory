@@ -1,7 +1,7 @@
 # PLOT TWIST
 **Plot Twist** est un mini-langage mathématique réalisé par **Fabien Delattre** et **Simon Lecoq** dans le cadre d’un projet ISEN en 2016.
 Il n'est pas parfait, mais nous n'allons pas en faire tout un fromage, sinon les bisons seront jaloux des vaches...
-![Démonstration](https://github.com/lowlighter/language-theory/raw/master/docs/demo.gif?raw=true)
+![Démonstration](https://github.com/lowlighter/language-theory/raw/master/docs/demo.gif)
 
 # Installer le projet
 
